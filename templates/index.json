@@ -1,12 +1,22 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "moby_hero": {
       "type": "moby-hero",
       "settings": {
+        "image": "shopify://shop_images/Hero_Mountain_1920x1071_237d2301-276a-4398-ae4a-e183c758eb23.webp",
         "heading": "SCIENCE-BACKED CLARITY AND STRENGTH",
         "subheading": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE",
         "button_text": "SHOP NOW",
-        "button_link": "/products/moby-creatine-sticks",
+        "button_link": "shopify://products/creatine",
         "show_shipping_badge": true,
         "shipping_text": "FREE SHIPPING ON ORDERS OVER €43"
       }
@@ -43,7 +53,13 @@
           }
         }
       },
-      "block_order": ["item_1", "item_2", "item_3", "item_4"]
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4"
+      ],
+      "settings": {}
     },
     "moby_features": {
       "type": "moby-features",
@@ -89,14 +105,17 @@
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5"]
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5"
+      ],
+      "settings": {}
     },
     "moby_featured_product": {
       "type": "moby-featured-product",
-      "settings": {
-        "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
-        "show_klarna_badge": true
-      },
       "blocks": {
         "benefit_1": {
           "type": "benefit",
@@ -127,15 +146,21 @@
           }
         }
       },
-      "block_order": ["benefit_1", "benefit_2", "benefit_3", "benefit_4"]
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ],
+      "settings": {
+        "product": "",
+        "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
+        "show_klarna_badge": true,
+        "subscription_link": ""
+      }
     },
     "moby_science": {
       "type": "moby-science",
-      "settings": {
-        "badge_text": "Backed by Science",
-        "heading": "Why Creatine Works",
-        "subheading": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance."
-      },
       "blocks": {
         "feature_1": {
           "type": "feature",
@@ -192,24 +217,35 @@
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5", "feature_6"]
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5",
+        "feature_6"
+      ],
+      "settings": {
+        "badge_text": "Backed by Science",
+        "heading": "Why Creatine Works",
+        "subheading": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance.",
+        "center_image": "shopify://shop_images/Stick_White.webp"
+      }
     },
     "moby_lifestyle": {
       "type": "moby-lifestyle",
       "settings": {
+        "background_image": "shopify://shop_images/Lifestyle_Optimized.webp",
         "tagline": "Produced in Sweden",
         "heading": "Your life. Optimized in one motion",
         "button_label": "Shop Now",
         "button_link": "/products/moby-creatine-sticks",
-        "show_product_card": true
+        "show_product_card": true,
+        "product": "creatine"
       }
     },
     "moby_faq": {
       "type": "moby-faq",
-      "settings": {
-        "heading": "Frequently Asked Questions",
-        "subheading": "Everything you need to know about MOBY creatine."
-      },
       "blocks": {
         "faq_1": {
           "type": "faq",
@@ -254,11 +290,23 @@
           }
         }
       },
-      "block_order": ["faq_1", "faq_2", "faq_3", "faq_4", "faq_5", "faq_6"]
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6"
+      ],
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "subheading": "Everything you need to know about MOBY creatine."
+      }
     },
     "moby_cta_banner": {
       "type": "moby-cta-banner",
       "settings": {
+        "background_image": "shopify://shop_images/B2B_bakgrund_1344x768_4573ad00-fe89-4c80-bd6a-709081108a56.webp",
         "heading": "Partner with MOBY",
         "description": "Available for distribution in pharmacies, gyms, and wellness retailers. Bring science-backed performance to your customers.",
         "button_label": "Partner with Moby",
@@ -267,14 +315,6 @@
     },
     "moby_footer": {
       "type": "moby-footer",
-      "settings": {
-        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
-        "email": "hello@drinkmoby.com",
-        "newsletter_heading": "Join the Movement",
-        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
-        "newsletter_placeholder": "Your email",
-        "show_payment_icons": true
-      },
       "blocks": {
         "quick_1": {
           "type": "quick_link",
@@ -337,7 +377,24 @@
           }
         }
       },
-      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+      "block_order": [
+        "quick_1",
+        "quick_2",
+        "quick_3",
+        "quick_4",
+        "support_1",
+        "support_2",
+        "support_3",
+        "support_4"
+      ],
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      }
     }
   },
   "order": [

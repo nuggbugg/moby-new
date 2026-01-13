@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "moby_buy_box": {
@@ -51,7 +60,13 @@
           }
         }
       },
-      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5"],
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5"
+      ],
       "settings": {}
     },
     "moby_why_stickpacks": {
@@ -90,7 +105,12 @@
           }
         }
       },
-      "block_order": ["benefit_1", "benefit_2", "benefit_3", "benefit_4"],
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ],
       "settings": {
         "heading": "Why Stick Packs?",
         "subheading": "The smarter way to supplement"
@@ -149,7 +169,15 @@
           }
         }
       },
-      "block_order": ["faq_1", "faq_2", "faq_3", "faq_4", "faq_5", "faq_6", "faq_7"],
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6",
+        "faq_7"
+      ],
       "settings": {
         "serving_size": "1 stick (5g)",
         "servings_per_container": "30",
@@ -187,7 +215,11 @@
           }
         }
       },
-      "block_order": ["pillar_1", "pillar_2", "pillar_3"],
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3"
+      ],
       "settings": {
         "badge": "Why Choose MOBY",
         "heading": "Creatine Made Clean, Simple, and Precise",
@@ -200,56 +232,30 @@
         "study_1": {
           "type": "study",
           "settings": {
-            "category": "Performance",
             "title": "Meta-Analysis: Creatine and Strength",
-            "source": "Journal of Strength & Conditioning Research",
-            "year": "2022",
-            "participants": "1,847",
-            "duration": "4-12 weeks",
-            "description": "Comprehensive meta-analysis showing creatine supplementation increases strength by an average of 8% in trained individuals.",
-            "metric_1_label": "Strength Increase",
-            "metric_1_value": 8,
-            "metric_2_label": "Power Output",
-            "metric_2_value": 14,
-            "conclusion": "Creatine supplementation significantly enhances strength and power output across various training protocols."
+            "year": "2022"
           }
         },
         "study_2": {
           "type": "study",
           "settings": {
-            "category": "Cognitive",
             "title": "Creatine and Cognitive Performance",
-            "source": "Experimental Gerontology",
-            "year": "2023",
-            "participants": "281",
-            "duration": "6 weeks",
-            "description": "Double-blind study examining creatine's effects on memory and processing speed in adults.",
-            "metric_1_label": "Memory Improvement",
-            "metric_1_value": 15,
-            "metric_2_label": "Processing Speed",
-            "metric_2_value": 12,
-            "conclusion": "Creatine supplementation shows promising cognitive benefits, particularly for memory and mental processing."
+            "year": "2023"
           }
         },
         "study_3": {
           "type": "study",
           "settings": {
-            "category": "Recovery",
             "title": "Creatine and Muscle Recovery",
-            "source": "International Journal of Sports Medicine",
-            "year": "2021",
-            "participants": "64",
-            "duration": "8 weeks",
-            "description": "Study examining creatine's role in reducing muscle damage markers and accelerating recovery.",
-            "metric_1_label": "Recovery Rate",
-            "metric_1_value": 20,
-            "metric_2_label": "Muscle Damage Markers",
-            "metric_2_value": -25,
-            "conclusion": "Creatine supplementation significantly reduces recovery time and markers of muscle damage."
+            "year": "2021"
           }
         }
       },
-      "block_order": ["study_1", "study_2", "study_3"],
+      "block_order": [
+        "study_1",
+        "study_2",
+        "study_3"
+      ],
       "settings": {
         "badge": "Science-Backed",
         "heading": "The Research Behind MOBY",
@@ -269,7 +275,9 @@
           }
         }
       },
-      "block_order": ["judge_me_reviews_review_widget_LybdrW"],
+      "block_order": [
+        "judge_me_reviews_review_widget_LybdrW"
+      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
