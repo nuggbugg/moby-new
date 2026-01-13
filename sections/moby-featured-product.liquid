@@ -1,0 +1,602 @@
+{% comment %}
+  MOBY Featured Product Section
+  - 2-column layout with product gallery and info
+  - Rating stars, Klarna badge, benefits grid
+  - Add to cart button with trust signals
+{% endcomment %}
+
+{%- liquid
+  assign product = section.settings.product
+  if product == blank
+    assign product = collections['all'].products.first
+  endif
+  
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_image = product.featured_image
+  
+  assign free_shipping_threshold = 500
+  if localization.country.currency.iso_code == 'EUR'
+    assign free_shipping_threshold = 43
+  elsif localization.country.currency.iso_code == 'USD'
+    assign free_shipping_threshold = 47
+  elsif localization.country.currency.iso_code == 'GBP'
+    assign free_shipping_threshold = 37
+  endif
+-%}
+
+<section class="moby-section moby-featured-product">
+  <div class="moby-container">
+    <div class="moby-featured-product__grid">
+      {%- if product != blank -%}
+        <!-- Product Gallery -->
+        <div class="moby-featured-product__gallery">
+          <div class="moby-featured-product__main-image">
+            {%- if featured_image != blank -%}
+              {{ featured_image | image_url: width: 800 | image_tag:
+                class: 'moby-featured-product__image',
+                loading: 'lazy',
+                sizes: '(min-width: 1024px) 50vw, 100vw',
+                widths: '400, 600, 800, 1000'
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'moby-featured-product__image moby-featured-product__placeholder' }}
+            {%- endif -%}
+          </div>
+          
+          {%- if product.images.size > 1 -%}
+            <div class="moby-featured-product__thumbnails">
+              {%- for image in product.images limit: 3 -%}
+                <button 
+                  class="moby-featured-product__thumbnail{% if forloop.first %} moby-featured-product__thumbnail--active{% endif %}"
+                  data-image-url="{{ image | image_url: width: 800 }}"
+                >
+                  {{ image | image_url: width: 200 | image_tag:
+                    loading: 'lazy',
+                    sizes: '100px',
+                    widths: '100, 200'
+                  }}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <!-- Product Info -->
+        <div class="moby-featured-product__info">
+          <!-- Rating -->
+          <div class="moby-featured-product__rating">
+            {%- for i in (1..5) -%}
+              <svg class="moby-featured-product__star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.9 8.6L22 9.3L17 14.1L18.2 21.2L12 17.8L5.8 21.2L7 14.1L2 9.3L9.1 8.6L12 2Z"/>
+              </svg>
+            {%- endfor -%}
+            <span class="moby-featured-product__rating-text">5-Star Rated</span>
+          </div>
+
+          <!-- Title -->
+          <h2 class="moby-featured-product__title">{{ product.title }}</h2>
+
+          <!-- Klarna Badge -->
+          {%- if section.settings.show_klarna_badge -%}
+            <div class="moby-featured-product__klarna">
+              <img 
+                src="https://cdn.shopify.com/s/files/1/0960/9779/6444/files/klarna-logo-pink.svg" 
+                alt="Klarna" 
+                class="moby-featured-product__klarna-logo"
+                width="60"
+                height="20"
+                loading="lazy"
+              >
+              <span>Pay securely with Klarna</span>
+            </div>
+          {%- endif -%}
+
+          <!-- Description -->
+          <div class="moby-featured-product__description">
+            <p>{{ section.settings.short_description | default: product.description | strip_html | truncate: 150 }}</p>
+          </div>
+
+          <!-- Benefits Grid -->
+          <div class="moby-featured-product__benefits">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'benefit' -%}
+                <div class="moby-featured-product__benefit" {{ block.shopify_attributes }}>
+                  <svg class="moby-featured-product__benefit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    {%- case block.settings.icon -%}
+                      {%- when 'zap' -%}
+                        <path d="M13 2L4 14H12L11 22L20 10H12L13 2Z"/>
+                      {%- when 'dumbbell' -%}
+                        <path d="M6 7V17M18 7V17M2 9V15M22 9V15M6 12H18"/>
+                      {%- when 'timer' -%}
+                        <circle cx="12" cy="12" r="10"/><path d="M12 6V12L16 14"/>
+                      {%- when 'trending' -%}
+                        <path d="M23 6L13.5 15.5L8.5 10.5L1 18"/><path d="M17 6H23V12"/>
+                    {%- endcase -%}
+                  </svg>
+                  <span>{{ block.settings.text }}</span>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          <!-- Price -->
+          <div class="moby-featured-product__price-wrapper">
+            <span class="moby-featured-product__price">{{ current_variant.price | money }}</span>
+            {%- if section.settings.subscription_link != blank -%}
+              <a href="{{ section.settings.subscription_link }}" class="moby-featured-product__subscription-link">
+                Subscribe & save 10%
+              </a>
+            {%- endif -%}
+          </div>
+
+          <!-- Buttons -->
+          <div class="moby-featured-product__buttons">
+            <button 
+              type="button"
+              class="moby-featured-product__add-to-cart"
+              data-variant-id="{{ current_variant.id }}"
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              {%- if current_variant.available -%}
+                Add to Cart
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+
+            <a href="{{ product.url }}" class="moby-featured-product__view-details">
+              View Details
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Trust Signals -->
+          <div class="moby-featured-product__trust">
+            <div class="moby-featured-product__trust-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L3 7V12C3 17.5 7 21.5 12 23C17 21.5 21 17.5 21 12V7L12 2Z"/>
+              </svg>
+              <span>100% satisfaction guarantee</span>
+            </div>
+            <div class="moby-featured-product__trust-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="6" width="15" height="10" rx="1"/>
+                <path d="M16 8H20L23 12V16H16V8Z"/>
+                <circle cx="6" cy="18" r="2"/>
+                <circle cx="19" cy="18" r="2"/>
+              </svg>
+              <span>Free shipping over {{ free_shipping_threshold | money_without_trailing_zeros }}</span>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <p class="moby-featured-product__no-product">Select a product in section settings</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Thumbnail gallery
+    const thumbnails = document.querySelectorAll('.moby-featured-product__thumbnail');
+    const mainImage = document.querySelector('.moby-featured-product__main-image img');
+    
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        const imageUrl = this.dataset.imageUrl;
+        if (mainImage && imageUrl) {
+          mainImage.src = imageUrl;
+          thumbnails.forEach(t => t.classList.remove('moby-featured-product__thumbnail--active'));
+          this.classList.add('moby-featured-product__thumbnail--active');
+        }
+      });
+    });
+
+    // Add to cart
+    const addToCartBtn = document.querySelector('.moby-featured-product__add-to-cart');
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', async function() {
+        const variantId = this.dataset.variantId;
+        if (!variantId) return;
+        
+        this.disabled = true;
+        this.textContent = 'Adding...';
+        
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: variantId, quantity: 1 })
+          });
+          
+          if (response.ok) {
+            this.textContent = 'Added!';
+            setTimeout(() => {
+              this.textContent = 'Add to Cart';
+              this.disabled = false;
+            }, 2000);
+          } else {
+            throw new Error('Failed to add to cart');
+          }
+        } catch (error) {
+          this.textContent = 'Error - Try Again';
+          this.disabled = false;
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .moby-featured-product {
+    background: var(--color-background, #ffffff);
+  }
+
+  .moby-featured-product__grid {
+    display: grid;
+    gap: 32px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-featured-product__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+  }
+
+  /* Gallery */
+  .moby-featured-product__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .moby-featured-product__main-image {
+    aspect-ratio: 1;
+    background: var(--moby-sage, #C9C8B6);
+    background-opacity: 0.2;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .moby-featured-product__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .moby-featured-product__placeholder {
+    background: var(--moby-sage);
+  }
+
+  .moby-featured-product__thumbnails {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .moby-featured-product__thumbnail {
+    aspect-ratio: 1;
+    background: var(--moby-sage, #C9C8B6);
+    background-opacity: 0.2;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.2s ease;
+  }
+
+  .moby-featured-product__thumbnail--active,
+  .moby-featured-product__thumbnail:hover {
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-featured-product__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Info */
+  .moby-featured-product__info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .moby-featured-product__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .moby-featured-product__star {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-featured-product__rating-text {
+    margin-left: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-featured-product__title {
+    font-family: 'Memoir', serif;
+    font-size: 30px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-featured-product__title {
+      font-size: 40px;
+    }
+  }
+
+  .moby-featured-product__klarna {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-featured-product__klarna-logo {
+    height: 20px;
+    width: auto;
+  }
+
+  .moby-featured-product__description {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-featured-product__description p {
+    margin: 0;
+  }
+
+  /* Benefits */
+  .moby-featured-product__benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .moby-featured-product__benefit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(201, 200, 182, 0.2);
+    border-radius: 4px;
+  }
+
+  .moby-featured-product__benefit-icon {
+    color: var(--moby-olive, #4F4A32);
+    flex-shrink: 0;
+  }
+
+  .moby-featured-product__benefit span {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  /* Price */
+  .moby-featured-product__price-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-featured-product__price {
+    font-family: 'N27', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-featured-product__subscription-link {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    color: var(--moby-olive, #4F4A32);
+    text-decoration: none;
+  }
+
+  .moby-featured-product__subscription-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Buttons */
+  .moby-featured-product__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .moby-featured-product__add-to-cart {
+    width: 100%;
+    height: 48px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .moby-featured-product__add-to-cart:hover:not(:disabled) {
+    background: rgba(79, 74, 50, 0.9);
+  }
+
+  .moby-featured-product__add-to-cart:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .moby-featured-product__view-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 48px;
+    background: transparent;
+    color: var(--moby-dark, #1C1A10);
+    border: 1px solid var(--moby-sage, #C9C8B6);
+    border-radius: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .moby-featured-product__view-details:hover {
+    border-color: var(--moby-olive, #4F4A32);
+    background: rgba(201, 200, 182, 0.1);
+  }
+
+  /* Trust Signals */
+  .moby-featured-product__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    padding-top: 8px;
+  }
+
+  .moby-featured-product__trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-featured-product__trust-item span {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .moby-featured-product__no-product {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--moby-sage, #C9C8B6);
+    font-family: 'N27', sans-serif;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Featured Product",
+  "tag": "section",
+  "class": "moby-featured-product-wrapper",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "textarea",
+      "id": "short_description",
+      "label": "Short description",
+      "info": "Override the product description. Leave blank to use product description."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_klarna_badge",
+      "label": "Show Klarna badge",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "subscription_link",
+      "label": "Subscription link",
+      "info": "Link to subscription option"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "zap", "label": "Lightning/Energy" },
+            { "value": "dumbbell", "label": "Dumbbell/Strength" },
+            { "value": "timer", "label": "Timer/Speed" },
+            { "value": "trending", "label": "Trending/Recovery" }
+          ],
+          "default": "zap"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Benefit text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Featured Product",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "zap",
+            "text": "Enhances energy"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "dumbbell",
+            "text": "Improves strength"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "timer",
+            "text": "Delays fatigue"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "trending",
+            "text": "Accelerates recovery"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
