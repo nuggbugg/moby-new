@@ -228,18 +228,20 @@
       "settings": {
         "badge_text": "Backed by Science",
         "heading": "Why Creatine Works",
-        "subheading": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance."
+        "subheading": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance.",
+        "center_image": "shopify://shop_images/Stick_White.webp"
       }
     },
     "moby_lifestyle": {
       "type": "moby-lifestyle",
       "settings": {
+        "background_image": "shopify://shop_images/Lifestyle_Optimized.webp",
         "tagline": "Produced in Sweden",
         "heading": "Your life. Optimized in one motion",
         "button_label": "Shop Now",
         "button_link": "/products/moby-creatine-sticks",
         "show_product_card": true,
-        "product": ""
+        "product": "creatine"
       }
     },
     "moby_faq": {
