@@ -1,0 +1,250 @@
+{% comment %}
+  MOBY Custom Hero Section
+  - Full-width background image
+  - Large heading with subheading
+  - CTA button with arrow
+  - Free shipping badge
+{% endcomment %}
+
+<section class="moby-hero" style="{% if section.settings.image %}background-image: url('{{ section.settings.image | image_url: width: 2560 }}');{% endif %}">
+  <div class="moby-hero__overlay"></div>
+
+  <div class="moby-hero__container">
+    <div class="moby-hero__content">
+      <!-- Main Heading -->
+      <h1 class="moby-hero__heading">
+        {{ section.settings.heading | default: "SCIENCE-BACKED CLARITY AND STRENGTH" }}
+      </h1>
+
+      <!-- Subheading -->
+      <p class="moby-hero__subheading">
+        {{ section.settings.subheading | default: "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE" }}
+      </p>
+
+      <!-- CTA Button -->
+      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="moby-hero__button">
+        {{ section.settings.button_text | default: "SHOP NOW" }}
+        <svg class="moby-hero__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <!-- Free Shipping Badge -->
+      {% if section.settings.show_shipping_badge %}
+        <div class="moby-hero__badge">
+          <svg class="moby-hero__check" width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="currentColor"/>
+            <path d="M8 12L11 15L16 9" stroke="var(--moby-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>{{ section.settings.shipping_text | default: "FREE SHIPPING ON ORDERS OVER €43" }}</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--moby-olive);
+    overflow: hidden;
+  }
+
+  .moby-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(28, 26, 16, 0.5) 0%,
+      rgba(28, 26, 16, 0.3) 40%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .moby-hero__container {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 48px 80px;
+  }
+
+  .moby-hero__content {
+    max-width: 650px;
+  }
+
+  .moby-hero__heading {
+    font-family: var(--font-heading--family, 'Inter', sans-serif);
+    font-size: clamp(40px, 8vw, 72px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--moby-lime);
+    margin: 0 0 24px;
+    text-transform: uppercase;
+  }
+
+  .moby-hero__subheading {
+    font-family: var(--font-body--family, 'Inter', sans-serif);
+    font-size: clamp(14px, 2vw, 16px);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    color: var(--moby-lime);
+    text-transform: uppercase;
+    margin: 0 0 32px;
+    max-width: 500px;
+  }
+
+  .moby-hero__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--moby-lime);
+    border: none;
+    border-radius: 50px;
+    color: var(--moby-dark);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .moby-hero__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(249, 253, 181, 0.3);
+  }
+
+  .moby-hero__arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .moby-hero__button:hover .moby-hero__arrow {
+    transform: translateX(4px);
+  }
+
+  .moby-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--moby-lime);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .moby-hero__check {
+    color: var(--moby-lime);
+    flex-shrink: 0;
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .moby-hero {
+      min-height: 90vh;
+      align-items: flex-end;
+    }
+
+    .moby-hero__overlay {
+      background: linear-gradient(
+        to top,
+        rgba(28, 26, 16, 0.7) 0%,
+        rgba(28, 26, 16, 0.4) 50%,
+        transparent 100%
+      );
+    }
+
+    .moby-hero__container {
+      padding: 100px 24px 60px;
+    }
+
+    .moby-hero__heading {
+      font-size: 36px;
+    }
+
+    .moby-hero__subheading {
+      font-size: 13px;
+    }
+
+    .moby-hero__button {
+      padding: 14px 28px;
+      font-size: 13px;
+    }
+
+    .moby-hero__badge {
+      font-size: 11px;
+    }
+  }
+
+  /* Placeholder when no image */
+  .moby-hero:not([style*="background-image"]) {
+    background: linear-gradient(135deg, var(--moby-olive) 0%, var(--moby-dark) 100%);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Hero",
+  "class": "moby-hero-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SCIENCE-BACKED CLARITY AND STRENGTH"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_badge",
+      "label": "Show shipping badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping badge text",
+      "default": "FREE SHIPPING ON ORDERS OVER €43"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Hero"
+    }
+  ]
+}
+{% endschema %}

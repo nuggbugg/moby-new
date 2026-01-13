@@ -1,0 +1,247 @@
+{% comment %}
+  MOBY Features Section
+  - 5-column icon grid
+  - Product selling points
+{% endcomment %}
+
+<section class="moby-features">
+  <div class="moby-features__container">
+    <div class="moby-features__grid">
+      {% for block in section.blocks %}
+        <div class="moby-features__item" {{ block.shopify_attributes }}>
+          <div class="moby-features__icon">
+            {% case block.settings.icon %}
+              {% when 'flask' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 3H15M10 3V8.5L4 18C3.33 19.17 4.17 20.5 5.5 20.5H18.5C19.83 20.5 20.67 19.17 20 18L14 8.5V3"/>
+                  <path d="M7 14H17"/>
+                </svg>
+              {% when 'leaf' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6 21C6 21 8 15 12 12C16 9 20 8 20 8C20 8 18 14 14 17C10 20 6 21 6 21Z"/>
+                  <path d="M8 17C8 17 12 13 16 11"/>
+                </svg>
+              {% when 'lightning' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M13 2L4 14H12L11 22L20 10H12L13 2Z"/>
+                </svg>
+              {% when 'target' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="6"/>
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+              {% when 'star' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 2L14.9 8.6L22 9.3L17 14.1L18.2 21.2L12 17.8L5.8 21.2L7 14.1L2 9.3L9.1 8.6L12 2Z"/>
+                </svg>
+              {% when 'check' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 12L11 14L15 10"/>
+                  <circle cx="12" cy="12" r="9"/>
+                </svg>
+              {% when 'package' %}
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z"/>
+                  <path d="M12 22V12"/>
+                  <path d="M20 7L12 12L4 7"/>
+                  <path d="M8 4.5L16 9.5"/>
+                </svg>
+            {% endcase %}
+          </div>
+          <h3 class="moby-features__title">{{ block.settings.title }}</h3>
+          <p class="moby-features__description">{{ block.settings.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-features {
+    background: #ffffff;
+    padding: 60px 24px;
+  }
+
+  .moby-features__container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .moby-features__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 32px;
+  }
+
+  .moby-features__item {
+    text-align: center;
+    padding: 0 12px;
+  }
+
+  .moby-features__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--moby-dark);
+  }
+
+  .moby-features__icon svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .moby-features__title {
+    font-family: var(--font-heading--family, 'Inter', sans-serif);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--moby-dark);
+    margin: 0 0 8px;
+  }
+
+  .moby-features__description {
+    font-family: var(--font-body--family, 'Inter', sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--moby-sage);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  /* Tablet Styles */
+  @media (max-width: 1024px) {
+    .moby-features__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px 24px;
+    }
+
+    .moby-features__item:nth-child(4),
+    .moby-features__item:nth-child(5) {
+      grid-column: span 1;
+    }
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 640px) {
+    .moby-features {
+      padding: 40px 16px;
+    }
+
+    .moby-features__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px 16px;
+    }
+
+    .moby-features__item:last-child:nth-child(odd) {
+      grid-column: span 2;
+    }
+
+    .moby-features__icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .moby-features__title {
+      font-size: 12px;
+    }
+
+    .moby-features__description {
+      font-size: 11px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Features",
+  "class": "moby-features-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "flask", "label": "Flask (Pure/Lab)" },
+            { "value": "leaf", "label": "Leaf (Natural)" },
+            { "value": "lightning", "label": "Lightning (Energy)" },
+            { "value": "target", "label": "Target (Dose)" },
+            { "value": "star", "label": "Star (Quality)" },
+            { "value": "check", "label": "Checkmark" },
+            { "value": "package", "label": "Package" }
+          ],
+          "default": "check"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "flask",
+            "title": "PURE MONOHYDRATE",
+            "description": "Third-party tested creatine with zero fillers"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "100% NATURAL",
+            "description": "Vegan-friendly, no artificial additives"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "lightning",
+            "title": "READY TO MIX",
+            "description": "Individual sticks for easy daily use"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "target",
+            "title": "OPTIMAL 5G DOSE",
+            "description": "Clinically proven effective amount"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "star",
+            "title": "PRODUCED IN SWEDEN",
+            "description": "Pharmaceutical-grade precision"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
