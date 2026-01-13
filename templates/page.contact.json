@@ -163,7 +163,7 @@
           "type": "quick_link",
           "settings": {
             "label": "Shop",
-            "link": "shopify://collections/all"
+            "link": "/products/moby-creatine-sticks"
           }
         },
         "quick_2": {

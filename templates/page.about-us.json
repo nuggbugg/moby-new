@@ -112,7 +112,7 @@
         "tagline": "A simple stick. A complete life.",
         "heading": "Balance, Strength & Clarity",
         "button_label": "Shop Now",
-        "button_link": "shopify://collections/all"
+        "button_link": "/products/moby-creatine-sticks"
       }
     },
     "moby_footer": {
@@ -130,7 +130,7 @@
           "type": "quick_link",
           "settings": {
             "label": "Shop",
-            "link": "shopify://collections/all"
+            "link": "/products/moby-creatine-sticks"
           }
         },
         "quick_2": {
