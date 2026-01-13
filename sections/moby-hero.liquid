@@ -51,23 +51,25 @@
       </p>
 
       <!-- CTA Button -->
-      <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="moby-hero__button">
-        <span>{{ section.settings.button_text | default: "SHOP NOW" }}</span>
-        <svg class="moby-hero__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-
-      <!-- Free Shipping Badge -->
-      {% if section.settings.show_shipping_badge %}
-        <div class="moby-hero__badge">
-          <svg class="moby-hero__check" width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" fill="currentColor"/>
-            <path d="M8 12L11 15L16 9" stroke="var(--moby-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <div class="moby-hero__cta-wrapper">
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="moby-hero__button">
+          <span>{{ section.settings.button_text | default: "SHOP NOW" }}</span>
+          <svg class="moby-hero__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span>{{ section.settings.shipping_text | default: "FREE SHIPPING ON ORDERS OVER €43" }}</span>
-        </div>
-      {% endif %}
+        </a>
+
+        <!-- Free Shipping Badge -->
+        {% if section.settings.show_shipping_badge %}
+          <div class="moby-hero__badge">
+            <svg class="moby-hero__check" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{ section.settings.shipping_text | default: "FREE SHIPPING ON ORDERS OVER €43" }}</span>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
@@ -123,43 +125,50 @@
   }
 
   .moby-hero__content {
-    max-width: 600px;
+    max-width: 720px;
   }
 
   .moby-hero__heading {
     font-family: 'Memoir', var(--font-heading--family, Georgia, serif);
-    font-size: clamp(42px, 9vw, 80px);
+    font-size: clamp(48px, 10vw, 96px);
     font-weight: 400;
     line-height: 0.95;
-    letter-spacing: -0.01em;
-    color: var(--moby-lime);
-    margin: 0 0 24px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin: 0 0 32px;
     text-transform: uppercase;
   }
 
   .moby-hero__subheading {
     font-family: 'N27', var(--font-body--family, system-ui, sans-serif);
-    font-size: clamp(13px, 1.8vw, 15px);
+    font-size: clamp(14px, 2vw, 18px);
     font-weight: 400;
-    line-height: 1.6;
-    letter-spacing: 0.12em;
-    color: var(--moby-lime);
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    color: #ffffff;
     text-transform: uppercase;
-    margin: 0 0 36px;
-    max-width: 480px;
+    margin: 0 0 40px;
+    max-width: 600px;
+  }
+
+  .moby-hero__cta-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
   }
 
   .moby-hero__button {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
+    gap: 16px;
+    padding: 20px 48px;
     background: var(--moby-lime);
     border: none;
     border-radius: 4px;
     color: var(--moby-dark);
     font-family: 'N27', var(--font-body--family, system-ui, sans-serif);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -182,15 +191,14 @@
   }
 
   .moby-hero__badge {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 28px;
+    gap: 12px;
     color: var(--moby-lime);
     font-family: 'N27', var(--font-body--family, system-ui, sans-serif);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
@@ -220,23 +228,26 @@
     }
 
     .moby-hero__heading {
-      font-size: 38px;
+      font-size: 42px;
       margin-bottom: 20px;
     }
 
     .moby-hero__subheading {
-      font-size: 12px;
+      font-size: 13px;
       margin-bottom: 28px;
     }
 
+    .moby-hero__cta-wrapper {
+      gap: 16px;
+    }
+
     .moby-hero__button {
-      padding: 14px 28px;
-      font-size: 12px;
+      padding: 16px 32px;
+      font-size: 13px;
     }
 
     .moby-hero__badge {
-      font-size: 11px;
-      margin-top: 24px;
+      font-size: 12px;
     }
   }
 </style>
