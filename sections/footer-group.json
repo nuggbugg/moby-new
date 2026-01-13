@@ -1,1 +1,81 @@
-{"type":"footer","name":"Footer","sections":{},"order":[]}
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "/products/moby-creatine-sticks"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/blogs/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-and-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+    }
+  },
+  "order": ["moby_footer"]
+}
