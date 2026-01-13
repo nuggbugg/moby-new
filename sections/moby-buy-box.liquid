@@ -15,29 +15,31 @@
     <div class="moby-buy-box__layout">
       <!-- Product Images -->
       <div class="moby-buy-box__gallery">
-        <div class="moby-buy-box__main-image" id="moby-main-image">
-          {%- if product.featured_image -%}
-            {{ product.featured_image | image_url: width: 800 | image_tag:
-              loading: 'eager',
-              class: 'moby-buy-box__image',
-              widths: '400, 600, 800'
-            }}
+        <div class="moby-buy-box__gallery-inner">
+          {%- if product.images.size > 1 -%}
+            <div class="moby-buy-box__thumbnails">
+              {%- for image in product.images -%}
+                <button
+                  class="moby-buy-box__thumbnail {% if forloop.first %}active{% endif %}"
+                  data-image-url="{{ image | image_url: width: 800 }}"
+                  type="button"
+                >
+                  {{ image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                </button>
+              {%- endfor -%}
+            </div>
           {%- endif -%}
-        </div>
 
-        {%- if product.images.size > 1 -%}
-          <div class="moby-buy-box__thumbnails">
-            {%- for image in product.images -%}
-              <button
-                class="moby-buy-box__thumbnail {% if forloop.first %}active{% endif %}"
-                data-image-url="{{ image | image_url: width: 800 }}"
-                type="button"
-              >
-                {{ image | image_url: width: 100 | image_tag: loading: 'lazy' }}
-              </button>
-            {%- endfor -%}
+          <div class="moby-buy-box__main-image" id="moby-main-image">
+            {%- if product.featured_image -%}
+              {{ product.featured_image | image_url: width: 800 | image_tag:
+                loading: 'eager',
+                class: 'moby-buy-box__image',
+                widths: '400, 600, 800'
+              }}
+            {%- endif -%}
           </div>
-        {%- endif -%}
+        </div>
 
         <!-- Trust Badges Below Image (Desktop) -->
         <div class="moby-buy-box__trust-icons">
@@ -93,9 +95,9 @@
 
         <!-- Klarna -->
         <div class="moby-buy-box__klarna">
-          <svg width="60" height="24" viewBox="0 0 60 24" fill="#FFB3C7">
-            <path d="M51.7 5h3.8v14.2h-3.8V5zm-6.5 0h3.8v14.2h-3.8V5zm-6.3 4.3c0-2.4-1.9-4.3-4.3-4.3h-6v14.2h3.8v-5.5h2.2c2.4 0 4.3-2 4.3-4.4zm-6.3 1.5h2.2c.5 0 .8-.4.8-.8 0-.5-.3-.9-.8-.9h-2.2v1.7zm-9.4-5.8h3.8v14.2h-3.8V5zm-13.7 0h4c0 3.4 1.2 6.5 3.3 9l-4.8 5.2h-5l4-4.4C8.9 12.5 7.5 8.9 7.5 5h4zm-7.7 0h3.8v14.2H3.8V5z"/>
-          </svg>
+          <span class="moby-buy-box__klarna-badge">
+            {{ 'klarna' | payment_type_svg_tag }}
+          </span>
           <span>Pay securely with Klarna</span>
         </div>
 
@@ -339,8 +341,14 @@
     gap: 16px;
   }
 
+  .moby-buy-box__gallery-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   @media (min-width: 1024px) {
-    .moby-buy-box__gallery {
+    .moby-buy-box__gallery-inner {
       flex-direction: row;
       gap: 16px;
     }
@@ -370,12 +378,14 @@
     gap: 8px;
     overflow-x: auto;
     padding-bottom: 4px;
+    order: 1;
   }
 
   @media (min-width: 1024px) {
     .moby-buy-box__thumbnails {
       flex-direction: column;
       width: 80px;
+      flex-shrink: 0;
       overflow-x: visible;
       order: -1;
     }
@@ -421,13 +431,13 @@
     display: none;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .moby-buy-box__trust-icons {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 24px;
-      padding-left: 96px;
+      margin-left: 96px;
     }
   }
 
@@ -556,7 +566,21 @@
     gap: 12px;
   }
 
-  .moby-buy-box__klarna span {
+  .moby-buy-box__klarna-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFB3C7;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .moby-buy-box__klarna-badge svg {
+    width: 48px;
+    height: 20px;
+  }
+
+  .moby-buy-box__klarna > span:last-child {
     font-family: 'N27', sans-serif;
     font-size: 13px;
     font-weight: 300;
