@@ -39,6 +39,34 @@
 }
 </script>
 
+{%- comment -%} BreadcrumbList Schema for SEO {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "The Power Station",
+      "item": "{{ shop.url }}{{ blog.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ article.title | json }},
+      "item": "{{ shop.url }}{{ article.url }}"
+    }
+  ]
+}
+</script>
+
 <article class="moby-article">
   <div class="moby-container moby-container--narrow">
     <!-- Back Link -->
@@ -373,7 +401,7 @@
   .moby-article__breadcrumb-sep {
     font-family: 'N27', sans-serif;
     font-size: 11px;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.7);
     margin: 0 8px;
   }
 
@@ -452,7 +480,7 @@
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.7);
   }
 
   .moby-article__meta-item svg {
@@ -671,7 +699,7 @@
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.7);
     background: rgba(28, 26, 16, 0.06);
     padding: 8px 14px;
     border-radius: 50px;
@@ -709,7 +737,7 @@
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.7);
     margin: 0 0 28px;
   }
 

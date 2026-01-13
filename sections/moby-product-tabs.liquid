@@ -4,6 +4,29 @@
   - Clean card-based layouts within each tab
 {% endcomment %}
 
+{%- comment -%} FAQPage Schema for Google Rich Results {%- endcomment -%}
+{%- assign faq_blocks = section.blocks | where: 'type', 'faq_item' -%}
+{%- if faq_blocks.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in faq_blocks -%}
+    {
+      "@type": "Question",
+      "name": {{ block.settings.question | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ block.settings.answer | json }}
+      }
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
 <section class="moby-product-tabs">
   <div class="moby-container">
     <!-- Tab Navigation -->
