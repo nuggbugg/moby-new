@@ -71,13 +71,13 @@
       </div>
 
       <!-- Mobile Menu Toggle -->
-      <button type="button" class="moby-header__mobile-toggle" aria-label="Menu" aria-expanded="false">
-        <svg class="moby-header__hamburger" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <line x1="4" y1="7" x2="20" y2="7"/>
-          <line x1="4" y1="12" x2="20" y2="12"/>
-          <line x1="4" y1="17" x2="20" y2="17"/>
+      <button type="button" class="moby-header__mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="moby-header__hamburger" width="24" height="16" viewBox="0 0 28 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M27.3471 16.9771C27.3471 17.5215 27.3989 18.0918 27.5545 18.7398L27.4508 18.8176C27.036 18.6361 25.74 18.5324 23.5626 18.5324H9.72044C7.54303 18.5324 6.24695 18.6361 5.8322 18.8176L5.72852 18.7398C5.88405 18.0918 5.93589 17.5215 5.93589 16.9771C5.93589 16.4328 5.88405 15.8625 5.72852 15.2145L5.8322 15.1367C6.24695 15.3182 7.54303 15.4219 9.72044 15.4219H23.5626C25.74 15.4219 27.036 15.3182 27.4508 15.1367L27.5545 15.2145C27.3989 15.8625 27.3471 16.4587 27.3471 16.9771Z" fill="var(--moby-accent)"/>
+          <path d="M21.6186 9.53965C21.6186 10.084 21.6704 10.6543 21.826 11.3023L21.7223 11.3801C21.3075 11.1986 20.0114 11.0949 17.834 11.0949H3.99192C1.81451 11.0949 0.518431 11.1986 0.103686 11.3801L0 11.3023C0.155529 10.6543 0.207373 10.084 0.207373 9.53965C0.207373 8.9953 0.155529 8.42502 0 7.77698L0.103686 7.69922C0.518431 7.88067 1.81451 7.98436 3.99192 7.98436H17.834C20.0114 7.98436 21.3075 7.88067 21.7223 7.69922L21.826 7.77698C21.6704 8.42502 21.6186 9.02122 21.6186 9.53965Z" fill="var(--moby-accent)"/>
+          <path d="M24.3666 1.84043C24.3666 2.38478 24.4185 2.95506 24.574 3.6031L24.4703 3.68086C24.0556 3.49941 22.7595 3.39573 20.5821 3.39573H6.73997C4.56256 3.39573 3.26648 3.49941 2.85173 3.68086L2.74805 3.6031C2.90358 2.95506 2.95542 2.38478 2.95542 1.84043C2.95542 1.29608 2.90358 0.725804 2.74805 0.0777647L2.85173 0C3.26648 0.181451 4.56256 0.285137 6.73997 0.285137H20.5821C22.7595 0.285137 24.0556 0.181451 24.4703 0L24.574 0.0777647C24.4185 0.725804 24.3666 1.322 24.3666 1.84043Z" fill="var(--moby-accent)"/>
         </svg>
-        <svg class="moby-header__close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display: none;">
+        <svg class="moby-header__close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--moby-accent)" stroke-width="1.5">
           <line x1="6" y1="6" x2="18" y2="18"/>
           <line x1="6" y1="18" x2="18" y2="6"/>
         </svg>
@@ -85,17 +85,32 @@
     </nav>
   </div>
 
-  <!-- Mobile Menu Drawer -->
-  <div class="moby-header__mobile-menu" hidden>
-    <ul class="moby-header__mobile-links">
-      {% for link in section.settings.menu.links %}
+  <!-- Mobile Menu Dropdown -->
+  <div class="moby-header__mobile-menu" id="mobile-menu" aria-hidden="true" hidden>
+    <div class="moby-header__mobile-inner">
+      <ul class="moby-header__mobile-links">
+        {% for link in section.settings.menu.links %}
+          <li>
+            <a href="{{ link.url }}" class="moby-header__mobile-link">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
         <li>
-          <a href="{{ link.url }}" class="moby-header__mobile-link">
-            {{ link.title }}
+          <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="moby-header__mobile-link">
+            My Account
           </a>
         </li>
-      {% endfor %}
-    </ul>
+      </ul>
+      <div class="moby-header__mobile-divider"></div>
+      <a href="{{ routes.all_products_collection_url }}" class="moby-header__mobile-cta">
+        Shop Now
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
   </div>
 </moby-header>
 
@@ -105,6 +120,9 @@
     --moby-olive: #4F4A32;
     --moby-sage: #C9C8B6;
     --moby-dark: #1C1A10;
+    --moby-accent: #F9FDB5;
+    --moby-core-contrast: #1C1A10;
+    --moby-radius: 4px;
   }
 
   .moby-header {
@@ -112,73 +130,71 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
-    padding: 16px 20px;
-    transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @media (min-width: 768px) {
-    .moby-header {
-      padding: 20px 32px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .moby-header {
-      padding: 24px 48px;
-    }
-  }
-
-  .moby-header--scrolled {
-    padding: 10px 20px;
-  }
-
-  @media (min-width: 768px) {
-    .moby-header--scrolled {
-      padding: 12px 32px;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .moby-header--scrolled {
-      padding: 12px 48px;
-    }
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 0 0 0;
+    transition: padding 300ms ease-in-out;
   }
 
   .moby-header__container {
-    max-width: 1280px;
+    width: 90%;
+    max-width: 1296px;
     margin: 0 auto;
+    transition: width 300ms ease-in-out, max-width 300ms ease-in-out;
+  }
+
+  /* Scrolled state - container shrinks */
+  .moby-header--scrolled .moby-header__container {
+    width: 860px;
+    max-width: 90%;
+  }
+
+  @media (max-width: 1024px) {
+    .moby-header--scrolled .moby-header__container {
+      width: 780px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .moby-header__container {
+      width: 95%;
+    }
+    .moby-header--scrolled .moby-header__container {
+      width: 95%;
+    }
   }
 
   .moby-header__nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #1B1A0F;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 4px;
-    padding: 10px 10px 10px 24px;
+    position: relative;
+    background: rgba(27, 26, 15, 0.92);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: var(--moby-radius);
+    padding: 0 8px 0 20px;
+    height: 52px;
     gap: 8px;
-    transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 300ms ease-in-out;
   }
 
-  @media (min-width: 1024px) {
+  @media (max-width: 768px) {
     .moby-header__nav {
-      padding: 12px 12px 12px 28px;
+      padding: 0 4px 0 12px;
     }
   }
 
-  .moby-header--scrolled .moby-header__nav {
-    padding: 6px 6px 6px 20px;
-    background: #1B1A0F;
-  }
-
-  @media (min-width: 1024px) {
-    .moby-header--scrolled .moby-header__nav {
-      padding: 8px 8px 8px 24px;
-    }
+  /* Border overlay */
+  .moby-header__nav::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(33, 33, 33, 0.08);
+    border-radius: var(--moby-radius);
+    pointer-events: none;
   }
 
   /* Logo */
@@ -187,43 +203,14 @@
     align-items: center;
     text-decoration: none;
     flex-shrink: 0;
+    transition: all 300ms ease-in-out;
   }
 
   .moby-header__logo-img {
-    height: 24px;
+    height: 16px;
     width: auto;
-    max-width: 120px;
     object-fit: contain;
-    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  @media (min-width: 1024px) {
-    .moby-header__logo-img {
-      height: 28px;
-    }
-  }
-
-  .moby-header--scrolled .moby-header__logo-img {
-    height: 20px;
-  }
-
-  @media (min-width: 1024px) {
-    .moby-header--scrolled .moby-header__logo-img {
-      height: 22px;
-    }
-  }
-
-  .moby-header__logo-text {
-    font-family: var(--font-heading--family, system-ui, sans-serif);
-    font-size: 22px;
-    font-weight: 600;
-    color: #FFFFFF;
-    letter-spacing: 0.12em;
-    transition: font-size 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .moby-header--scrolled .moby-header__logo-text {
-    font-size: 18px;
+    transition: height 300ms ease-in-out;
   }
 
   /* Desktop Menu */
@@ -232,7 +219,8 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 0;
+    gap: 32px;
+    align-items: center;
   }
 
   @media (min-width: 1024px) {
@@ -247,43 +235,43 @@
 
   .moby-header__menu-link {
     display: block;
-    padding: 10px 16px;
-    color: var(--moby-lime);
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     font-family: var(--font-body--family, system-ui, sans-serif);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    transition: opacity 0.2s ease, padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: color 200ms ease;
     white-space: nowrap;
   }
 
-  .moby-header--scrolled .moby-header__menu-link {
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-
   .moby-header__menu-link:hover {
-    opacity: 0.7;
+    color: #ffffff;
   }
 
   /* Actions */
   .moby-header__actions {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 12px;
+    height: 37px;
+  }
+
+  @media (max-width: 768px) {
+    .moby-header__actions {
+      gap: 8px;
+    }
   }
 
   .moby-header__icon-btn {
     display: none;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    color: var(--moby-lime);
+    padding: 8px;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: opacity 0.2s ease, width 0.35s cubic-bezier(0.4, 0, 0.2, 1), height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: color 200ms ease;
   }
 
   @media (min-width: 1024px) {
@@ -292,13 +280,14 @@
     }
   }
 
-  .moby-header--scrolled .moby-header__icon-btn {
-    width: 36px;
-    height: 36px;
+  .moby-header__icon-btn:hover {
+    color: #ffffff;
   }
 
-  .moby-header__icon-btn:hover {
-    opacity: 0.7;
+  .moby-header__icon-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 1.5;
   }
 
   /* Currency */
@@ -306,17 +295,17 @@
     display: none;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
+    padding: 8px 12px;
     background: rgba(249, 253, 181, 0.12);
     border: none;
-    border-radius: 4px;
-    color: var(--moby-lime);
+    border-radius: var(--moby-radius);
+    color: rgba(255, 255, 255, 0.8);
     font-family: var(--font-body--family, system-ui, sans-serif);
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 300;
     letter-spacing: 0.02em;
     cursor: pointer;
-    transition: background 0.2s ease, padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background 200ms ease, color 200ms ease;
   }
 
   @media (min-width: 1024px) {
@@ -325,72 +314,58 @@
     }
   }
 
-  .moby-header--scrolled .moby-header__currency-btn {
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-
   .moby-header__currency-btn:hover {
     background: rgba(249, 253, 181, 0.2);
+    color: #ffffff;
   }
 
   .moby-header__caret {
     opacity: 0.8;
-    transition: transform 0.2s ease;
+    transition: transform 200ms ease;
   }
 
   /* Cart */
   .moby-header__cart {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 18px;
-    background: var(--moby-lime);
-    border-radius: 4px;
-    color: var(--moby-dark);
+    justify-content: center;
+    gap: 6px;
+    padding: 8.7px 16px;
+    background: var(--moby-accent);
+    border-radius: var(--moby-radius);
+    color: var(--moby-core-contrast);
     text-decoration: none;
     font-family: var(--font-body--family, system-ui, sans-serif);
     font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow:
+      inset 0px 0.6px 1px -0.5px rgba(255, 255, 255, 0.07),
+      inset 0px 2.3px 4px -1px rgba(255, 255, 255, 0.08),
+      inset 0px 10px 18px -1.5px rgba(255, 255, 255, 0.14);
+    transition: opacity 200ms ease;
   }
 
-  @media (min-width: 1024px) {
+  @media (max-width: 1024px) {
     .moby-header__cart {
-      padding: 12px 22px;
-    }
-  }
-
-  .moby-header--scrolled .moby-header__cart {
-    padding: 10px 14px;
-    font-size: 11px;
-  }
-
-  @media (min-width: 1024px) {
-    .moby-header--scrolled .moby-header__cart {
-      padding: 10px 18px;
+      padding: 8.7px 12px;
     }
   }
 
   .moby-header__cart:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(249, 253, 181, 0.25);
+    opacity: 0.9;
   }
 
   .moby-header__cart svg {
-    width: 18px;
-    height: 18px;
-    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .moby-header--scrolled .moby-header__cart svg {
     width: 16px;
     height: 16px;
+    stroke-width: 1.5;
   }
 
   .moby-header__cart-text {
     display: none;
+    white-space: nowrap;
   }
 
   @media (min-width: 1024px) {
@@ -404,11 +379,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    padding: 8px;
     background: none;
     border: none;
-    color: var(--moby-lime);
     cursor: pointer;
   }
 
@@ -418,47 +391,109 @@
     }
   }
 
-  /* Mobile Menu */
+  .moby-header__hamburger {
+    display: block;
+  }
+
+  .moby-header__close {
+    display: none;
+  }
+
+  /* Mobile Menu Dropdown */
   .moby-header__mobile-menu {
-    position: fixed;
-    top: 0;
+    position: absolute;
+    top: 88px;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--moby-olive);
-    padding: 100px 24px 24px;
-    z-index: -1;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    width: 100%;
+    z-index: 50;
+    display: none;
   }
 
   .moby-header__mobile-menu[data-open="true"] {
-    opacity: 1;
-    visibility: visible;
+    display: block;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-header__mobile-menu {
+      display: none !important;
+    }
+  }
+
+  .moby-header__mobile-inner {
+    width: 95%;
+    margin: 0 auto;
+    background: #1B1A0F;
+    border-radius: var(--moby-radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .moby-header__mobile-links {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   .moby-header__mobile-link {
     display: block;
-    padding: 16px 0;
-    color: var(--moby-lime);
+    padding: 8px 0;
+    color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    font-size: 20px;
-    font-weight: 500;
+    font-family: var(--font-body--family, system-ui, sans-serif);
+    font-size: 14px;
+    font-weight: 300;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(249, 253, 181, 0.15);
+    transition: color 200ms ease;
+  }
+
+  .moby-header__mobile-link:hover {
+    color: #ffffff;
+  }
+
+  .moby-header__mobile-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 8px 0;
+  }
+
+  .moby-header__mobile-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    background: var(--moby-accent);
+    color: var(--moby-core-contrast);
+    border-radius: var(--moby-radius);
+    font-family: var(--font-body--family, system-ui, sans-serif);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .moby-header__mobile-cta:hover {
+    opacity: 0.9;
+  }
+
+  .moby-header__mobile-cta svg {
+    width: 16px;
+    height: 16px;
   }
 
   /* Spacer for fixed header - only on non-index pages */
   body:not(:has(.moby-header--transparent)) {
-    padding-top: 100px;
+    padding-top: 88px;
   }
 
   @supports not selector(:has(*)) {
@@ -478,6 +513,7 @@
     connectedCallback() {
       this.handleScroll = this.handleScroll.bind(this);
       this.handleMobileToggle = this.handleMobileToggle.bind(this);
+      this.closeMobileMenu = this.closeMobileMenu.bind(this);
 
       window.addEventListener('scroll', this.handleScroll, { passive: true });
 
@@ -485,6 +521,12 @@
       if (mobileToggle) {
         mobileToggle.addEventListener('click', this.handleMobileToggle);
       }
+
+      // Close mobile menu when clicking on links
+      const mobileLinks = this.querySelectorAll('.moby-header__mobile-link, .moby-header__mobile-cta');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', this.closeMobileMenu);
+      });
 
       this.handleScroll();
     }
@@ -496,7 +538,8 @@
     handleScroll() {
       const scrollY = window.scrollY;
 
-      if (scrollY > 60) {
+      // Scroll threshold: 100px as per design spec
+      if (scrollY > 100) {
         this.classList.add('moby-header--scrolled');
       } else {
         this.classList.remove('moby-header--scrolled');
@@ -515,12 +558,32 @@
 
       mobileMenu.dataset.open = !isOpen;
       mobileMenu.hidden = isOpen;
+      mobileMenu.setAttribute('aria-hidden', isOpen);
       toggle.setAttribute('aria-expanded', !isOpen);
+      toggle.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
 
       hamburger.style.display = isOpen ? 'block' : 'none';
       close.style.display = isOpen ? 'none' : 'block';
 
       document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+
+    closeMobileMenu() {
+      const mobileMenu = this.querySelector('.moby-header__mobile-menu');
+      const hamburger = this.querySelector('.moby-header__hamburger');
+      const close = this.querySelector('.moby-header__close');
+      const toggle = this.querySelector('.moby-header__mobile-toggle');
+
+      if (mobileMenu.dataset.open === 'true') {
+        mobileMenu.dataset.open = 'false';
+        mobileMenu.hidden = true;
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open menu');
+        hamburger.style.display = 'block';
+        close.style.display = 'none';
+        document.body.style.overflow = '';
+      }
     }
   }
 
