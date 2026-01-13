@@ -31,18 +31,13 @@
 
       <!-- Desktop Navigation -->
       <ul class="moby-header__menu">
-        <li class="moby-header__menu-item">
-          <a href="/products/moby-creatine-sticks" class="moby-header__menu-link">Shop</a>
-        </li>
-        <li class="moby-header__menu-item">
-          <a href="/blogs/power-station" class="moby-header__menu-link">The Power Station</a>
-        </li>
-        <li class="moby-header__menu-item">
-          <a href="/pages/about-us" class="moby-header__menu-link">About Us</a>
-        </li>
-        <li class="moby-header__menu-item">
-          <a href="/pages/contact" class="moby-header__menu-link">Partner with MOBY</a>
-        </li>
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li class="moby-header__menu-item">
+            <a href="{{ link.url }}" class="moby-header__menu-link{% if link.active %} moby-header__menu-link--active{% endif %}">
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
       </ul>
 
       <!-- Desktop Right Actions (hidden on mobile) -->
@@ -125,18 +120,13 @@
   <div class="moby-header__mobile-menu" id="mobile-menu" aria-hidden="true" hidden>
     <div class="moby-header__mobile-inner">
       <ul class="moby-header__mobile-links">
-        <li>
-          <a href="/products/moby-creatine-sticks" class="moby-header__mobile-link">Shop</a>
-        </li>
-        <li>
-          <a href="/blogs/power-station" class="moby-header__mobile-link">The Power Station</a>
-        </li>
-        <li>
-          <a href="/pages/about-us" class="moby-header__mobile-link">About Us</a>
-        </li>
-        <li>
-          <a href="/pages/contact" class="moby-header__mobile-link">Partner with MOBY</a>
-        </li>
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li>
+            <a href="{{ link.url }}" class="moby-header__mobile-link{% if link.active %} moby-header__mobile-link--active{% endif %}">
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
         <li>
           <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="moby-header__mobile-link">
             My Account
@@ -287,7 +277,8 @@
     white-space: nowrap;
   }
 
-  .moby-header__menu-link:hover {
+  .moby-header__menu-link:hover,
+  .moby-header__menu-link--active {
     color: #ffffff;
   }
 
@@ -582,7 +573,8 @@
     transition: color 200ms ease;
   }
 
-  .moby-header__mobile-link:hover {
+  .moby-header__mobile-link:hover,
+  .moby-header__mobile-link--active {
     color: #ffffff;
   }
 
