@@ -12,6 +12,7 @@
     "moby_about_hero": {
       "type": "moby-about-hero",
       "settings": {
+        "background_image": "shopify://shop_images/Lifestyle_Optimized.webp",
         "heading": "About MOBY",
         "description": "Redefining daily energy, strength, and clarity for everyone"
       }
@@ -19,6 +20,7 @@
     "moby_about_mission": {
       "type": "moby-about-mission",
       "settings": {
+        "image": "shopify://shop_images/Creatine_Sticks_1.webp",
         "badge_text": "Our Mission",
         "heading": "Breaking Old Stereotypes",
         "text_1": "MOBY exists to break old stereotypes around creatine, making energy, strength, and clarity accessible to everyone who wants to live and perform better every day.",
@@ -27,10 +29,6 @@
     },
     "moby_about_values": {
       "type": "moby-about-values",
-      "settings": {
-        "badge_text": "What We Stand For",
-        "heading": "Our Core Values"
-      },
       "blocks": {
         "value_1": {
           "type": "value",
@@ -65,7 +63,16 @@
           }
         }
       },
-      "block_order": ["value_1", "value_2", "value_3", "value_4"]
+      "block_order": [
+        "value_1",
+        "value_2",
+        "value_3",
+        "value_4"
+      ],
+      "settings": {
+        "badge_text": "What We Stand For",
+        "heading": "Our Core Values"
+      }
     },
     "moby_about_philosophy": {
       "type": "moby-about-philosophy",
@@ -78,11 +85,6 @@
     },
     "moby_about_quality": {
       "type": "moby-about-quality",
-      "settings": {
-        "badge_text": "Our Commitment",
-        "heading": "Quality You Can Trust",
-        "description": "Every MOBY product is manufactured in Sweden, adhering to the highest European quality and safety standards. We use only pharmaceutical-grade creatine monohydrate, rigorously tested for purity and potency."
-      },
       "blocks": {
         "credential_1": {
           "type": "credential",
@@ -113,11 +115,22 @@
           }
         }
       },
-      "block_order": ["credential_1", "credential_2", "credential_3", "credential_4"]
+      "block_order": [
+        "credential_1",
+        "credential_2",
+        "credential_3",
+        "credential_4"
+      ],
+      "settings": {
+        "badge_text": "Our Commitment",
+        "heading": "Quality You Can Trust",
+        "description": "Every MOBY product is manufactured in Sweden, adhering to the highest European quality and safety standards. We use only pharmaceutical-grade creatine monohydrate, rigorously tested for purity and potency."
+      }
     },
     "moby_about_cta": {
       "type": "moby-about-cta",
       "settings": {
+        "background_image": "shopify://shop_images/Hero_Mountain_1920x1071_237d2301-276a-4398-ae4a-e183c758eb23.webp",
         "tagline": "A simple stick. A complete life.",
         "heading": "Balance, Strength & Clarity",
         "button_label": "Shop Now",
@@ -126,14 +139,6 @@
     },
     "moby_footer": {
       "type": "moby-footer",
-      "settings": {
-        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
-        "email": "hello@drinkmoby.com",
-        "newsletter_heading": "Join the Movement",
-        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
-        "newsletter_placeholder": "Your email",
-        "show_payment_icons": true
-      },
       "blocks": {
         "quick_1": {
           "type": "quick_link",
@@ -196,7 +201,24 @@
           }
         }
       },
-      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+      "block_order": [
+        "quick_1",
+        "quick_2",
+        "quick_3",
+        "quick_4",
+        "support_1",
+        "support_2",
+        "support_3",
+        "support_4"
+      ],
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      }
     }
   },
   "order": [
