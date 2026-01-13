@@ -83,33 +83,30 @@
         <div class="moby-footer__payments-grid">
           <div class="moby-footer__payment-row">
             <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/googlepay" alt="Google Pay" loading="lazy" width="32" height="20">
+              {{ 'google_pay' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/applepay" alt="Apple Pay" loading="lazy" width="32" height="20">
+              {{ 'apple_pay' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon moby-footer__payment-icon--shop">
-              <img src="https://cdn.simpleicons.org/shopify/white" alt="Shop Pay" loading="lazy" width="28" height="16">
+              {{ 'shopify_pay' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/paypal" alt="PayPal" loading="lazy" width="32" height="20">
+              {{ 'paypal' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/mastercard" alt="Mastercard" loading="lazy" width="32" height="20">
+              {{ 'master' | payment_type_svg_tag }}
             </div>
           </div>
           <div class="moby-footer__payment-row">
             <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/visa" alt="Visa" loading="lazy" width="32" height="20">
+              {{ 'visa' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon moby-footer__payment-icon--klarna">
-              <img src="https://cdn.simpleicons.org/klarna/black" alt="Klarna" loading="lazy" width="28" height="16">
+              {{ 'klarna' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
-              <img src="{{ 'swish-logo.png' | asset_url }}" alt="Swish" loading="lazy" width="32" height="20" onerror="this.style.display='none'">
-            </div>
-            <div class="moby-footer__payment-icon">
-              <img src="https://cdn.simpleicons.org/americanexpress" alt="American Express" loading="lazy" width="36" height="24">
+              {{ 'american_express' | payment_type_svg_tag }}
             </div>
           </div>
         </div>
@@ -310,7 +307,8 @@
     background: #FFB3C7;
   }
 
-  .moby-footer__payment-icon img {
+  .moby-footer__payment-icon img,
+  .moby-footer__payment-icon svg {
     max-width: 32px;
     max-height: 20px;
     object-fit: contain;

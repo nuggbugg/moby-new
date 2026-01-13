@@ -283,13 +283,9 @@
                 </div>
               </div>
 
-              <!-- Frequency Selector (hidden until subscribe selected) -->
+              <!-- Frequency Selector - Shopify Subscription App Embed -->
               <div class="moby-buy-box__frequency" id="frequency-selector" style="display: none;">
-                <select name="selling_plan" id="selling-plan-select">
-                  <option value="monthly">Ships every month</option>
-                  <option value="bimonthly">Ships every second month</option>
-                  <option value="trimonthly">Ships every third month</option>
-                </select>
+                <div class="subscriptions_app_embed_block"></div>
               </div>
             </div>
           </label>
@@ -985,7 +981,7 @@
     white-space: nowrap;
   }
 
-  /* Frequency Selector */
+  /* Frequency Selector - Subscription App Embed */
   .moby-buy-box__frequency {
     padding-left: 28px;
     padding-top: 16px;
@@ -1009,6 +1005,31 @@
 
   .moby-buy-box__frequency select:focus {
     border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Style Shopify Subscription App Embed */
+  .subscriptions_app_embed_block {
+    font-family: 'N27', sans-serif;
+  }
+
+  .subscriptions_app_embed_block label {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .subscriptions_app_embed_block input[type="radio"] {
+    accent-color: var(--moby-olive, #4F4A32);
+  }
+
+  .subscriptions_app_embed_block select {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    border-radius: 6px;
+    background: #ffffff;
   }
 
   /* Add to Cart Button */

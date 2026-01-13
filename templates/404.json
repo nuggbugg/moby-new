@@ -68,41 +68,13 @@
           "type": "button",
           "name": "t:names.button",
           "settings": {
-            "label": "Continue shopping",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "text_GqmVFf",
-        "text_Ua9XAW",
-        "button_PAQMwR"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "section_width": "page-width",
-        "section_height": "medium",
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 20,
-        "color_scheme": "",
-        "padding-block-start": 100,
-        "padding-block-end": 100
-      }
-    },
-    "product_list_R6Dg6h": {
-      "type": "product-list",
-      "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "static": true,
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account/pages/6971b1a1-27f6-4c27-b8b0-3009fd3b921d",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
