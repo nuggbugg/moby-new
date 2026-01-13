@@ -17,29 +17,29 @@
         "item_1": {
           "type": "item",
           "settings": {
-            "icon": "shield",
-            "text": "100% SATISFACTION GUARANTEE"
+            "icon": "star",
+            "text": "5-STAR RATED"
           }
         },
         "item_2": {
           "type": "item",
           "settings": {
-            "icon": "truck",
-            "text": "FREE SHIPPING OVER €43"
+            "icon": "check",
+            "text": "PREMIUM CLEAN CREATINE MONOHYDRATE"
           }
         },
         "item_3": {
           "type": "item",
           "settings": {
-            "icon": "star",
-            "text": "5-STAR RATED"
+            "icon": "shield",
+            "text": "100% SATISFACTION GUARANTEE"
           }
         },
         "item_4": {
           "type": "item",
           "settings": {
-            "icon": "check",
-            "text": "PREMIUM CLEAN CREATINE MONOHYDRATE"
+            "icon": "truck",
+            "text": "FREE SHIPPING OVER €43"
           }
         }
       },
@@ -90,7 +90,265 @@
         }
       },
       "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5"]
+    },
+    "moby_featured_product": {
+      "type": "moby-featured-product",
+      "settings": {
+        "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
+        "show_klarna_badge": true
+      },
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "zap",
+            "text": "Enhances energy"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "dumbbell",
+            "text": "Improves strength"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "timer",
+            "text": "Delays fatigue"
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "trending",
+            "text": "Accelerates recovery"
+          }
+        }
+      },
+      "block_order": ["benefit_1", "benefit_2", "benefit_3", "benefit_4"]
+    },
+    "moby_science": {
+      "type": "moby-science",
+      "settings": {
+        "badge_text": "Backed by Science",
+        "heading": "Why Creatine Works",
+        "subheading": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance."
+      },
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "microscope",
+            "title": "Clinically Proven",
+            "description": "Backed by over 1,000 scientific studies"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "brain",
+            "title": "Cognitive Performance",
+            "description": "Supports mental clarity and focus"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "zap",
+            "title": "Daily Energy",
+            "description": "Sustained energy throughout your day"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "heart",
+            "title": "Recovery Support",
+            "description": "Faster muscle recovery and repair"
+          }
+        },
+        "feature_5": {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "shield",
+            "title": "Pure Quality",
+            "description": "100% pharmaceutical-grade creatine"
+          }
+        },
+        "feature_6": {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "users",
+            "title": "For Everyone",
+            "description": "Suitable for all active lifestyles"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5", "feature_6"]
+    },
+    "moby_lifestyle": {
+      "type": "moby-lifestyle",
+      "settings": {
+        "tagline": "Produced in Sweden",
+        "heading": "Your life. Optimized in one motion",
+        "button_label": "Shop Now",
+        "button_link": "shopify://collections/all",
+        "show_product_card": true
+      }
+    },
+    "moby_faq": {
+      "type": "moby-faq",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "subheading": "Everything you need to know about MOBY creatine."
+      },
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "What is creatine and why should I take it?",
+            "answer": "Creatine is one of the most researched supplements in the world. It supports muscle strength, cognitive function, energy production, and recovery. Recent studies show benefits for everyone — from athletes to office professionals."
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "How is MOBY different from other creatine supplements?",
+            "answer": "MOBY combines premium Swedish creatine monohydrate with a convenient, portable format. Our single-serving sachets are designed for your lifestyle — easy to mix anywhere, anytime. Plus, we're committed to transparency and quality."
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "When should I take MOBY?",
+            "answer": "We recommend taking MOBY as part of your morning routine for consistent energy, focus, and strength throughout the day. Consistency is more important than timing, so find what works best for your schedule."
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "Is MOBY suitable for everyone?",
+            "answer": "MOBY is designed for anyone looking to enhance their physical and mental performance. Whether you're an athlete, professional, or just starting your wellness journey, creatine can support your goals. Consult your healthcare provider if you have specific health concerns."
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "question": "How much creatine is in each serving?",
+            "answer": "Each MOBY sachet contains 5g of pure creatine monohydrate — the clinically effective dose recommended by research. No fillers, no artificial additives, just premium creatine."
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "question": "Where is MOBY produced?",
+            "answer": "MOBY is proudly made in Sweden with premium Swedish ingredients. We maintain the highest quality standards and source our creatine from trusted European suppliers."
+          }
+        }
+      },
+      "block_order": ["faq_1", "faq_2", "faq_3", "faq_4", "faq_5", "faq_6"]
+    },
+    "moby_cta_banner": {
+      "type": "moby-cta-banner",
+      "settings": {
+        "heading": "Partner with MOBY",
+        "description": "Available for distribution in pharmacies, gyms, and wellness retailers. Bring science-backed performance to your customers.",
+        "button_label": "Partner with Moby",
+        "button_link": "/pages/contact"
+      }
+    },
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "shopify://collections/all"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/pages/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
     }
   },
-  "order": ["moby_hero", "moby_marquee", "moby_features"]
+  "order": [
+    "moby_hero",
+    "moby_marquee",
+    "moby_features",
+    "moby_featured_product",
+    "moby_science",
+    "moby_lifestyle",
+    "moby_faq",
+    "moby_cta_banner",
+    "moby_footer"
+  ]
 }
