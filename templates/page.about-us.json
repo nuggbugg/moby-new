@@ -1,0 +1,202 @@
+{
+  "sections": {
+    "moby_about_hero": {
+      "type": "moby-about-hero",
+      "settings": {
+        "heading": "About MOBY",
+        "description": "Redefining daily energy, strength, and clarity for everyone"
+      }
+    },
+    "moby_about_mission": {
+      "type": "moby-about-mission",
+      "settings": {
+        "badge_text": "Our Mission",
+        "heading": "Breaking Old Stereotypes",
+        "text_1": "MOBY exists to break old stereotypes around creatine, making energy, strength, and clarity accessible to everyone who wants to live and perform better every day.",
+        "text_2": "We're reframing creatine as a daily essential for those who care not just about strength, but also mental clarity, focus, and overall vitality. What was once a routine is now one simple motion."
+      }
+    },
+    "moby_about_values": {
+      "type": "moby-about-values",
+      "settings": {
+        "badge_text": "What We Stand For",
+        "heading": "Our Core Values"
+      },
+      "blocks": {
+        "value_1": {
+          "type": "value",
+          "settings": {
+            "icon": "sparkles",
+            "title": "Simplicity",
+            "description": "One stick. One motion. No complexity, no mess—just effortless daily ritual."
+          }
+        },
+        "value_2": {
+          "type": "value",
+          "settings": {
+            "icon": "beaker",
+            "title": "Science",
+            "description": "Every formula backed by research. Optimal 5g dose, pharmaceutical-grade purity."
+          }
+        },
+        "value_3": {
+          "type": "value",
+          "settings": {
+            "icon": "shield",
+            "title": "Quality",
+            "description": "Produced in Sweden with the highest European standards. Rigorously tested for purity."
+          }
+        },
+        "value_4": {
+          "type": "value",
+          "settings": {
+            "icon": "heart",
+            "title": "Accessibility",
+            "description": "Breaking stereotypes—creatine isn't just for athletes, it's for everyone."
+          }
+        }
+      },
+      "block_order": ["value_1", "value_2", "value_3", "value_4"]
+    },
+    "moby_about_philosophy": {
+      "type": "moby-about-philosophy",
+      "settings": {
+        "badge_text": "The MOBY Philosophy",
+        "heading": "Packed Yet Effortless",
+        "quote": "\"MOBY is packed: concentrated, complete, and precise—a product built on complexity and science. Yet using it is effortless—easy, seamless, and naturally in rhythm with your life.\"",
+        "subtext": "It's not really about doing more—it's about moving lighter, with the energy to show up fully—in work, in movement, in life."
+      }
+    },
+    "moby_about_quality": {
+      "type": "moby-about-quality",
+      "settings": {
+        "badge_text": "Our Commitment",
+        "heading": "Quality You Can Trust",
+        "description": "Every MOBY product is manufactured in Sweden, adhering to the highest European quality and safety standards. We use only pharmaceutical-grade creatine monohydrate, rigorously tested for purity and potency."
+      },
+      "blocks": {
+        "credential_1": {
+          "type": "credential",
+          "settings": {
+            "icon": "map-pin",
+            "label": "Produced in Sweden"
+          }
+        },
+        "credential_2": {
+          "type": "credential",
+          "settings": {
+            "icon": "flask",
+            "label": "Pharmaceutical-Grade"
+          }
+        },
+        "credential_3": {
+          "type": "credential",
+          "settings": {
+            "icon": "beaker",
+            "label": "Rigorously Tested"
+          }
+        },
+        "credential_4": {
+          "type": "credential",
+          "settings": {
+            "icon": "check-circle",
+            "label": "European Standards"
+          }
+        }
+      },
+      "block_order": ["credential_1", "credential_2", "credential_3", "credential_4"]
+    },
+    "moby_about_cta": {
+      "type": "moby-about-cta",
+      "settings": {
+        "tagline": "A simple stick. A complete life.",
+        "heading": "Balance, Strength & Clarity",
+        "button_label": "Shop Now",
+        "button_link": "shopify://collections/all"
+      }
+    },
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "shopify://collections/all"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/pages/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+    }
+  },
+  "order": [
+    "moby_about_hero",
+    "moby_about_mission",
+    "moby_about_values",
+    "moby_about_philosophy",
+    "moby_about_quality",
+    "moby_about_cta",
+    "moby_footer"
+  ]
+}
