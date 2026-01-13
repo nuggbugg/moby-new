@@ -1,0 +1,1188 @@
+{% comment %}
+  MOBY Buy Box Section
+  - Volume selector cards (1, 2, 3 months)
+  - One-time vs Subscribe & Save toggle
+  - Benefits checkmarks
+  - Payment icons and trust badges
+{% endcomment %}
+
+{%- assign product = product | default: collection.products.first -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign base_price = current_variant.price | divided_by: 100.0 -%}
+
+<section class="moby-section moby-buy-box" data-section-id="{{ section.id }}">
+  <div class="moby-container">
+    <div class="moby-buy-box__layout">
+      <!-- Product Images -->
+      <div class="moby-buy-box__gallery">
+        <div class="moby-buy-box__main-image" id="moby-main-image">
+          {%- if product.featured_image -%}
+            {{ product.featured_image | image_url: width: 800 | image_tag:
+              loading: 'eager',
+              class: 'moby-buy-box__image',
+              widths: '400, 600, 800'
+            }}
+          {%- endif -%}
+        </div>
+
+        {%- if product.images.size > 1 -%}
+          <div class="moby-buy-box__thumbnails">
+            {%- for image in product.images -%}
+              <button
+                class="moby-buy-box__thumbnail {% if forloop.first %}active{% endif %}"
+                data-image-url="{{ image | image_url: width: 800 }}"
+                type="button"
+              >
+                {{ image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        <!-- Trust Badges Below Image (Desktop) -->
+        <div class="moby-buy-box__trust-icons">
+          <div class="moby-buy-box__trust-icon">
+            <div class="moby-buy-box__trust-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+              </svg>
+            </div>
+            <p>Pure Creatine<br>Monohydrate</p>
+          </div>
+          <div class="moby-buy-box__trust-icon">
+            <div class="moby-buy-box__trust-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <p>5G Per<br>Serving</p>
+          </div>
+          <div class="moby-buy-box__trust-icon">
+            <div class="moby-buy-box__trust-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <p>Lab Tested<br>Quality</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="moby-buy-box__info">
+        <!-- Judge.me Reviews Badge -->
+        <div class="moby-buy-box__reviews">
+          <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}"></div>
+        </div>
+
+        <!-- Title & Stock -->
+        <div class="moby-buy-box__header">
+          <h1 class="moby-buy-box__title">{{ product.title }}</h1>
+          {%- if current_variant.available -%}
+            <span class="moby-buy-box__stock moby-buy-box__stock--in">
+              <span class="moby-buy-box__stock-dot"></span>
+              In Stock
+            </span>
+          {%- else -%}
+            <span class="moby-buy-box__stock moby-buy-box__stock--out">
+              Out of Stock
+            </span>
+          {%- endif -%}
+        </div>
+
+        <!-- Klarna -->
+        <div class="moby-buy-box__klarna">
+          <svg width="60" height="24" viewBox="0 0 60 24" fill="#FFB3C7">
+            <path d="M51.7 5h3.8v14.2h-3.8V5zm-6.5 0h3.8v14.2h-3.8V5zm-6.3 4.3c0-2.4-1.9-4.3-4.3-4.3h-6v14.2h3.8v-5.5h2.2c2.4 0 4.3-2 4.3-4.4zm-6.3 1.5h2.2c.5 0 .8-.4.8-.8 0-.5-.3-.9-.8-.9h-2.2v1.7zm-9.4-5.8h3.8v14.2h-3.8V5zm-13.7 0h4c0 3.4 1.2 6.5 3.3 9l-4.8 5.2h-5l4-4.4C8.9 12.5 7.5 8.9 7.5 5h4zm-7.7 0h3.8v14.2H3.8V5z"/>
+          </svg>
+          <span>Pay securely with Klarna</span>
+        </div>
+
+        <!-- Short Description -->
+        <p class="moby-buy-box__description">
+          {{ section.settings.short_description | default: 'Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.' }}
+        </p>
+
+        <!-- Key Benefits Card -->
+        <div class="moby-buy-box__benefits">
+          <div class="moby-buy-box__benefit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="var(--moby-olive, #4F4A32)"/>
+              <polyline points="7 12 10 15 17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Enhances energy production</span>
+          </div>
+          <div class="moby-buy-box__benefit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="var(--moby-olive, #4F4A32)"/>
+              <polyline points="7 12 10 15 17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Improves strength and power</span>
+          </div>
+          <div class="moby-buy-box__benefit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="var(--moby-olive, #4F4A32)"/>
+              <polyline points="7 12 10 15 17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Delays fatigue</span>
+          </div>
+          <div class="moby-buy-box__benefit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="var(--moby-olive, #4F4A32)"/>
+              <polyline points="7 12 10 15 17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Accelerates recovery</span>
+          </div>
+        </div>
+
+        <!-- Volume Selector Cards -->
+        <div class="moby-buy-box__packs" id="pack-selector">
+          <label class="moby-buy-box__pack active" data-quantity="1">
+            <input type="radio" name="pack_quantity" value="1" checked>
+            <div class="moby-buy-box__pack-image">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="12" y="8" width="24" height="32" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+                <rect x="16" y="14" width="16" height="8" rx="1" fill="var(--moby-dark, #1C1A10)" opacity="0.1"/>
+              </svg>
+            </div>
+            <span class="moby-buy-box__pack-months">1 Month</span>
+            <span class="moby-buy-box__pack-price" data-base-price="{{ current_variant.price }}">{{ current_variant.price | money }}/pack</span>
+            <span class="moby-buy-box__pack-details">1-pack | 30 servings</span>
+            <span class="moby-buy-box__pack-serving">{{ current_variant.price | divided_by: 30 | money }}/serving</span>
+          </label>
+
+          <label class="moby-buy-box__pack" data-quantity="2">
+            <input type="radio" name="pack_quantity" value="2">
+            <span class="moby-buy-box__pack-badge">Save 10%</span>
+            <div class="moby-buy-box__pack-image">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="8" y="10" width="20" height="28" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+                <rect x="20" y="6" width="20" height="28" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+              </svg>
+            </div>
+            <span class="moby-buy-box__pack-months">2 Months</span>
+            {%- assign price_2 = current_variant.price | times: 0.9 -%}
+            <span class="moby-buy-box__pack-price">{{ price_2 | money }}/pack</span>
+            <span class="moby-buy-box__pack-details">2-pack | 60 servings</span>
+            <span class="moby-buy-box__pack-serving">{{ price_2 | divided_by: 30 | money }}/serving</span>
+          </label>
+
+          <label class="moby-buy-box__pack" data-quantity="3">
+            <input type="radio" name="pack_quantity" value="3">
+            <span class="moby-buy-box__pack-badge">Save 15%</span>
+            <div class="moby-buy-box__pack-image">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="6" y="12" width="16" height="24" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+                <rect x="16" y="8" width="16" height="24" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+                <rect x="26" y="4" width="16" height="24" rx="2" fill="var(--moby-sage, #C9C8B6)" stroke="var(--moby-dark, #1C1A10)" stroke-width="1"/>
+              </svg>
+            </div>
+            <span class="moby-buy-box__pack-months">3 Months</span>
+            {%- assign price_3 = current_variant.price | times: 0.85 -%}
+            <span class="moby-buy-box__pack-price">{{ price_3 | money }}/pack</span>
+            <span class="moby-buy-box__pack-details">3-pack | 90 servings</span>
+            <span class="moby-buy-box__pack-serving">{{ price_3 | divided_by: 30 | money }}/serving</span>
+          </label>
+        </div>
+
+        <!-- Purchase Type Selector -->
+        <div class="moby-buy-box__purchase-type" id="purchase-type">
+          <!-- One-time Purchase -->
+          <label class="moby-buy-box__option active" data-type="one-time">
+            <input type="radio" name="purchase_type" value="one-time" checked>
+            <div class="moby-buy-box__option-radio"></div>
+            <div class="moby-buy-box__option-content">
+              <div class="moby-buy-box__option-row">
+                <div class="moby-buy-box__option-info">
+                  <span class="moby-buy-box__option-title">One-time Purchase</span>
+                  <span class="moby-buy-box__option-subtitle">Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}, volume discount.</span>
+                </div>
+                <div class="moby-buy-box__option-price">
+                  <span class="moby-buy-box__price-current" id="onetime-price">{{ current_variant.price | money }}</span>
+                  <span class="moby-buy-box__price-original" id="onetime-original" style="display: none;"></span>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <!-- Subscribe & Save -->
+          <label class="moby-buy-box__option moby-buy-box__option--subscribe" data-type="subscribe">
+            <input type="radio" name="purchase_type" value="subscribe">
+            <span class="moby-buy-box__option-badge">Recommended</span>
+            <div class="moby-buy-box__option-radio"></div>
+            <div class="moby-buy-box__option-content">
+              <div class="moby-buy-box__option-row">
+                <div class="moby-buy-box__option-info">
+                  <span class="moby-buy-box__option-title">Subscribe & Save <span id="subscribe-discount">(-10%)</span></span>
+                  <span class="moby-buy-box__option-subtitle">Lowest price! Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}. Cancel anytime.</span>
+                </div>
+                <div class="moby-buy-box__option-price">
+                  <span class="moby-buy-box__price-current" id="subscribe-price">{{ current_variant.price | times: 0.9 | money }}</span>
+                  <span class="moby-buy-box__price-original" id="subscribe-original">{{ current_variant.price | money }}</span>
+                </div>
+              </div>
+
+              <!-- Frequency Selector (hidden until subscribe selected) -->
+              <div class="moby-buy-box__frequency" id="frequency-selector" style="display: none;">
+                <select name="selling_plan" id="selling-plan-select">
+                  <option value="monthly">Ships every month</option>
+                  <option value="bimonthly">Ships every second month</option>
+                  <option value="trimonthly">Ships every third month</option>
+                </select>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Add to Cart Form -->
+        <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <input type="hidden" name="quantity" value="1" id="quantity-input">
+          <input type="hidden" name="selling_plan" value="" id="selling-plan-input">
+
+          <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
+            {%- if current_variant.available -%}
+              <span id="btn-text">Join the Movement</span> - <span id="btn-price">{{ current_variant.price | money }}</span>
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </button>
+        </form>
+
+        <!-- Payment Icons -->
+        <div class="moby-buy-box__payments">
+          <p class="moby-buy-box__payments-label">Pay securely with</p>
+          <div class="moby-buy-box__payment-row">
+            <div class="moby-buy-box__payment-icon">
+              {{ 'google_pay' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon">
+              {{ 'apple_pay' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon moby-buy-box__payment-icon--shop">
+              {{ 'shopify_pay' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon">
+              {{ 'paypal' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon">
+              {{ 'master' | payment_type_svg_tag }}
+            </div>
+          </div>
+          <div class="moby-buy-box__payment-row">
+            <div class="moby-buy-box__payment-icon">
+              {{ 'visa' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon moby-buy-box__payment-icon--klarna">
+              {{ 'klarna' | payment_type_svg_tag }}
+            </div>
+            <div class="moby-buy-box__payment-icon">
+              {{ 'american_express' | payment_type_svg_tag }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Footer -->
+        <div class="moby-buy-box__trust-footer">
+          <div class="moby-buy-box__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L20 6V12C20 16.4 16.5 20.3 12 22C7.5 20.3 4 16.4 4 12V6L12 2Z"/>
+            </svg>
+            <p>100% Satisfaction<br>Guarantee</p>
+          </div>
+          <div class="moby-buy-box__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="1" y="3" width="15" height="13" rx="2"/>
+              <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            <p>Free Shipping Over<br>{{ section.settings.free_shipping_threshold | default: '500 kr' }}</p>
+          </div>
+          <div class="moby-buy-box__trust-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 3v18M8 8l4-5 4 5M8 16l4 5 4-5"/>
+              <rect x="3" y="8" width="18" height="8" rx="1"/>
+            </svg>
+            <p>Delivery Within<br>1-3 Days</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-buy-box {
+    padding: 100px 0 60px;
+    background: var(--color-background, #ffffff);
+  }
+
+  .moby-buy-box__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-buy-box__layout {
+      grid-template-columns: 1.4fr 1fr;
+      gap: 48px;
+    }
+  }
+
+  /* Gallery */
+  .moby-buy-box__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-buy-box__gallery {
+      flex-direction: row;
+      gap: 16px;
+    }
+  }
+
+  .moby-buy-box__main-image {
+    aspect-ratio: 1;
+    background: rgba(245, 245, 240, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .moby-buy-box__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+  }
+
+  .moby-buy-box__main-image:hover .moby-buy-box__image {
+    transform: scale(1.05);
+  }
+
+  .moby-buy-box__thumbnails {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-buy-box__thumbnails {
+      flex-direction: column;
+      width: 80px;
+      overflow-x: visible;
+      order: -1;
+    }
+  }
+
+  .moby-buy-box__thumbnail {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: rgba(245, 245, 240, 0.5);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    padding: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-buy-box__thumbnail {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+    }
+  }
+
+  .moby-buy-box__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .moby-buy-box__thumbnail:hover {
+    border-color: rgba(28, 26, 16, 0.2);
+  }
+
+  .moby-buy-box__thumbnail.active {
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Trust Icons (below gallery on desktop) */
+  .moby-buy-box__trust-icons {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__trust-icons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+      padding-left: 96px;
+    }
+  }
+
+  .moby-buy-box__trust-icon {
+    text-align: center;
+  }
+
+  .moby-buy-box__trust-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+  }
+
+  .moby-buy-box__trust-circle svg {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-buy-box__trust-icon p {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  /* Product Info */
+  .moby-buy-box__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .moby-buy-box__reviews {
+    min-height: 20px;
+  }
+
+  .moby-buy-box__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-buy-box__title {
+    font-family: 'Memoir', serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__title {
+      font-size: 20px;
+    }
+  }
+
+  .moby-buy-box__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    width: fit-content;
+  }
+
+  .moby-buy-box__stock--in {
+    background: rgba(79, 74, 50, 0.1);
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-buy-box__stock-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+  }
+
+  .moby-buy-box__stock-dot::before,
+  .moby-buy-box__stock-dot::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .moby-buy-box__stock-dot::before {
+    width: 100%;
+    height: 100%;
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-buy-box__stock-dot::after {
+    width: 100%;
+    height: 100%;
+    background: var(--moby-olive, #4F4A32);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.75; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  .moby-buy-box__stock--out {
+    background: rgba(28, 26, 16, 0.08);
+    color: rgba(28, 26, 16, 0.6);
+  }
+
+  /* Klarna */
+  .moby-buy-box__klarna {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .moby-buy-box__klarna span {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.7);
+  }
+
+  /* Description */
+  .moby-buy-box__description {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  /* Benefits */
+  .moby-buy-box__benefits {
+    background: rgba(245, 245, 240, 0.5);
+    border-radius: 8px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+
+  .moby-buy-box__benefit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .moby-buy-box__benefit svg {
+    flex-shrink: 0;
+  }
+
+  .moby-buy-box__benefit span {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__benefit span {
+      font-size: 12px;
+    }
+  }
+
+  /* Pack Selector */
+  .moby-buy-box__packs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .moby-buy-box__pack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 12px 8px;
+    border: 2px solid rgba(28, 26, 16, 0.12);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  .moby-buy-box__pack input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .moby-buy-box__pack:hover {
+    border-color: rgba(79, 74, 50, 0.3);
+  }
+
+  .moby-buy-box__pack.active {
+    border-color: var(--moby-olive, #4F4A32);
+    background: rgba(79, 74, 50, 0.05);
+  }
+
+  .moby-buy-box__pack-badge {
+    position: absolute;
+    top: -8px;
+    right: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 6px;
+    background: rgba(245, 245, 240, 1);
+    color: var(--moby-dark, #1C1A10);
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__pack-badge {
+      font-size: 9px;
+      padding: 4px 8px;
+    }
+  }
+
+  .moby-buy-box__pack-image {
+    margin-bottom: 8px;
+  }
+
+  .moby-buy-box__pack-image svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__pack-image svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .moby-buy-box__pack-months {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    margin-bottom: 4px;
+  }
+
+  .moby-buy-box__pack-price {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--moby-dark, #1C1A10);
+    margin-bottom: 4px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__pack-price {
+      font-size: 16px;
+    }
+  }
+
+  .moby-buy-box__pack-details {
+    font-family: 'N27', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.6);
+    margin-bottom: 2px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__pack-details {
+      font-size: 10px;
+    }
+  }
+
+  .moby-buy-box__pack-serving {
+    font-family: 'N27', sans-serif;
+    font-size: 8px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.5);
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__pack-serving {
+      font-size: 9px;
+    }
+  }
+
+  /* Purchase Type Options */
+  .moby-buy-box__purchase-type {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .moby-buy-box__option {
+    position: relative;
+    display: block;
+    padding: 16px;
+    border: 2px solid rgba(28, 26, 16, 0.12);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__option {
+      padding: 20px;
+    }
+  }
+
+  .moby-buy-box__option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .moby-buy-box__option:hover {
+    border-color: rgba(79, 74, 50, 0.3);
+  }
+
+  .moby-buy-box__option.active {
+    border-color: var(--moby-olive, #4F4A32);
+    background: rgba(79, 74, 50, 0.05);
+  }
+
+  .moby-buy-box__option--subscribe {
+    border-color: rgba(79, 74, 50, 0.3);
+  }
+
+  .moby-buy-box__option--subscribe:hover {
+    border-color: rgba(79, 74, 50, 0.5);
+  }
+
+  .moby-buy-box__option-badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 12px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    border-radius: 4px;
+  }
+
+  .moby-buy-box__option-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .moby-buy-box__option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .moby-buy-box__option-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-left: 28px;
+  }
+
+  .moby-buy-box__option-radio {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(28, 26, 16, 0.3);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .moby-buy-box__option--subscribe .moby-buy-box__option-radio {
+    top: 28px;
+    transform: none;
+  }
+
+  .moby-buy-box__option.active .moby-buy-box__option-radio {
+    border-color: var(--moby-olive, #4F4A32);
+    background: var(--moby-olive, #4F4A32);
+    box-shadow: inset 0 0 0 3px #ffffff;
+  }
+
+  .moby-buy-box__option-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .moby-buy-box__option-title {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__option-title {
+      font-size: 14px;
+    }
+  }
+
+  .moby-buy-box__option-subtitle {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.6);
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__option-subtitle {
+      font-size: 12px;
+    }
+  }
+
+  .moby-buy-box__option-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+
+  .moby-buy-box__price-current {
+    font-family: 'N27', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--moby-dark, #1C1A10);
+    white-space: nowrap;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box__price-current {
+      font-size: 18px;
+    }
+  }
+
+  .moby-buy-box__price-original {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.5);
+    text-decoration: line-through;
+    white-space: nowrap;
+  }
+
+  /* Frequency Selector */
+  .moby-buy-box__frequency {
+    padding-left: 28px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(28, 26, 16, 0.1);
+  }
+
+  .moby-buy-box__frequency select {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--moby-dark, #1C1A10);
+    background: #ffffff;
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .moby-buy-box__frequency select:focus {
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Add to Cart Button */
+  .moby-buy-box__form {
+    margin-top: 8px;
+  }
+
+  .moby-buy-box__add-btn {
+    width: 100%;
+    height: 56px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    background: var(--moby-olive, #4F4A32);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .moby-buy-box__add-btn:hover:not(:disabled) {
+    background: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-buy-box__add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Payment Icons */
+  .moby-buy-box__payments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+  }
+
+  .moby-buy-box__payments-label {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(28, 26, 16, 0.5);
+    margin: 0;
+  }
+
+  .moby-buy-box__payment-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .moby-buy-box__payment-icon {
+    width: 44px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid rgba(28, 26, 16, 0.1);
+    border-radius: 4px;
+  }
+
+  .moby-buy-box__payment-icon svg {
+    max-width: 32px;
+    max-height: 20px;
+  }
+
+  .moby-buy-box__payment-icon--shop {
+    background: #5A31F4;
+  }
+
+  .moby-buy-box__payment-icon--klarna {
+    background: #FFB3C7;
+  }
+
+  /* Trust Footer */
+  .moby-buy-box__trust-footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(28, 26, 16, 0.1);
+  }
+
+  .moby-buy-box__trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .moby-buy-box__trust-item svg {
+    color: rgba(28, 26, 16, 0.5);
+  }
+
+  .moby-buy-box__trust-item p {
+    font-family: 'N27', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    color: rgba(28, 26, 16, 0.5);
+    margin: 0;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+  if (!section) return;
+
+  const basePrice = {{ current_variant.price }};
+  const packSelector = section.querySelector('#pack-selector');
+  const purchaseType = section.querySelector('#purchase-type');
+  const frequencySelector = section.querySelector('#frequency-selector');
+  const quantityInput = section.querySelector('#quantity-input');
+  const sellingPlanInput = section.querySelector('#selling-plan-input');
+  const btnPrice = section.querySelector('#btn-price');
+  const btnText = section.querySelector('#btn-text');
+  const onetimePrice = section.querySelector('#onetime-price');
+  const onetimeOriginal = section.querySelector('#onetime-original');
+  const subscribePrice = section.querySelector('#subscribe-price');
+  const subscribeOriginal = section.querySelector('#subscribe-original');
+  const subscribeDiscount = section.querySelector('#subscribe-discount');
+
+  let currentQuantity = 1;
+  let currentType = 'one-time';
+
+  function formatMoney(cents) {
+    return (cents / 100).toLocaleString('{{ localization.language.iso_code | default: "en" }}', {
+      style: 'currency',
+      currency: '{{ cart.currency.iso_code | default: "SEK" }}'
+    });
+  }
+
+  function getPackDiscount(qty) {
+    if (qty === 2) return 0.10;
+    if (qty === 3) return 0.15;
+    return 0;
+  }
+
+  function updatePrices() {
+    const packDiscount = getPackDiscount(currentQuantity);
+    const subscriptionDiscount = 0.10;
+
+    // One-time price
+    const onetimeTotal = basePrice * currentQuantity * (1 - packDiscount);
+    onetimePrice.textContent = formatMoney(onetimeTotal);
+
+    if (packDiscount > 0) {
+      onetimeOriginal.style.display = 'block';
+      onetimeOriginal.textContent = formatMoney(basePrice * currentQuantity);
+    } else {
+      onetimeOriginal.style.display = 'none';
+    }
+
+    // Subscribe price
+    const priceAfterPack = basePrice * (1 - packDiscount);
+    const subscribeTotal = priceAfterPack * (1 - subscriptionDiscount) * currentQuantity;
+    subscribePrice.textContent = formatMoney(subscribeTotal);
+    subscribeOriginal.textContent = formatMoney(basePrice * currentQuantity);
+
+    // Calculate total discount for subscribe
+    const totalDiscount = 1 - ((1 - packDiscount) * (1 - subscriptionDiscount));
+    subscribeDiscount.textContent = `(-${Math.round(totalDiscount * 100)}%)`;
+
+    // Update button
+    const finalPrice = currentType === 'subscribe' ? subscribeTotal : onetimeTotal;
+    btnPrice.textContent = formatMoney(finalPrice);
+    btnText.textContent = currentType === 'subscribe' ? 'Subscribe' : 'Join the Movement';
+
+    // Update quantity input
+    quantityInput.value = currentQuantity;
+  }
+
+  // Pack selection
+  packSelector.querySelectorAll('.moby-buy-box__pack').forEach(pack => {
+    pack.addEventListener('click', function() {
+      packSelector.querySelectorAll('.moby-buy-box__pack').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      this.querySelector('input').checked = true;
+      currentQuantity = parseInt(this.dataset.quantity);
+      updatePrices();
+    });
+  });
+
+  // Purchase type selection
+  purchaseType.querySelectorAll('.moby-buy-box__option').forEach(option => {
+    option.addEventListener('click', function() {
+      purchaseType.querySelectorAll('.moby-buy-box__option').forEach(o => o.classList.remove('active'));
+      this.classList.add('active');
+      this.querySelector('input').checked = true;
+      currentType = this.dataset.type;
+
+      // Show/hide frequency selector
+      if (currentType === 'subscribe') {
+        frequencySelector.style.display = 'block';
+        // Set selling plan (you'll need to map these to actual selling plan IDs)
+        sellingPlanInput.value = ''; // Needs actual selling plan ID from Shopify
+      } else {
+        frequencySelector.style.display = 'none';
+        sellingPlanInput.value = '';
+      }
+
+      updatePrices();
+    });
+  });
+
+  // Thumbnail gallery
+  section.querySelectorAll('.moby-buy-box__thumbnail').forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      section.querySelectorAll('.moby-buy-box__thumbnail').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const mainImage = section.querySelector('.moby-buy-box__image');
+      if (mainImage && this.dataset.imageUrl) {
+        mainImage.src = this.dataset.imageUrl;
+      }
+    });
+  });
+
+  // Initial update
+  updatePrices();
+});
+</script>
+
+{% schema %}
+{
+  "name": "MOBY Buy Box",
+  "tag": "section",
+  "class": "moby-buy-box-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "short_description",
+      "label": "Short description",
+      "default": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance."
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping threshold",
+      "default": "500 kr"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Buy Box"
+    }
+  ]
+}
+{% endschema %}
