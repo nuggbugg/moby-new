@@ -40,8 +40,8 @@
         {% endfor %}
       </ul>
 
-      <!-- Right Actions -->
-      <div class="moby-header__actions">
+      <!-- Desktop Right Actions (hidden on mobile) -->
+      <div class="moby-header__actions moby-header__actions--desktop">
         <!-- Account Icon -->
         <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="moby-header__icon-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -59,7 +59,7 @@
           </svg>
         </button>
 
-        <!-- Cart Button -->
+        <!-- Cart Button (Desktop) -->
         <a href="{{ routes.cart_url }}" class="moby-header__cart">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
@@ -70,18 +70,31 @@
         </a>
       </div>
 
-      <!-- Mobile Menu Toggle -->
-      <button type="button" class="moby-header__mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-        <svg class="moby-header__hamburger" width="24" height="16" viewBox="0 0 28 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M27.3471 16.9771C27.3471 17.5215 27.3989 18.0918 27.5545 18.7398L27.4508 18.8176C27.036 18.6361 25.74 18.5324 23.5626 18.5324H9.72044C7.54303 18.5324 6.24695 18.6361 5.8322 18.8176L5.72852 18.7398C5.88405 18.0918 5.93589 17.5215 5.93589 16.9771C5.93589 16.4328 5.88405 15.8625 5.72852 15.2145L5.8322 15.1367C6.24695 15.3182 7.54303 15.4219 9.72044 15.4219H23.5626C25.74 15.4219 27.036 15.3182 27.4508 15.1367L27.5545 15.2145C27.3989 15.8625 27.3471 16.4587 27.3471 16.9771Z" fill="var(--moby-accent)"/>
-          <path d="M21.6186 9.53965C21.6186 10.084 21.6704 10.6543 21.826 11.3023L21.7223 11.3801C21.3075 11.1986 20.0114 11.0949 17.834 11.0949H3.99192C1.81451 11.0949 0.518431 11.1986 0.103686 11.3801L0 11.3023C0.155529 10.6543 0.207373 10.084 0.207373 9.53965C0.207373 8.9953 0.155529 8.42502 0 7.77698L0.103686 7.69922C0.518431 7.88067 1.81451 7.98436 3.99192 7.98436H17.834C20.0114 7.98436 21.3075 7.88067 21.7223 7.69922L21.826 7.77698C21.6704 8.42502 21.6186 9.02122 21.6186 9.53965Z" fill="var(--moby-accent)"/>
-          <path d="M24.3666 1.84043C24.3666 2.38478 24.4185 2.95506 24.574 3.6031L24.4703 3.68086C24.0556 3.49941 22.7595 3.39573 20.5821 3.39573H6.73997C4.56256 3.39573 3.26648 3.49941 2.85173 3.68086L2.74805 3.6031C2.90358 2.95506 2.95542 2.38478 2.95542 1.84043C2.95542 1.29608 2.90358 0.725804 2.74805 0.0777647L2.85173 0C3.26648 0.181451 4.56256 0.285137 6.73997 0.285137H20.5821C22.7595 0.285137 24.0556 0.181451 24.4703 0L24.574 0.0777647C24.4185 0.725804 24.3666 1.322 24.3666 1.84043Z" fill="var(--moby-accent)"/>
-        </svg>
-        <svg class="moby-header__close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--moby-accent)" stroke-width="1.5">
-          <line x1="6" y1="6" x2="18" y2="18"/>
-          <line x1="6" y1="18" x2="18" y2="6"/>
-        </svg>
-      </button>
+      <!-- Mobile Right Actions (Cart + Hamburger together) -->
+      <div class="moby-header__actions moby-header__actions--mobile">
+        <!-- Cart Button (Mobile) -->
+        <a href="{{ routes.cart_url }}" class="moby-header__cart">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="moby-header__cart-text">CART</span>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button type="button" class="moby-header__mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="moby-header__hamburger" width="24" height="16" viewBox="0 0 28 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M27.3471 16.9771C27.3471 17.5215 27.3989 18.0918 27.5545 18.7398L27.4508 18.8176C27.036 18.6361 25.74 18.5324 23.5626 18.5324H9.72044C7.54303 18.5324 6.24695 18.6361 5.8322 18.8176L5.72852 18.7398C5.88405 18.0918 5.93589 17.5215 5.93589 16.9771C5.93589 16.4328 5.88405 15.8625 5.72852 15.2145L5.8322 15.1367C6.24695 15.3182 7.54303 15.4219 9.72044 15.4219H23.5626C25.74 15.4219 27.036 15.3182 27.4508 15.1367L27.5545 15.2145C27.3989 15.8625 27.3471 16.4587 27.3471 16.9771Z" fill="var(--moby-accent)"/>
+            <path d="M21.6186 9.53965C21.6186 10.084 21.6704 10.6543 21.826 11.3023L21.7223 11.3801C21.3075 11.1986 20.0114 11.0949 17.834 11.0949H3.99192C1.81451 11.0949 0.518431 11.1986 0.103686 11.3801L0 11.3023C0.155529 10.6543 0.207373 10.084 0.207373 9.53965C0.207373 8.9953 0.155529 8.42502 0 7.77698L0.103686 7.69922C0.518431 7.88067 1.81451 7.98436 3.99192 7.98436H17.834C20.0114 7.98436 21.3075 7.88067 21.7223 7.69922L21.826 7.77698C21.6704 8.42502 21.6186 9.02122 21.6186 9.53965Z" fill="var(--moby-accent)"/>
+            <path d="M24.3666 1.84043C24.3666 2.38478 24.4185 2.95506 24.574 3.6031L24.4703 3.68086C24.0556 3.49941 22.7595 3.39573 20.5821 3.39573H6.73997C4.56256 3.39573 3.26648 3.49941 2.85173 3.68086L2.74805 3.6031C2.90358 2.95506 2.95542 2.38478 2.95542 1.84043C2.95542 1.29608 2.90358 0.725804 2.74805 0.0777647L2.85173 0C3.26648 0.181451 4.56256 0.285137 6.73997 0.285137H20.5821C22.7595 0.285137 24.0556 0.181451 24.4703 0L24.574 0.0777647C24.4185 0.725804 24.3666 1.322 24.3666 1.84043Z" fill="var(--moby-accent)"/>
+          </svg>
+          <svg class="moby-header__close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--moby-accent)" stroke-width="1.5">
+            <line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="6" y1="18" x2="18" y2="6"/>
+          </svg>
+        </button>
+      </div>
     </nav>
   </div>
 
@@ -258,9 +271,26 @@
     height: 37px;
   }
 
-  @media (max-width: 768px) {
-    .moby-header__actions {
-      gap: 8px;
+  /* Desktop actions - hidden on mobile */
+  .moby-header__actions--desktop {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-header__actions--desktop {
+      display: flex;
+    }
+  }
+
+  /* Mobile actions - hidden on desktop */
+  .moby-header__actions--mobile {
+    display: flex;
+    gap: 8px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-header__actions--mobile {
+      display: none;
     }
   }
 
@@ -377,12 +407,6 @@
     background: none;
     border: none;
     cursor: pointer;
-  }
-
-  @media (min-width: 1024px) {
-    .moby-header__mobile-toggle {
-      display: none;
-    }
   }
 
   .moby-header__hamburger {
