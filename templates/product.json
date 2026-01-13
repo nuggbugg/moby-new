@@ -1,1 +1,630 @@
-{"sections":{"main":{"type":"product-information","blocks":{"media-gallery":{"type":"_product-media-gallery","static":true,"settings":{"media_presentation":"grid","media_columns":"one","image_gap":0,"large_first_image":false,"icons_style":"arrow","slideshow_controls_style":"dots","slideshow_mobile_controls_style":"counter","thumbnail_position":"bottom","thumbnail_width":44,"aspect_ratio":"1","constrain_to_viewport":false,"media_fit":"cover","media_radius":0,"extend_media":true,"zoom":true,"video_loop":false,"hide_variants":false,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":50,"padding-inline-end":50},"blocks":{}},"product-details":{"type":"_product-details","static":true,"settings":{"width":"custom","custom_width":92,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","details_position":"flex-start","gap":0,"sticky_details_desktop":true,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":56,"padding-block-end":24,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"group_4we3XL":{"type":"group","name":"Main information","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":12,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"placeholder":"","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"review_pzw7fn":{"type":"review","settings":{"stars_style":"shaded","show_number":true,"rating_color":"primary","type_preset":"paragraph","alignment":"left"},"blocks":{}},"text_DQhnJA":{"type":"text","name":"Byline","settings":{"text":"<p>{{ closest.product.metafields.descriptors.subtitle.value }}<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"custom","font":"var(--font-primary--family)","font_size":"var(--font-size--heading-xs)","line_height":"normal","letter_spacing":"loose","case":"uppercase","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"product_title_JtBYqQ":{"type":"product-title","name":"t:names.title","settings":{"width":"fit-content","max_width":"normal","alignment":"left","type_preset":"h2","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"judge_me_reviews_preview_badge_MWgmDE":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/preview_badge\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{}},"price_XqcpTF":{"type":"price","settings":{"show_sale_price_first":true,"show_installments":true,"show_tax_info":true,"type_preset":"h6","width":"100%","alignment":"left","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","color":"var(--color-foreground)","padding-block-start":4,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["review_pzw7fn","text_DQhnJA","product_title_JtBYqQ","judge_me_reviews_preview_badge_MWgmDE","price_XqcpTF"]},"group_dTHcXb":{"type":"group","name":"Product form","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":32,"width":"custom","custom_width":80,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"placeholder":"","padding-block-start":32,"padding-block-end":32,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"variant_picker_KePPVa":{"type":"variant-picker","settings":{"variant_style":"buttons","show_swatches":true,"alignment":"left","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"buy_buttons_6p8c63":{"type":"buy-buttons","settings":{"stacking":false,"show_pickup_availability":false,"gift_card_form":true,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"quantity":{"type":"quantity","static":true,"settings":{},"blocks":{}},"add-to-cart":{"type":"add-to-cart","static":true,"settings":{"style_class":"button-secondary"},"blocks":{}},"accelerated-checkout":{"type":"accelerated-checkout","static":true,"settings":{},"blocks":{}}},"block_order":[]}},"block_order":["variant_picker_KePPVa","buy_buttons_6p8c63"]},"text_LbbLqQ":{"type":"text","name":"Product description","settings":{"text":"{{ closest.product.description }}","width":"100%","max_width":"normal","alignment":"left","type_preset":"paragraph","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":48,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["group_4we3XL","group_dTHcXb","text_LbbLqQ"]}},"settings":{"content_width":"content-full-width","desktop_media_position":"left","equal_columns":true,"limit_details_width":false,"gap":0,"color_scheme":"scheme-1","padding-block-start":50,"padding-block-end":0}},"176615865915cd46a8":{"type":"_blocks","blocks":{"judge_me_reviews_review_widget_LybdrW":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"review_data":"sample_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}}},"block_order":["judge_me_reviews_review_widget_LybdrW"],"settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":12,"section_width":"page-width","section_height":"","section_height_custom":50,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","padding-block-start":0,"padding-block-end":0}},"1766159780be2b33af":{"type":"_blocks","blocks":{"judge_me_reviews_review_widget_zUXPq6":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"review_data":"sample_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}}},"block_order":["judge_me_reviews_review_widget_zUXPq6"],"settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":12,"section_width":"page-width","section_height":"","section_height_custom":50,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","padding-block-start":0,"padding-block-end":0}}},"order":["main","176615865915cd46a8","1766159780be2b33af"]}
+{
+  "sections": {
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "grid",
+            "media_columns": "one",
+            "image_gap": 0,
+            "large_first_image": false,
+            "icons_style": "arrow",
+            "slideshow_controls_style": "dots",
+            "slideshow_mobile_controls_style": "counter",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 44,
+            "aspect_ratio": "1",
+            "constrain_to_viewport": false,
+            "media_fit": "cover",
+            "media_radius": 0,
+            "extend_media": true,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": false,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 50,
+            "padding-inline-end": 50
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "custom",
+            "custom_width": 92,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 0,
+            "sticky_details_desktop": true,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 56,
+            "padding-block-end": 24,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_4we3XL": {
+              "type": "group",
+              "name": "Main information",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "review_pzw7fn": {
+                  "type": "review",
+                  "settings": {
+                    "stars_style": "shaded",
+                    "show_number": true,
+                    "rating_color": "primary",
+                    "type_preset": "paragraph",
+                    "alignment": "left"
+                  },
+                  "blocks": {}
+                },
+                "text_DQhnJA": {
+                  "type": "text",
+                  "name": "Byline",
+                  "settings": {
+                    "text": "<p>{{ closest.product.metafields.descriptors.subtitle.value }}</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font": "var(--font-primary--family)",
+                    "font_size": "var(--font-size--heading-xs)",
+                    "line_height": "normal",
+                    "letter_spacing": "loose",
+                    "case": "uppercase",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "product_title_JtBYqQ": {
+                  "type": "product-title",
+                  "name": "t:names.title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h2",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "judge_me_reviews_preview_badge_MWgmDE": {
+                  "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+                  "settings": {}
+                },
+                "price_XqcpTF": {
+                  "type": "price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": true,
+                    "show_tax_info": true,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": ["review_pzw7fn", "text_DQhnJA", "product_title_JtBYqQ", "judge_me_reviews_preview_badge_MWgmDE", "price_XqcpTF"]
+            },
+            "group_dTHcXb": {
+              "type": "group",
+              "name": "Product form",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 32,
+                "width": "custom",
+                "custom_width": 80,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 32,
+                "padding-block-end": 32,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "variant_picker_KePPVa": {
+                  "type": "variant-picker",
+                  "settings": {
+                    "variant_style": "buttons",
+                    "show_swatches": true,
+                    "alignment": "left",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "buy_buttons_6p8c63": {
+                  "type": "buy-buttons",
+                  "settings": {
+                    "stacking": false,
+                    "show_pickup_availability": false,
+                    "gift_card_form": true,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "quantity": {
+                      "type": "quantity",
+                      "static": true,
+                      "settings": {},
+                      "blocks": {}
+                    },
+                    "add-to-cart": {
+                      "type": "add-to-cart",
+                      "static": true,
+                      "settings": {
+                        "style_class": "button-secondary"
+                      },
+                      "blocks": {}
+                    },
+                    "accelerated-checkout": {
+                      "type": "accelerated-checkout",
+                      "static": true,
+                      "settings": {},
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": []
+                }
+              },
+              "block_order": ["variant_picker_KePPVa", "buy_buttons_6p8c63"]
+            },
+            "text_LbbLqQ": {
+              "type": "text",
+              "name": "Product description",
+              "settings": {
+                "text": "{{ closest.product.description }}",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "paragraph",
+                "font": "var(--font-primary--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 48,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": ["group_4we3XL", "group_dTHcXb", "text_LbbLqQ"]
+        }
+      },
+      "settings": {
+        "content_width": "content-full-width",
+        "desktop_media_position": "left",
+        "equal_columns": true,
+        "limit_details_width": false,
+        "gap": 0,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 50,
+        "padding-block-end": 0
+      }
+    },
+    "moby_features": {
+      "type": "moby-features",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "icon": "flask",
+            "title": "PURE MONOHYDRATE",
+            "description": "Third-party tested creatine with zero fillers"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "100% NATURAL",
+            "description": "Vegan-friendly, no artificial additives"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "icon": "lightning",
+            "title": "READY TO MIX",
+            "description": "Individual sticks for easy daily use"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "icon": "target",
+            "title": "OPTIMAL 5G DOSE",
+            "description": "Clinically proven effective amount"
+          }
+        },
+        "feature_5": {
+          "type": "feature",
+          "settings": {
+            "icon": "star",
+            "title": "PRODUCED IN SWEDEN",
+            "description": "Pharmaceutical-grade precision"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5"],
+      "settings": {}
+    },
+    "moby_why_stickpacks": {
+      "type": "moby-why-stickpacks",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "check",
+            "title": "Perfect Dose Every Time",
+            "description": "No measuring, no guessing. Each stick contains exactly 5g of pure creatine monohydrate."
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "lightning",
+            "title": "Travel-Ready",
+            "description": "Compact, lightweight sticks fit in your pocket, gym bag, or carry-on. Never miss a dose."
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "title": "Sealed Freshness",
+            "description": "Each stick is individually sealed to preserve potency and prevent moisture contamination."
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "title": "No Mess, No Waste",
+            "description": "Clean, precise dispensing. No spills, no scoops to clean, no powder residue."
+          }
+        }
+      },
+      "block_order": ["benefit_1", "benefit_2", "benefit_3", "benefit_4"],
+      "settings": {
+        "heading": "Why Stick Packs?",
+        "subheading": "The smarter way to supplement"
+      }
+    },
+    "moby_product_tabs": {
+      "type": "moby-product-tabs",
+      "blocks": {
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How much creatine should I take daily?",
+            "answer": "We recommend one stick (5g) per day mixed with 200-300ml of water. This is the clinically proven dose for optimal cognitive and physical benefits."
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "When is the best time to take creatine?",
+            "answer": "Creatine can be taken at any time of day. For best results, take it consistently at the same time each day. Many prefer taking it in the morning with breakfast or post-workout."
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is MOBY suitable for vegetarians and vegans?",
+            "answer": "Yes, MOBY Creatine is 100% vegan-friendly. It contains pure creatine monohydrate with no animal-derived ingredients."
+          }
+        },
+        "faq_4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do I need a loading phase?",
+            "answer": "No loading phase is necessary. While some protocols suggest a loading phase, consistent daily intake of 5g will achieve optimal levels within 2-3 weeks."
+          }
+        },
+        "faq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long until I see results?",
+            "answer": "Most people notice improved mental clarity within 1-2 weeks, while physical performance benefits typically appear after 2-4 weeks of consistent use."
+          }
+        },
+        "faq_6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I take creatine with other supplements?",
+            "answer": "Yes, creatine is safe to combine with most other supplements. It works particularly well with protein, caffeine, and B vitamins."
+          }
+        },
+        "faq_7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "We offer a 100% satisfaction guarantee. If you're not completely satisfied with MOBY, contact us within 30 days for a full refund."
+          }
+        }
+      },
+      "block_order": ["faq_1", "faq_2", "faq_3", "faq_4", "faq_5", "faq_6", "faq_7"],
+      "settings": {
+        "serving_size": "1 stick (5g)",
+        "servings_per_container": "30",
+        "form": "Powder (stick packs)",
+        "flavor": "Unflavored",
+        "produced_in": "Sweden",
+        "ingredient_description": "The most researched and proven form of creatine. Clinically shown to enhance ATP production, support muscle energy, improve cognitive function, and accelerate recovery. Our pharmaceutical-grade creatine monohydrate is micronized for superior absorption and mixability."
+      }
+    },
+    "moby_why_moby": {
+      "type": "moby-why-moby",
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "icon": "shield",
+            "title": "Third-Party Tested",
+            "description": "Verified purity and potency. Every batch, independently tested by accredited European labs."
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "icon": "leaf",
+            "title": "Premium Sourcing",
+            "description": "Pharmaceutical-grade creatine monohydrate produced in Sweden under strict GMP standards."
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "icon": "star",
+            "title": "No Fillers",
+            "description": "Just pure creatine. No flavors, dyes, sugar, or unnecessary additives — ever."
+          }
+        }
+      },
+      "block_order": ["pillar_1", "pillar_2", "pillar_3"],
+      "settings": {
+        "badge": "Why Choose MOBY",
+        "heading": "Creatine Made Clean, Simple, and Precise",
+        "subheading": "Pure creatine, nothing else. Third-party tested, precisely dosed, and produced in Sweden under the strictest standards."
+      }
+    },
+    "moby_research": {
+      "type": "moby-research",
+      "blocks": {
+        "study_1": {
+          "type": "study",
+          "settings": {
+            "category": "Performance",
+            "title": "Meta-Analysis: Creatine and Strength",
+            "source": "Journal of Strength & Conditioning Research",
+            "year": "2022",
+            "participants": "1,847",
+            "duration": "4-12 weeks",
+            "description": "Comprehensive meta-analysis showing creatine supplementation increases strength by an average of 8% in trained individuals.",
+            "metric_1_label": "Strength Increase",
+            "metric_1_value": 8,
+            "metric_2_label": "Power Output",
+            "metric_2_value": 14,
+            "conclusion": "Creatine supplementation significantly enhances strength and power output across various training protocols."
+          }
+        },
+        "study_2": {
+          "type": "study",
+          "settings": {
+            "category": "Cognitive",
+            "title": "Creatine and Cognitive Performance",
+            "source": "Experimental Gerontology",
+            "year": "2023",
+            "participants": "281",
+            "duration": "6 weeks",
+            "description": "Double-blind study examining creatine's effects on memory and processing speed in adults.",
+            "metric_1_label": "Memory Improvement",
+            "metric_1_value": 15,
+            "metric_2_label": "Processing Speed",
+            "metric_2_value": 12,
+            "conclusion": "Creatine supplementation shows promising cognitive benefits, particularly for memory and mental processing."
+          }
+        },
+        "study_3": {
+          "type": "study",
+          "settings": {
+            "category": "Recovery",
+            "title": "Creatine and Muscle Recovery",
+            "source": "International Journal of Sports Medicine",
+            "year": "2021",
+            "participants": "64",
+            "duration": "8 weeks",
+            "description": "Study examining creatine's role in reducing muscle damage markers and accelerating recovery.",
+            "metric_1_label": "Recovery Rate",
+            "metric_1_value": 20,
+            "metric_2_label": "Muscle Damage Markers",
+            "metric_2_value": -25,
+            "conclusion": "Creatine supplementation significantly reduces recovery time and markers of muscle damage."
+          }
+        }
+      },
+      "block_order": ["study_1", "study_2", "study_3"],
+      "settings": {
+        "badge": "Science-Backed",
+        "heading": "The Research Behind MOBY",
+        "subheading": "Creatine monohydrate is one of the most studied supplements in sports nutrition. Here's what the science says."
+      }
+    },
+    "176615865915cd46a8": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_review_widget_LybdrW": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": ["judge_me_reviews_review_widget_LybdrW"],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "moby_sticky_bar": {
+      "type": "moby-sticky-bar",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "moby_features",
+    "moby_why_stickpacks",
+    "moby_product_tabs",
+    "moby_why_moby",
+    "moby_research",
+    "176615865915cd46a8",
+    "moby_sticky_bar"
+  ]
+}

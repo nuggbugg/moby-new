@@ -1,0 +1,517 @@
+{% comment %}
+  MOBY Research Section
+  - Clinical studies with expandable accordions
+  - Bar chart visualizations
+{% endcomment %}
+
+<section class="moby-section moby-research">
+  <div class="moby-container moby-container--narrow">
+    <!-- Header -->
+    <div class="moby-research__header">
+      <span class="moby-research__badge">{{ section.settings.badge | default: "Clinical Evidence" }}</span>
+      <h2 class="moby-research__heading">{{ section.settings.heading | default: "The Science Behind Creatine" }}</h2>
+      <p class="moby-research__subheading">{{ section.settings.subheading | default: "Creatine is one of the most researched supplements in the world. Here are key findings from peer-reviewed clinical studies." }}</p>
+    </div>
+
+    <!-- Studies List -->
+    <div class="moby-research__studies">
+      {%- for block in section.blocks -%}
+        <div class="moby-research__study" {{ block.shopify_attributes }}>
+          <button 
+            class="moby-research__study-header" 
+            type="button"
+            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="study-content-{{ block.id }}"
+          >
+            <div class="moby-research__study-info">
+              <div class="moby-research__study-meta">
+                <svg class="moby-research__flask-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 3H15M10 3V8.5L4 18C3.33 19.17 4.17 20.5 5.5 20.5H18.5C19.83 20.5 20.67 19.17 20 18L14 8.5V3"/>
+                  <path d="M7 14H17"/>
+                </svg>
+                <span>{{ block.settings.journal }} • {{ block.settings.year }}</span>
+              </div>
+              <h3 class="moby-research__study-title">{{ block.settings.title }}</h3>
+            </div>
+            <svg class="moby-research__chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+
+          <div 
+            class="moby-research__study-content{% if forloop.first %} moby-research__study-content--open{% endif %}" 
+            id="study-content-{{ block.id }}"
+            {% unless forloop.first %}hidden{% endunless %}
+          >
+            <p class="moby-research__study-finding">{{ block.settings.finding }}</p>
+
+            <!-- Bar Chart -->
+            <div class="moby-research__chart">
+              <p class="moby-research__chart-label">{{ block.settings.metric }} Comparison</p>
+              
+              <div class="moby-research__bar-group">
+                <div class="moby-research__bar-row">
+                  <span class="moby-research__bar-label">Placebo</span>
+                  <span class="moby-research__bar-value">{{ block.settings.placebo_result }}{{ block.settings.unit }}</span>
+                </div>
+                <div class="moby-research__bar-track">
+                  <div class="moby-research__bar moby-research__bar--placebo" style="--bar-width: {{ block.settings.placebo_result | divided_by: 1.2 }}%"></div>
+                </div>
+              </div>
+
+              <div class="moby-research__bar-group">
+                <div class="moby-research__bar-row">
+                  <span class="moby-research__bar-label moby-research__bar-label--highlight">Creatine</span>
+                  <span class="moby-research__bar-value moby-research__bar-value--highlight">{{ block.settings.creatine_result }}{{ block.settings.unit }}</span>
+                </div>
+                <div class="moby-research__bar-track">
+                  <div class="moby-research__bar moby-research__bar--creatine" style="--bar-width: {{ block.settings.creatine_result | divided_by: 1.2 }}%"></div>
+                </div>
+              </div>
+
+              <p class="moby-research__chart-note">Higher is better</p>
+            </div>
+
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" target="_blank" rel="noopener noreferrer" class="moby-research__study-link">
+                View Study
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                </svg>
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const studies = document.querySelectorAll('.moby-research__study');
+    
+    studies.forEach(study => {
+      const button = study.querySelector('.moby-research__study-header');
+      const content = study.querySelector('.moby-research__study-content');
+      
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        
+        // Close all other studies
+        studies.forEach(otherStudy => {
+          if (otherStudy !== study) {
+            const otherButton = otherStudy.querySelector('.moby-research__study-header');
+            const otherContent = otherStudy.querySelector('.moby-research__study-content');
+            otherButton.setAttribute('aria-expanded', 'false');
+            otherContent.hidden = true;
+            otherContent.classList.remove('moby-research__study-content--open');
+          }
+        });
+        
+        // Toggle current study
+        this.setAttribute('aria-expanded', !isExpanded);
+        content.hidden = isExpanded;
+        content.classList.toggle('moby-research__study-content--open', !isExpanded);
+      });
+    });
+  });
+</script>
+
+<style>
+  .moby-research {
+    background: rgba(245, 245, 240, 0.3);
+  }
+
+  .moby-research__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-research__header {
+      margin-bottom: 64px;
+    }
+  }
+
+  .moby-research__badge {
+    display: inline-block;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+    margin-bottom: 12px;
+  }
+
+  .moby-research__heading {
+    font-family: 'Memoir', serif;
+    font-size: 28px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-research__heading {
+      font-size: 40px;
+    }
+  }
+
+  .moby-research__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* Studies */
+  .moby-research__studies {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .moby-research__study {
+    background: #ffffff;
+    border: 1px solid rgba(201, 200, 182, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .moby-research__study-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s ease;
+  }
+
+  .moby-research__study-header:hover {
+    background: rgba(245, 245, 240, 0.5);
+  }
+
+  .moby-research__study-info {
+    flex: 1;
+  }
+
+  .moby-research__study-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .moby-research__flask-icon {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-research__study-meta span {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-research__study-title {
+    font-family: 'Memoir', serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-research__study-title {
+      font-size: 16px;
+    }
+  }
+
+  .moby-research__chevron {
+    flex-shrink: 0;
+    color: var(--moby-sage, #C9C8B6);
+    transition: transform 0.3s ease;
+  }
+
+  .moby-research__study-header[aria-expanded="true"] .moby-research__chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Content */
+  .moby-research__study-content {
+    padding: 0 24px 24px;
+    border-top: 1px solid rgba(201, 200, 182, 0.3);
+    margin-top: -1px;
+  }
+
+  .moby-research__study-content--open {
+    padding-top: 16px;
+  }
+
+  .moby-research__study-finding {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0 0 24px;
+  }
+
+  /* Bar Chart */
+  .moby-research__chart {
+    margin-bottom: 16px;
+  }
+
+  .moby-research__chart-label {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-sage, #C9C8B6);
+    text-align: center;
+    margin: 0 0 16px;
+  }
+
+  .moby-research__bar-group {
+    margin-bottom: 12px;
+  }
+
+  .moby-research__bar-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .moby-research__bar-label {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-research__bar-label--highlight {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-research__bar-value {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .moby-research__bar-value--highlight {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-research__bar-track {
+    height: 32px;
+    background: rgba(201, 200, 182, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .moby-research__bar {
+    height: 100%;
+    border-radius: 4px;
+    width: var(--bar-width, 0%);
+    transition: width 0.8s ease;
+  }
+
+  .moby-research__bar--placebo {
+    background: rgba(201, 200, 182, 0.5);
+  }
+
+  .moby-research__bar--creatine {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-research__chart-note {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-align: center;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 8px 0 0;
+  }
+
+  .moby-research__study-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-research__study-link:hover {
+    opacity: 0.8;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Research",
+  "tag": "section",
+  "class": "moby-research-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge text",
+      "default": "Clinical Evidence"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Science Behind Creatine"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Creatine is one of the most researched supplements in the world. Here are key findings from peer-reviewed clinical studies."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "study",
+      "name": "Study",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Study title",
+          "default": "Creatine Supplementation and Cognitive Performance"
+        },
+        {
+          "type": "text",
+          "id": "journal",
+          "label": "Journal name",
+          "default": "Experimental Gerontology"
+        },
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year",
+          "default": "2018"
+        },
+        {
+          "type": "textarea",
+          "id": "finding",
+          "label": "Key finding",
+          "default": "A systematic review found that creatine supplementation significantly improved short-term memory and reasoning/intelligence scores in healthy individuals, particularly under stress or sleep deprivation."
+        },
+        {
+          "type": "text",
+          "id": "metric",
+          "label": "Metric name",
+          "default": "Cognitive Performance"
+        },
+        {
+          "type": "number",
+          "id": "placebo_result",
+          "label": "Placebo result",
+          "default": 100
+        },
+        {
+          "type": "number",
+          "id": "creatine_result",
+          "label": "Creatine result",
+          "default": 115
+        },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "Unit",
+          "default": "%"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Study link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Research",
+      "blocks": [
+        {
+          "type": "study",
+          "settings": {
+            "title": "Creatine Supplementation and Cognitive Performance",
+            "journal": "Experimental Gerontology",
+            "year": "2018",
+            "finding": "A systematic review found that creatine supplementation significantly improved short-term memory and reasoning/intelligence scores in healthy individuals, particularly under stress or sleep deprivation.",
+            "metric": "Cognitive Performance",
+            "placebo_result": 100,
+            "creatine_result": 115,
+            "unit": "%",
+            "link": "https://pubmed.ncbi.nlm.nih.gov/29704637/"
+          }
+        },
+        {
+          "type": "study",
+          "settings": {
+            "title": "Effects of Creatine on Memory in Healthy Individuals",
+            "journal": "Nutritional Neuroscience",
+            "year": "2022",
+            "finding": "Meta-analysis of randomized controlled trials showed creatine supplementation significantly improved memory performance, with greater effects observed in older adults.",
+            "metric": "Memory Score",
+            "placebo_result": 100,
+            "creatine_result": 112,
+            "unit": "%",
+            "link": "https://pubmed.ncbi.nlm.nih.gov/35984306/"
+          }
+        },
+        {
+          "type": "study",
+          "settings": {
+            "title": "Creatine Supplementation and Strength Gains During Resistance Training",
+            "journal": "International Journal of Sport Nutrition",
+            "year": "2003",
+            "finding": "Meta-analysis demonstrated that creatine supplementation, combined with resistance training, increased maximum strength by an average of 8% and repetition performance by 14% compared to placebo.",
+            "metric": "Strength Increase",
+            "placebo_result": 100,
+            "creatine_result": 108,
+            "unit": "%",
+            "link": "https://pubmed.ncbi.nlm.nih.gov/12945830/"
+          }
+        },
+        {
+          "type": "study",
+          "settings": {
+            "title": "Creatine Supplementation and Exercise Performance",
+            "journal": "Journal of the International Society of Sports Nutrition",
+            "year": "2012",
+            "finding": "Comprehensive review confirmed creatine monohydrate is the most effective ergogenic nutritional supplement for increasing high-intensity exercise capacity and lean body mass during training.",
+            "metric": "High-Intensity Output",
+            "placebo_result": 100,
+            "creatine_result": 115,
+            "unit": "%",
+            "link": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3407788/"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
