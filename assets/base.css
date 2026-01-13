@@ -562,6 +562,33 @@ p:empty {
   height: 100%;
 }
 
+/* === MOBY Section Layout System ===
+   Core Rule: All section content must align within a 1296px max-width container, centered on the page.
+   Usage: <section class="moby-section"><div class="moby-container">Content</div></section>
+*/
+
+.moby-section {
+  width: 100%;
+  padding: 128px 0; /* Desktop vertical spacing */
+}
+
+@media (max-width: 768px) {
+  .moby-section {
+    padding: 80px 0; /* Mobile vertical spacing */
+  }
+}
+
+.moby-container {
+  width: 90%;
+  max-width: 1296px;
+  margin: 0 auto;
+}
+
+/* For narrower content sections like FAQ */
+.moby-container--narrow {
+  max-width: 1000px;
+}
+
 /* Utility */
 
 .hidden {
