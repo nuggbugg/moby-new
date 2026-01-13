@@ -11,7 +11,9 @@
         class: 'moby-blog-hero__image',
         loading: 'eager',
         sizes: '100vw',
-        widths: '375, 750, 1100, 1500, 1920'
+        widths: '375, 750, 1100, 1500, 1920',
+        alt: section.settings.heading | default: 'The Power Station Blog',
+        fetchpriority: 'high'
       }}
     </div>
   {%- else -%}

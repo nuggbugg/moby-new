@@ -77,7 +77,8 @@
             {%- if featured_product.featured_image -%}
               {{ featured_product.featured_image | image_url: width: 200 | image_tag:
                 loading: 'lazy',
-                widths: '100, 150, 200'
+                widths: '100, 150, 200',
+                alt: featured_product.title
               }}
             {%- endif -%}
           </div>

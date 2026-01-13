@@ -15,7 +15,8 @@
               class: 'moby-about-mission__image',
               loading: 'lazy',
               sizes: '(min-width: 768px) 50vw, 100vw',
-              widths: '375, 500, 600, 800'
+              widths: '375, 500, 600, 800',
+              alt: section.settings.heading | default: 'Our Mission'
             }}
           {%- else -%}
             <div class="moby-about-mission__placeholder"></div>
