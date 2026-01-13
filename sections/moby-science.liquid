@@ -48,7 +48,8 @@
             class: 'moby-science__image',
             loading: 'lazy',
             sizes: '(min-width: 1024px) 33vw, 80vw',
-            widths: '300, 400, 500, 600'
+            widths: '300, 400, 500, 600',
+            alt: section.settings.heading | default: 'MOBY Science'
           }}
         {%- else -%}
           {{ 'product-1' | placeholder_svg_tag: 'moby-science__image' }}

@@ -14,7 +14,8 @@
             class: 'moby-partner-why__image',
             loading: 'lazy',
             sizes: '(min-width: 768px) 40vw, 80vw',
-            widths: '300, 400, 500, 600'
+            widths: '300, 400, 500, 600',
+            alt: section.settings.heading | default: 'Why MOBY'
           }}
         {%- else -%}
           <div class="moby-partner-why__placeholder"></div>

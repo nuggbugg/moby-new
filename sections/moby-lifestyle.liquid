@@ -52,7 +52,8 @@
               {{ product.featured_image | image_url: width: 200 | image_tag:
                 loading: 'lazy',
                 width: 112,
-                height: 112
+                height: 112,
+                alt: product.title
               }}
             {%- else -%}
               {{ 'product-1' | placeholder_svg_tag }}

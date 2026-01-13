@@ -10,6 +10,33 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 {%- assign base_price = current_variant.price | divided_by: 100.0 -%}
 
+{%- comment -%} Product Structured Data for SEO {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 200 | json }},
+  "image": {{ product.featured_image | image_url: width: 1200 | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": "MOBY"
+  },
+  "sku": {{ current_variant.sku | json }},
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "priceCurrency": "{{ cart.currency.iso_code }}",
+    "price": "{{ current_variant.price | money_without_currency | remove: ',' }}",
+    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    }
+  }
+}
+</script>
+
 <section class="moby-section moby-buy-box" data-section-id="{{ section.id }}">
   <div class="moby-container">
     <div class="moby-buy-box__layout">
@@ -24,7 +51,7 @@
                   data-image-url="{{ image | image_url: width: 800 }}"
                   type="button"
                 >
-                  {{ image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+                  {{ image | image_url: width: 100 | image_tag: loading: 'lazy', alt: product.title | append: ' - Image ' | append: forloop.index }}
                 </button>
               {%- endfor -%}
             </div>
@@ -35,7 +62,9 @@
               {{ product.featured_image | image_url: width: 800 | image_tag:
                 loading: 'eager',
                 class: 'moby-buy-box__image',
-                widths: '400, 600, 800'
+                widths: '400, 600, 800',
+                alt: product.title,
+                fetchpriority: 'high'
               }}
             {%- endif -%}
           </div>
@@ -556,7 +585,7 @@
 
   .moby-buy-box__stock--out {
     background: rgba(28, 26, 16, 0.08);
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.75);
   }
 
   /* Klarna */
@@ -736,7 +765,7 @@
     font-family: 'N27', sans-serif;
     font-size: 9px;
     font-weight: 300;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.75);
     margin-bottom: 2px;
   }
 
@@ -750,7 +779,7 @@
     font-family: 'N27', sans-serif;
     font-size: 8px;
     font-weight: 300;
-    color: rgba(28, 26, 16, 0.5);
+    color: rgba(28, 26, 16, 0.7);
   }
 
   @media (min-width: 768px) {
@@ -888,7 +917,7 @@
     font-family: 'N27', sans-serif;
     font-size: 10px;
     font-weight: 300;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.75);
   }
 
   @media (min-width: 768px) {
@@ -922,7 +951,7 @@
     font-family: 'N27', sans-serif;
     font-size: 12px;
     font-weight: 300;
-    color: rgba(28, 26, 16, 0.5);
+    color: rgba(28, 26, 16, 0.7);
     text-decoration: line-through;
     white-space: nowrap;
   }
@@ -998,7 +1027,7 @@
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: rgba(28, 26, 16, 0.5);
+    color: rgba(28, 26, 16, 0.7);
     margin: 0;
   }
 
@@ -1050,7 +1079,7 @@
   }
 
   .moby-buy-box__trust-item svg {
-    color: rgba(28, 26, 16, 0.5);
+    color: rgba(28, 26, 16, 0.7);
   }
 
   .moby-buy-box__trust-item p {
@@ -1060,7 +1089,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     line-height: 1.4;
-    color: rgba(28, 26, 16, 0.5);
+    color: rgba(28, 26, 16, 0.7);
     margin: 0;
   }
 </style>
