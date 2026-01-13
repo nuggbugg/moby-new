@@ -88,7 +88,7 @@
             <div class="moby-footer__payment-icon">
               {{ 'apple_pay' | payment_type_svg_tag }}
             </div>
-            <div class="moby-footer__payment-icon moby-footer__payment-icon--shop">
+            <div class="moby-footer__payment-icon">
               {{ 'shopify_pay' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
@@ -102,7 +102,7 @@
             <div class="moby-footer__payment-icon">
               {{ 'visa' | payment_type_svg_tag }}
             </div>
-            <div class="moby-footer__payment-icon moby-footer__payment-icon--klarna">
+            <div class="moby-footer__payment-icon">
               {{ 'klarna' | payment_type_svg_tag }}
             </div>
             <div class="moby-footer__payment-icon">
@@ -292,26 +292,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 28px;
-    background: var(--color-background, #ffffff);
-    border: 1px solid rgba(28, 26, 16, 0.1);
-    border-radius: 4px;
-  }
-
-  .moby-footer__payment-icon--shop {
-    background: #5A31F4;
-  }
-
-  .moby-footer__payment-icon--klarna {
-    background: #FFB3C7;
   }
 
   .moby-footer__payment-icon img,
   .moby-footer__payment-icon svg {
-    max-width: 32px;
-    max-height: 20px;
-    object-fit: contain;
+    height: 24px;
+    width: auto;
   }
 
   /* Copyright */
