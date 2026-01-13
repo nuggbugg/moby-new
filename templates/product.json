@@ -112,6 +112,7 @@
         "benefit_4"
       ],
       "settings": {
+        "badge": "The MOBY Difference",
         "heading": "Why Stick Packs?",
         "subheading": "The smarter way to supplement"
       }
@@ -233,21 +234,42 @@
           "type": "study",
           "settings": {
             "title": "Meta-Analysis: Creatine and Strength",
-            "year": "2022"
+            "journal": "Experimental Gerontology",
+            "year": "2022",
+            "finding": "A systematic review found that creatine supplementation significantly improved short-term memory and reasoning/intelligence scores in healthy individuals, particularly under stress or sleep deprivation.",
+            "metric": "Cognitive Performance",
+            "placebo_result": 100,
+            "creatine_result": 115,
+            "unit": "%",
+            "link": ""
           }
         },
         "study_2": {
           "type": "study",
           "settings": {
             "title": "Creatine and Cognitive Performance",
-            "year": "2023"
+            "journal": "Experimental Gerontology",
+            "year": "2023",
+            "finding": "A systematic review found that creatine supplementation significantly improved short-term memory and reasoning/intelligence scores in healthy individuals, particularly under stress or sleep deprivation.",
+            "metric": "Cognitive Performance",
+            "placebo_result": 100,
+            "creatine_result": 115,
+            "unit": "%",
+            "link": ""
           }
         },
         "study_3": {
           "type": "study",
           "settings": {
             "title": "Creatine and Muscle Recovery",
-            "year": "2021"
+            "journal": "Experimental Gerontology",
+            "year": "2021",
+            "finding": "A systematic review found that creatine supplementation significantly improved short-term memory and reasoning/intelligence scores in healthy individuals, particularly under stress or sleep deprivation.",
+            "metric": "Cognitive Performance",
+            "placebo_result": 100,
+            "creatine_result": 115,
+            "unit": "%",
+            "link": ""
           }
         }
       },
