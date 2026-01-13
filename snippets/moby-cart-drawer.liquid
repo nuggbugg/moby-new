@@ -1,0 +1,547 @@
+{% comment %}
+  MOBY Cart Drawer
+  - Slide-in drawer from right
+  - Cart items with quantity controls
+  - Subtotal and checkout button
+{% endcomment %}
+
+<div id="moby-cart-drawer" class="moby-cart-drawer" aria-hidden="true">
+  <div class="moby-cart-drawer__backdrop" data-cart-drawer-close></div>
+
+  <div class="moby-cart-drawer__panel">
+    <!-- Header -->
+    <div class="moby-cart-drawer__header">
+      <h2 class="moby-cart-drawer__title">Your Cart</h2>
+      <button type="button" class="moby-cart-drawer__close" data-cart-drawer-close aria-label="Close cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="moby-cart-drawer__content" data-cart-drawer-content>
+      {% if cart.item_count > 0 %}
+        <div class="moby-cart-drawer__items">
+          {% for item in cart.items %}
+            <div class="moby-cart-drawer__item" data-cart-item data-line-id="{{ item.key }}">
+              <div class="moby-cart-drawer__item-image">
+                {% if item.image %}
+                  <img
+                    src="{{ item.image | image_url: width: 120 }}"
+                    alt="{{ item.title | escape }}"
+                    width="60"
+                    height="60"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="moby-cart-drawer__item-placeholder"></div>
+                {% endif %}
+              </div>
+
+              <div class="moby-cart-drawer__item-details">
+                <a href="{{ item.url }}" class="moby-cart-drawer__item-title">{{ item.product.title }}</a>
+                {% if item.variant.title != 'Default Title' %}
+                  <p class="moby-cart-drawer__item-variant">{{ item.variant.title }}</p>
+                {% endif %}
+                <p class="moby-cart-drawer__item-price">{{ item.final_line_price | money }}</p>
+              </div>
+
+              <div class="moby-cart-drawer__item-actions">
+                <div class="moby-cart-drawer__quantity">
+                  <button
+                    type="button"
+                    class="moby-cart-drawer__qty-btn"
+                    data-quantity-minus
+                    data-line="{{ forloop.index }}"
+                    aria-label="Decrease quantity"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <span class="moby-cart-drawer__qty-value" data-quantity-value>{{ item.quantity }}</span>
+                  <button
+                    type="button"
+                    class="moby-cart-drawer__qty-btn"
+                    data-quantity-plus
+                    data-line="{{ forloop.index }}"
+                    aria-label="Increase quantity"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="moby-cart-drawer__remove"
+                  data-remove-item
+                  data-line="{{ forloop.index }}"
+                  aria-label="Remove item"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="moby-cart-drawer__empty">
+          <p>Your cart is empty</p>
+          <a href="/collections/all" class="moby-cart-drawer__continue" data-cart-drawer-close>Continue Shopping</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Footer -->
+    {% if cart.item_count > 0 %}
+      <div class="moby-cart-drawer__footer">
+        <div class="moby-cart-drawer__subtotal">
+          <span>Subtotal</span>
+          <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="moby-cart-drawer__shipping-note">Shipping calculated at checkout</p>
+        <a href="{{ routes.cart_url }}" class="moby-cart-drawer__view-cart">View Cart</a>
+        <button type="button" class="moby-cart-drawer__checkout" onclick="window.location.href='{{ routes.checkout_url }}'">
+          Checkout
+        </button>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .moby-cart-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .moby-cart-drawer.is-open {
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .moby-cart-drawer__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(28, 26, 16, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .moby-cart-drawer.is-open .moby-cart-drawer__backdrop {
+    opacity: 1;
+  }
+
+  .moby-cart-drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    height: 100%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -4px 0 24px rgba(28, 26, 16, 0.1);
+  }
+
+  .moby-cart-drawer.is-open .moby-cart-drawer__panel {
+    transform: translateX(0);
+  }
+
+  .moby-cart-drawer__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(201, 200, 182, 0.3);
+  }
+
+  .moby-cart-drawer__title {
+    font-family: 'Memoir', serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  .moby-cart-drawer__close {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--moby-dark, #1C1A10);
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-cart-drawer__close:hover {
+    opacity: 0.6;
+  }
+
+  .moby-cart-drawer__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  .moby-cart-drawer__items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .moby-cart-drawer__item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-cart-drawer__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .moby-cart-drawer__item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(201, 200, 182, 0.1);
+  }
+
+  .moby-cart-drawer__item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .moby-cart-drawer__item-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-cart-drawer__item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .moby-cart-drawer__item-title {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-cart-drawer__item-title:hover {
+    opacity: 0.7;
+  }
+
+  .moby-cart-drawer__item-variant {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: rgba(28, 26, 16, 0.6);
+    margin: 0;
+  }
+
+  .moby-cart-drawer__item-price {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--moby-dark, #1C1A10);
+    margin: 4px 0 0;
+  }
+
+  .moby-cart-drawer__item-actions {
+    grid-column: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .moby-cart-drawer__quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(201, 200, 182, 0.3);
+    border-radius: 4px;
+    padding: 4px 8px;
+  }
+
+  .moby-cart-drawer__qty-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--moby-dark, #1C1A10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-cart-drawer__qty-btn:hover {
+    opacity: 0.6;
+  }
+
+  .moby-cart-drawer__qty-value {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--moby-dark, #1C1A10);
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .moby-cart-drawer__remove {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(28, 26, 16, 0.6);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .moby-cart-drawer__remove:hover {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-cart-drawer__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .moby-cart-drawer__empty p {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(28, 26, 16, 0.6);
+    margin: 0;
+  }
+
+  .moby-cart-drawer__continue {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .moby-cart-drawer__footer {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(201, 200, 182, 0.3);
+    background: rgba(245, 245, 240, 0.5);
+  }
+
+  .moby-cart-drawer__subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .moby-cart-drawer__subtotal span {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-cart-drawer__shipping-note {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.6);
+    margin: 0 0 16px;
+  }
+
+  .moby-cart-drawer__view-cart {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: var(--moby-dark, #1C1A10);
+    background: transparent;
+    border: 1px solid var(--moby-dark, #1C1A10);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+  }
+
+  .moby-cart-drawer__view-cart:hover {
+    background: var(--moby-dark, #1C1A10);
+    color: #ffffff;
+  }
+
+  .moby-cart-drawer__checkout {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: #ffffff;
+    background: var(--moby-olive, #4F4A32);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .moby-cart-drawer__checkout:hover {
+    background: var(--moby-dark, #1C1A10);
+  }
+
+  /* Prevent body scroll when drawer is open */
+  body.cart-drawer-open {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  (function() {
+    const drawer = document.getElementById('moby-cart-drawer');
+    if (!drawer) return;
+
+    // Open drawer function
+    function openCartDrawer() {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('cart-drawer-open');
+    }
+
+    // Close drawer function
+    function closeCartDrawer() {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('cart-drawer-open');
+    }
+
+    // Expose globally
+    window.openCartDrawer = openCartDrawer;
+    window.closeCartDrawer = closeCartDrawer;
+
+    // Close button handlers
+    drawer.querySelectorAll('[data-cart-drawer-close]').forEach(btn => {
+      btn.addEventListener('click', closeCartDrawer);
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeCartDrawer();
+      }
+    });
+
+    // Quantity update handlers
+    drawer.querySelectorAll('[data-quantity-minus]').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        const line = this.dataset.line;
+        const item = this.closest('[data-cart-item]');
+        const qtyValue = item.querySelector('[data-quantity-value]');
+        const currentQty = parseInt(qtyValue.textContent);
+
+        if (currentQty > 1) {
+          await updateCartQuantity(line, currentQty - 1);
+        } else {
+          await updateCartQuantity(line, 0);
+        }
+      });
+    });
+
+    drawer.querySelectorAll('[data-quantity-plus]').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        const line = this.dataset.line;
+        const item = this.closest('[data-cart-item]');
+        const qtyValue = item.querySelector('[data-quantity-value]');
+        const currentQty = parseInt(qtyValue.textContent);
+
+        await updateCartQuantity(line, currentQty + 1);
+      });
+    });
+
+    // Remove item handlers
+    drawer.querySelectorAll('[data-remove-item]').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        const line = this.dataset.line;
+        await updateCartQuantity(line, 0);
+      });
+    });
+
+    // Update cart quantity
+    async function updateCartQuantity(line, quantity) {
+      try {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            line: parseInt(line),
+            quantity: quantity
+          })
+        });
+
+        if (response.ok) {
+          // Refresh the page to update cart drawer content
+          location.reload();
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      }
+    }
+  })();
+</script>

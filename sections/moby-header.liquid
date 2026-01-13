@@ -83,27 +83,27 @@
         </div>
 
         <!-- Cart Button (Desktop) -->
-        <a href="{{ routes.cart_url }}" class="moby-header__cart">
+        <button type="button" class="moby-header__cart" onclick="window.openCartDrawer()" aria-label="Open cart">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
             <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
             <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <span class="moby-header__cart-text">CART</span>
-        </a>
+        </button>
       </div>
 
       <!-- Mobile Right Actions (Cart + Hamburger together) -->
       <div class="moby-header__actions moby-header__actions--mobile">
         <!-- Cart Button (Mobile) -->
-        <a href="{{ routes.cart_url }}" class="moby-header__cart">
+        <button type="button" class="moby-header__cart" onclick="window.openCartDrawer()" aria-label="Open cart">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
             <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
             <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <span class="moby-header__cart-text">CART</span>
-        </a>
+        </button>
 
         <!-- Mobile Menu Toggle -->
         <button type="button" class="moby-header__mobile-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -472,6 +472,7 @@
     gap: 6px;
     padding: 8.7px 16px;
     background: var(--moby-accent);
+    border: none;
     border-radius: var(--moby-radius);
     color: var(--moby-core-contrast);
     text-decoration: none;
@@ -480,6 +481,7 @@
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    cursor: pointer;
     box-shadow:
       inset 0px 0.6px 1px -0.5px rgba(255, 255, 255, 0.07),
       inset 0px 2.3px 4px -1px rgba(255, 255, 255, 0.08),
