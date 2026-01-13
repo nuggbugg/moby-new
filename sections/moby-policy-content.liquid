@@ -1,0 +1,498 @@
+{% comment %}
+  MOBY Policy Content Section
+  - Reusable section for policy pages (Shipping, Privacy, Terms)
+  - Clean typography with MOBY styling
+  - Supports multiple content blocks
+{% endcomment %}
+
+<section class="moby-section moby-policy">
+  <div class="moby-container moby-policy__container">
+    {%- if section.settings.heading != blank -%}
+      <h1 class="moby-policy__heading">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.last_updated != blank -%}
+      <p class="moby-policy__updated">Last updated: {{ section.settings.last_updated }}</p>
+    {%- endif -%}
+
+    <div class="moby-policy__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'section_heading' -%}
+            <section class="moby-policy__section" {{ block.shopify_attributes }}>
+              <h2 class="moby-policy__section-heading">{{ block.settings.heading }}</h2>
+              {%- if block.settings.content != blank -%}
+                <div class="moby-policy__text">{{ block.settings.content }}</div>
+              {%- endif -%}
+            </section>
+
+          {%- when 'subsection' -%}
+            <div class="moby-policy__subsection" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="moby-policy__subsection-title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.content != blank -%}
+                <div class="moby-policy__text">{{ block.settings.content }}</div>
+              {%- endif -%}
+            </div>
+
+          {%- when 'list' -%}
+            <div class="moby-policy__list-wrapper" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="moby-policy__subsection-title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.items != blank -%}
+                {%- assign list_items = block.settings.items | split: '|' -%}
+                <ul class="moby-policy__list">
+                  {%- for item in list_items -%}
+                    <li>{{ item | strip }}</li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+          {%- when 'numbered_list' -%}
+            <div class="moby-policy__list-wrapper" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="moby-policy__subsection-title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.items != blank -%}
+                {%- assign list_items = block.settings.items | split: '|' -%}
+                <ol class="moby-policy__list moby-policy__list--numbered">
+                  {%- for item in list_items -%}
+                    <li>{{ item | strip }}</li>
+                  {%- endfor -%}
+                </ol>
+              {%- endif -%}
+            </div>
+
+          {%- when 'contact_box' -%}
+            <div class="moby-policy__contact-box" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h3 class="moby-policy__contact-heading">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="moby-policy__contact-text">{{ block.settings.text }}</p>
+              {%- endif -%}
+              {%- if block.settings.email != blank -%}
+                <p class="moby-policy__contact-email">
+                  Email: <a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a>
+                </p>
+              {%- endif -%}
+            </div>
+
+          {%- when 'company_info' -%}
+            <div class="moby-policy__company-info" {{ block.shopify_attributes }}>
+              {%- if block.settings.company_name != blank -%}
+                <p><strong>{{ block.settings.company_name }}</strong></p>
+              {%- endif -%}
+              {%- if block.settings.org_number != blank -%}
+                <p>Org. number: {{ block.settings.org_number }}</p>
+              {%- endif -%}
+              {%- if block.settings.address != blank -%}
+                <p>{{ block.settings.address | newline_to_br }}</p>
+              {%- endif -%}
+              {%- if block.settings.email != blank -%}
+                <p>Email: <a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a></p>
+              {%- endif -%}
+            </div>
+
+          {%- when 'text_block' -%}
+            <div class="moby-policy__text-block" {{ block.shopify_attributes }}>
+              {{ block.settings.content }}
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-policy {
+    padding-top: 120px;
+    padding-bottom: 64px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-policy {
+      padding-top: 140px;
+      padding-bottom: 96px;
+    }
+  }
+
+  .moby-policy__container {
+    max-width: 896px;
+  }
+
+  .moby-policy__heading {
+    font-family: 'Memoir', serif;
+    font-size: 36px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-policy__heading {
+      font-size: 48px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .moby-policy__updated {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.5);
+    margin: 0 0 48px;
+  }
+
+  .moby-policy__content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-policy__content {
+      gap: 40px;
+    }
+  }
+
+  .moby-policy__section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .moby-policy__section-heading {
+    font-family: 'Memoir', serif;
+    font-size: 22px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-policy__section-heading {
+      font-size: 26px;
+    }
+  }
+
+  .moby-policy__subsection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-policy__subsection-title {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-policy__text,
+  .moby-policy__text-block {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(28, 26, 16, 0.8);
+  }
+
+  .moby-policy__text p,
+  .moby-policy__text-block p {
+    margin: 0 0 12px;
+  }
+
+  .moby-policy__text p:last-child,
+  .moby-policy__text-block p:last-child {
+    margin-bottom: 0;
+  }
+
+  .moby-policy__text a,
+  .moby-policy__text-block a {
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-policy__text a:hover,
+  .moby-policy__text-block a:hover {
+    opacity: 0.7;
+  }
+
+  .moby-policy__list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .moby-policy__list {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(28, 26, 16, 0.8);
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  .moby-policy__list li {
+    margin-bottom: 8px;
+  }
+
+  .moby-policy__list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .moby-policy__list--numbered {
+    list-style-type: decimal;
+  }
+
+  .moby-policy__contact-box {
+    background: rgba(245, 245, 240, 0.7);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-policy__contact-box {
+      padding: 32px;
+    }
+  }
+
+  .moby-policy__contact-heading {
+    font-family: 'Memoir', serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-policy__contact-text {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(28, 26, 16, 0.7);
+    margin: 0;
+  }
+
+  .moby-policy__contact-email {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .moby-policy__contact-email a {
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-policy__contact-email a:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+
+  .moby-policy__company-info {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(28, 26, 16, 0.8);
+  }
+
+  .moby-policy__company-info p {
+    margin: 0 0 4px;
+  }
+
+  .moby-policy__company-info p:last-child {
+    margin-bottom: 0;
+  }
+
+  .moby-policy__company-info a {
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-policy__company-info a:hover {
+    opacity: 0.7;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Policy Content",
+  "tag": "section",
+  "class": "moby-policy-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Page heading",
+      "default": "Policy Title"
+    },
+    {
+      "type": "text",
+      "id": "last_updated",
+      "label": "Last updated date",
+      "default": "January 2026"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "section_heading",
+      "name": "Section with Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Section heading",
+          "default": "Section Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "subsection",
+      "name": "Subsection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "name": "Bullet List",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (optional)"
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "List items (separate with |)",
+          "default": "Item 1|Item 2|Item 3"
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "name": "Numbered List",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (optional)"
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "List items (separate with |)",
+          "default": "Step 1|Step 2|Step 3"
+        }
+      ]
+    },
+    {
+      "type": "contact_box",
+      "name": "Contact Box",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Questions?"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Our customer service team is here to help."
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "hello@drinkmoby.com"
+        }
+      ]
+    },
+    {
+      "type": "company_info",
+      "name": "Company Info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "company_name",
+          "label": "Company name",
+          "default": "MOBY Nutrition AB"
+        },
+        {
+          "type": "text",
+          "id": "org_number",
+          "label": "Org. number",
+          "default": "559547-6259"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address",
+          "default": "Maria Prästgårdsgata 31\n118 52 Stockholm, Sweden"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "hello@drinkmoby.com"
+        }
+      ]
+    },
+    {
+      "type": "text_block",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Policy Content"
+    }
+  ]
+}
+{% endschema %}
