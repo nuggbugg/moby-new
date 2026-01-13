@@ -47,7 +47,7 @@
 
       <!-- Subheading -->
       <p class="moby-hero__subheading">
-        {{ section.settings.subheading | default: "Effortless daily creatine for brain, body, and balance" }}
+        {{ section.settings.subheading | default: "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE" }}
       </p>
 
       <!-- CTA Button -->
@@ -146,16 +146,18 @@
 
   .moby-hero__subheading {
     font-family: 'N27', var(--font-body--family, system-ui, sans-serif);
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 300;
     line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: rgba(255, 255, 255, 0.8);
     margin: 0 0 32px;
   }
 
   @media (min-width: 768px) {
     .moby-hero__subheading {
-      font-size: 20px;
+      font-size: 16px;
     }
   }
 
@@ -267,7 +269,7 @@
       "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Effortless daily creatine for brain, body, and balance"
+      "default": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE"
     },
     {
       "type": "text",
