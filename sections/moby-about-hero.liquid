@@ -5,6 +5,33 @@
   - Centered heading and description
 {% endcomment %}
 
+{%- comment -%} Organization Schema for SEO {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MOBY",
+  "legalName": "MOBY Nutrition AB",
+  "url": "{{ shop.url }}",
+  "logo": "{{ shop.url }}{{ 'logo.png' | asset_url }}",
+  "description": "Premium creatine monohydrate in convenient daily stick packs. Pharmaceutical-grade, third-party tested, produced in Sweden.",
+  "foundingDate": "2024",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "SE"
+  },
+  "sameAs": [
+    "{{ shop.metafields.social.instagram.value | default: '' }}",
+    "{{ shop.metafields.social.facebook.value | default: '' }}"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": "{{ shop.email }}"
+  }
+}
+</script>
+
 <section class="moby-about-hero">
   {%- if section.settings.background_image != blank -%}
     <div class="moby-about-hero__image-wrapper">

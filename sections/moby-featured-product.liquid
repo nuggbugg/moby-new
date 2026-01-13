@@ -47,9 +47,10 @@
           {%- if product.images.size > 1 -%}
             <div class="moby-featured-product__thumbnails">
               {%- for image in product.images limit: 3 -%}
-                <button 
+                <button
                   class="moby-featured-product__thumbnail{% if forloop.first %} moby-featured-product__thumbnail--active{% endif %}"
                   data-image-url="{{ image | image_url: width: 800 }}"
+                  aria-label="View product image {{ forloop.index }}"
                 >
                   {{ image | image_url: width: 200 | image_tag:
                     loading: 'lazy',
@@ -491,7 +492,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.7);
   }
 
   .moby-featured-product__trust-item span {
