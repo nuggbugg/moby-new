@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "moby_article": {
+      "type": "moby-article",
+      "settings": {
+        "cta_heading": "Ready to Experience the Difference?",
+        "cta_text": "Try MOBY's pharmaceutical-grade creatine monohydrate today.",
+        "cta_button": "Shop Now"
+      }
+    }
+  },
+  "order": [
+    "moby_article"
+  ]
+}

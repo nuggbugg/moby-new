@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "moby_blog_hero": {
+      "type": "moby-blog-hero",
+      "settings": {
+        "badge_text": "The Power Station",
+        "heading": "Science-Backed Wellness Insights",
+        "subheading": "Expert articles on creatine, cognitive health, and optimal supplementation from the MOBY research team."
+      }
+    },
+    "moby_blog_grid": {
+      "type": "moby-blog-grid",
+      "settings": {
+        "articles_per_page": 9
+      }
+    },
+    "moby_blog_newsletter": {
+      "type": "moby-blog-newsletter",
+      "settings": {
+        "heading": "Join the Movement",
+        "description": "Subscribe to receive the latest research, wellness insights, and exclusive content from MOBY Nutrition.",
+        "placeholder": "ENTER YOUR EMAIL",
+        "button_text": "Subscribe"
+      }
+    }
+  },
+  "order": [
+    "moby_blog_hero",
+    "moby_blog_grid",
+    "moby_blog_newsletter"
+  ]
+}
