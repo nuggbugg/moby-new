@@ -1,0 +1,827 @@
+{% comment %}
+  MOBY Product Tabs Section
+  - 4 tabbed content sections: Overview, Ingredients, How to Use, FAQ
+  - Clean card-based layouts within each tab
+{% endcomment %}
+
+<section class="moby-product-tabs">
+  <div class="moby-container">
+    <!-- Tab Navigation -->
+    <div class="moby-product-tabs__nav" role="tablist">
+      <button
+        class="moby-product-tabs__tab moby-product-tabs__tab--active"
+        role="tab"
+        aria-selected="true"
+        data-tab="overview"
+      >
+        Overview
+      </button>
+      <button
+        class="moby-product-tabs__tab"
+        role="tab"
+        aria-selected="false"
+        data-tab="ingredients"
+      >
+        Ingredients
+      </button>
+      <button
+        class="moby-product-tabs__tab"
+        role="tab"
+        aria-selected="false"
+        data-tab="how-to-use"
+      >
+        <span class="moby-product-tabs__tab-full">How to Use</span>
+        <span class="moby-product-tabs__tab-short">Use</span>
+      </button>
+      <button
+        class="moby-product-tabs__tab"
+        role="tab"
+        aria-selected="false"
+        data-tab="faq"
+      >
+        FAQ
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="moby-product-tabs__content">
+      <!-- Overview Tab -->
+      <div class="moby-product-tabs__panel moby-product-tabs__panel--active" data-panel="overview" role="tabpanel">
+        <div class="moby-product-tabs__grid">
+          <!-- Product Details Card -->
+          <div class="moby-product-tabs__card">
+            <h3 class="moby-product-tabs__card-title">Product Details</h3>
+            <div class="moby-product-tabs__details">
+              <div class="moby-product-tabs__detail-row">
+                <span class="moby-product-tabs__detail-label">Serving Size</span>
+                <span class="moby-product-tabs__detail-value">{{ section.settings.serving_size | default: '1 stick (5g)' }}</span>
+              </div>
+              <div class="moby-product-tabs__detail-row">
+                <span class="moby-product-tabs__detail-label">Servings Per Container</span>
+                <span class="moby-product-tabs__detail-value">{{ section.settings.servings_per_container | default: '30' }}</span>
+              </div>
+              <div class="moby-product-tabs__detail-row">
+                <span class="moby-product-tabs__detail-label">Form</span>
+                <span class="moby-product-tabs__detail-value">{{ section.settings.form | default: 'Powder (stick packs)' }}</span>
+              </div>
+              <div class="moby-product-tabs__detail-row">
+                <span class="moby-product-tabs__detail-label">Flavor</span>
+                <span class="moby-product-tabs__detail-value">{{ section.settings.flavor | default: 'Unflavored' }}</span>
+              </div>
+              <div class="moby-product-tabs__detail-row moby-product-tabs__detail-row--last">
+                <span class="moby-product-tabs__detail-label">Produced In</span>
+                <span class="moby-product-tabs__detail-value">{{ section.settings.produced_in | default: 'Sweden' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nutrition Facts Card -->
+          <div class="moby-product-tabs__card">
+            <h3 class="moby-product-tabs__card-title">Nutrition Facts</h3>
+            <table class="moby-product-tabs__table">
+              <thead>
+                <tr>
+                  <th>Nutrient</th>
+                  <th>Per Serving</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Creatine Monohydrate</td>
+                  <td>5g</td>
+                </tr>
+                <tr>
+                  <td>Calories</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Carbohydrates</td>
+                  <td>0g</td>
+                </tr>
+                <tr>
+                  <td>Sugars</td>
+                  <td>0g</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ingredients Tab -->
+      <div class="moby-product-tabs__panel" data-panel="ingredients" role="tabpanel" hidden>
+        <div class="moby-product-tabs__stack">
+          <!-- Active Ingredients Card -->
+          <div class="moby-product-tabs__card">
+            <h3 class="moby-product-tabs__card-title">Active Ingredients</h3>
+            <div class="moby-product-tabs__ingredient">
+              <h4 class="moby-product-tabs__ingredient-title">Creatine Monohydrate (5g per serving)</h4>
+              <p class="moby-product-tabs__ingredient-desc">
+                {{ section.settings.ingredient_description | default: 'The most researched and proven form of creatine. Clinically shown to enhance ATP production, support muscle energy, improve cognitive function, and accelerate recovery. Our pharmaceutical-grade creatine monohydrate is micronized for superior absorption and mixability.' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- What's NOT in MOBY Card -->
+          <div class="moby-product-tabs__card">
+            <h3 class="moby-product-tabs__card-title">What's NOT in MOBY</h3>
+            <div class="moby-product-tabs__exclusions">
+              {%- assign exclusions = 'Artificial Colors,Artificial Flavors,Preservatives,Gluten,Dairy,Soy,GMOs,Banned Substances' | split: ',' -%}
+              {%- for item in exclusions -%}
+                <div class="moby-product-tabs__exclusion-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>No {{ item }}</span>
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to Use Tab -->
+      <div class="moby-product-tabs__panel" data-panel="how-to-use" role="tabpanel" hidden>
+        <div class="moby-product-tabs__stack">
+          <!-- Recommended Usage Card -->
+          <div class="moby-product-tabs__card">
+            <h3 class="moby-product-tabs__card-title">Recommended Usage</h3>
+            <div class="moby-product-tabs__usage-sections">
+              <div class="moby-product-tabs__usage-item">
+                <h4 class="moby-product-tabs__usage-title">Daily Dose</h4>
+                <p class="moby-product-tabs__usage-desc">
+                  Mix one stick (5g) with 200-300ml of water. Take once daily, preferably at the same time each day for consistency.
+                </p>
+              </div>
+              <div class="moby-product-tabs__usage-item">
+                <h4 class="moby-product-tabs__usage-title">Best Time to Take</h4>
+                <p class="moby-product-tabs__usage-desc">
+                  Creatine can be taken at any time. Many prefer mornings with breakfast or post-workout. What matters most is daily consistency.
+                </p>
+              </div>
+              <div class="moby-product-tabs__usage-item">
+                <h4 class="moby-product-tabs__usage-title">Loading Phase</h4>
+                <p class="moby-product-tabs__usage-desc">
+                  Not required. While some protocols suggest loading, consistent daily intake achieves optimal muscle saturation within 2-3 weeks.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Steps Images -->
+          <div class="moby-product-tabs__steps">
+            <div class="moby-product-tabs__step">
+              <div class="moby-product-tabs__step-image">
+                {%- if section.settings.step_1_image != blank -%}
+                  <img
+                    src="{{ section.settings.step_1_image | image_url: width: 400 }}"
+                    alt="Step 1 - Add one stick"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <div class="moby-product-tabs__step-placeholder"></div>
+                {%- endif -%}
+              </div>
+              <p class="moby-product-tabs__step-label">1. Add one stick</p>
+            </div>
+            <div class="moby-product-tabs__step">
+              <div class="moby-product-tabs__step-image">
+                {%- if section.settings.step_2_image != blank -%}
+                  <img
+                    src="{{ section.settings.step_2_image | image_url: width: 400 }}"
+                    alt="Step 2 - Mix with water"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <div class="moby-product-tabs__step-placeholder"></div>
+                {%- endif -%}
+              </div>
+              <p class="moby-product-tabs__step-label">2. Mix with water</p>
+            </div>
+            <div class="moby-product-tabs__step">
+              <div class="moby-product-tabs__step-image">
+                {%- if section.settings.step_3_image != blank -%}
+                  <img
+                    src="{{ section.settings.step_3_image | image_url: width: 400 }}"
+                    alt="Step 3 - Drink daily"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <div class="moby-product-tabs__step-placeholder"></div>
+                {%- endif -%}
+              </div>
+              <p class="moby-product-tabs__step-label">3. Drink daily</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Tab -->
+      <div class="moby-product-tabs__panel" data-panel="faq" role="tabpanel" hidden>
+        <div class="moby-product-tabs__accordion">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'faq_item' -%}
+              <details class="moby-product-tabs__faq-item" {{ block.shopify_attributes }}>
+                <summary class="moby-product-tabs__faq-question">
+                  {{ block.settings.question }}
+                  <svg class="moby-product-tabs__faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </summary>
+                <div class="moby-product-tabs__faq-answer">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-product-tabs {
+    padding: 32px 0 64px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs {
+      padding: 64px 0 96px;
+    }
+  }
+
+  /* Tab Navigation */
+  .moby-product-tabs__nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(201, 200, 182, 0.15);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 32px;
+  }
+
+  .moby-product-tabs__tab {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--moby-dark, #1C1A10);
+    background: transparent;
+    border: none;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__tab {
+      font-size: 12px;
+      padding: 12px 16px;
+    }
+  }
+
+  .moby-product-tabs__tab--active {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .moby-product-tabs__tab-full {
+    display: none;
+  }
+
+  .moby-product-tabs__tab-short {
+    display: inline;
+  }
+
+  @media (min-width: 640px) {
+    .moby-product-tabs__tab-full {
+      display: inline;
+    }
+    .moby-product-tabs__tab-short {
+      display: none;
+    }
+  }
+
+  /* Tab Panels */
+  .moby-product-tabs__panel {
+    display: none;
+  }
+
+  .moby-product-tabs__panel--active {
+    display: block;
+  }
+
+  .moby-product-tabs__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .moby-product-tabs__stack {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Cards */
+  .moby-product-tabs__card {
+    background: #ffffff;
+    border: 1px solid rgba(201, 200, 182, 0.3);
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__card {
+      padding: 32px;
+    }
+  }
+
+  .moby-product-tabs__card-title {
+    font-family: 'Memoir', serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 16px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__card-title {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+  }
+
+  /* Product Details */
+  .moby-product-tabs__details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-product-tabs__detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-product-tabs__detail-row--last {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .moby-product-tabs__detail-label,
+  .moby-product-tabs__detail-value {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .moby-product-tabs__detail-label {
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-product-tabs__detail-value {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  /* Table */
+  .moby-product-tabs__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .moby-product-tabs__table th,
+  .moby-product-tabs__table td {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-product-tabs__table th {
+    color: var(--moby-sage, #C9C8B6);
+    text-align: left;
+  }
+
+  .moby-product-tabs__table th:last-child {
+    text-align: right;
+  }
+
+  .moby-product-tabs__table td {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-product-tabs__table td:last-child {
+    text-align: right;
+  }
+
+  .moby-product-tabs__table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Ingredients */
+  .moby-product-tabs__ingredient {
+    border-left: 2px solid var(--moby-olive, #4F4A32);
+    padding-left: 16px;
+  }
+
+  .moby-product-tabs__ingredient-title {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 8px;
+  }
+
+  .moby-product-tabs__ingredient-desc {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  /* Exclusions */
+  .moby-product-tabs__exclusions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .moby-product-tabs__exclusion-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .moby-product-tabs__exclusion-item svg {
+    flex-shrink: 0;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-product-tabs__exclusion-item span {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  /* Usage */
+  .moby-product-tabs__usage-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .moby-product-tabs__usage-title {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 8px;
+  }
+
+  .moby-product-tabs__usage-desc {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  /* Steps */
+  .moby-product-tabs__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__steps {
+      gap: 24px;
+    }
+  }
+
+  .moby-product-tabs__step-image {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__step-image {
+      aspect-ratio: 4/5;
+      margin-bottom: 12px;
+    }
+  }
+
+  .moby-product-tabs__step-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .moby-product-tabs__step-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-product-tabs__step-label {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__step-label {
+      font-size: 13px;
+    }
+  }
+
+  /* FAQ Accordion */
+  .moby-product-tabs__accordion {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .moby-product-tabs__faq-item {
+    border-bottom: 1px solid rgba(201, 200, 182, 0.3);
+  }
+
+  .moby-product-tabs__faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .moby-product-tabs__faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .moby-product-tabs__faq-question {
+    font-family: 'Memoir', serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    text-align: left;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__faq-question {
+      font-size: 14px;
+      padding: 20px 0;
+    }
+  }
+
+  .moby-product-tabs__faq-icon {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-product-tabs__faq-item[open] .moby-product-tabs__faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .moby-product-tabs__faq-answer {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    padding-bottom: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-product-tabs__faq-answer {
+      font-size: 14px;
+      padding-bottom: 20px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabsSection = document.querySelector('.moby-product-tabs');
+    if (!tabsSection) return;
+
+    const tabs = tabsSection.querySelectorAll('.moby-product-tabs__tab');
+    const panels = tabsSection.querySelectorAll('.moby-product-tabs__panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const targetPanel = tab.dataset.tab;
+
+        // Update tabs
+        tabs.forEach(t => {
+          t.classList.remove('moby-product-tabs__tab--active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('moby-product-tabs__tab--active');
+        tab.setAttribute('aria-selected', 'true');
+
+        // Update panels
+        panels.forEach(panel => {
+          if (panel.dataset.panel === targetPanel) {
+            panel.classList.add('moby-product-tabs__panel--active');
+            panel.removeAttribute('hidden');
+          } else {
+            panel.classList.remove('moby-product-tabs__panel--active');
+            panel.setAttribute('hidden', '');
+          }
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "MOBY Product Tabs",
+  "tag": "section",
+  "class": "moby-product-tabs-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Details"
+    },
+    {
+      "type": "text",
+      "id": "serving_size",
+      "label": "Serving Size",
+      "default": "1 stick (5g)"
+    },
+    {
+      "type": "text",
+      "id": "servings_per_container",
+      "label": "Servings Per Container",
+      "default": "30"
+    },
+    {
+      "type": "text",
+      "id": "form",
+      "label": "Form",
+      "default": "Powder (stick packs)"
+    },
+    {
+      "type": "text",
+      "id": "flavor",
+      "label": "Flavor",
+      "default": "Unflavored"
+    },
+    {
+      "type": "text",
+      "id": "produced_in",
+      "label": "Produced In",
+      "default": "Sweden"
+    },
+    {
+      "type": "header",
+      "content": "Ingredients"
+    },
+    {
+      "type": "textarea",
+      "id": "ingredient_description",
+      "label": "Ingredient Description",
+      "default": "The most researched and proven form of creatine. Clinically shown to enhance ATP production, support muscle energy, improve cognitive function, and accelerate recovery. Our pharmaceutical-grade creatine monohydrate is micronized for superior absorption and mixability."
+    },
+    {
+      "type": "header",
+      "content": "How to Use Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_1_image",
+      "label": "Step 1 Image",
+      "info": "Add one stick"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_2_image",
+      "label": "Step 2 Image",
+      "info": "Mix with water"
+    },
+    {
+      "type": "image_picker",
+      "id": "step_3_image",
+      "label": "Step 3 Image",
+      "info": "Drink daily"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How much creatine should I take daily?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "We recommend one stick (5g) per day mixed with 200-300ml of water. This is the clinically proven dose for optimal cognitive and physical benefits."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Product Tabs",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How much creatine should I take daily?",
+            "answer": "We recommend one stick (5g) per day mixed with 200-300ml of water. This is the clinically proven dose for optimal cognitive and physical benefits."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "When is the best time to take creatine?",
+            "answer": "Creatine can be taken at any time of day. For best results, take it consistently at the same time each day. Many prefer taking it in the morning with breakfast or post-workout."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is MOBY suitable for vegetarians and vegans?",
+            "answer": "Yes, MOBY Creatine is 100% vegan-friendly. It contains pure creatine monohydrate with no animal-derived ingredients."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do I need a loading phase?",
+            "answer": "No loading phase is necessary. While some protocols suggest a loading phase, consistent daily intake of 5g will achieve optimal levels within 2-3 weeks."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long until I see results?",
+            "answer": "Most people notice improved mental clarity within 1-2 weeks, while physical performance benefits typically appear after 2-4 weeks of consistent use."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I take creatine with other supplements?",
+            "answer": "Yes, creatine is safe to combine with most other supplements. It works particularly well with protein, caffeine, and B vitamins."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "We offer a 100% satisfaction guarantee. If you're not completely satisfied with MOBY, contact us within 30 days for a full refund."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
