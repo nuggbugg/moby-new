@@ -63,8 +63,8 @@
         {% if section.settings.show_shipping_badge %}
           <div class="moby-hero__badge">
             <svg class="moby-hero__check" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-              <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="10" fill="var(--moby-lime, #F9FDB5)"/>
+              <path d="M8 12L11 15L16 9" stroke="var(--moby-olive, #4F4A32)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <span>{{ section.settings.shipping_text | default: "FREE SHIPPING ON ORDERS OVER €43" }}</span>
           </div>
@@ -114,12 +114,12 @@
     width: 90%;
     max-width: 1296px;
     margin: 0 auto;
-    padding: 140px 0 80px;
+    padding: 200px 0 80px;
   }
 
   @media (min-width: 768px) {
     .moby-hero__container {
-      padding: 160px 0 100px;
+      padding: 240px 0 100px;
     }
   }
 
@@ -151,7 +151,7 @@
     line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.8);
+    color: #ffffff;
     margin: 0 0 32px;
   }
 
@@ -230,7 +230,7 @@
     }
 
     .moby-hero__container {
-      padding: 100px 0 60px;
+      padding: 160px 0 60px;
     }
 
     .moby-hero__cta-wrapper {

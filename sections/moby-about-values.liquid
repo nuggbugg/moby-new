@@ -1,0 +1,255 @@
+{% comment %}
+  MOBY About Values Section
+  - 4-column grid of value cards
+  - Icons, titles, and descriptions
+{% endcomment %}
+
+<section class="moby-section moby-about-values">
+  <div class="moby-container">
+    <!-- Header -->
+    <div class="moby-about-values__header">
+      {%- if section.settings.badge_text != blank -%}
+        <span class="moby-about-values__badge">{{ section.settings.badge_text }}</span>
+      {%- endif -%}
+
+      <h2 class="moby-about-values__heading">{{ section.settings.heading }}</h2>
+    </div>
+
+    <!-- Values Grid -->
+    <div class="moby-about-values__grid">
+      {%- for block in section.blocks -%}
+        <div class="moby-about-values__card" {{ block.shopify_attributes }}>
+          <div class="moby-about-values__icon">
+            {%- case block.settings.icon -%}
+              {%- when 'sparkles' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3L13.5 8.5L19 10L13.5 11.5L12 17L10.5 11.5L5 10L10.5 8.5L12 3Z"/>
+                  <path d="M5 3L5.5 5L7 5.5L5.5 6L5 8L4.5 6L3 5.5L4.5 5L5 3Z"/>
+                  <path d="M19 17L19.5 19L21 19.5L19.5 20L19 22L18.5 20L17 19.5L18.5 19L19 17Z"/>
+                </svg>
+              {%- when 'beaker' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 3H15M10 3V8.5L4 18C3.33 19.17 4.17 20.5 5.5 20.5H18.5C19.83 20.5 20.67 19.17 20 18L14 8.5V3"/>
+                  <path d="M7 14H17"/>
+                </svg>
+              {%- when 'shield' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L20 6V12C20 16.4 16.5 20.3 12 22C7.5 20.3 4 16.4 4 12V6L12 2Z"/>
+                </svg>
+              {%- when 'heart' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21C12 21 4 14.36 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.09C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 14.36 16 21 16 21"/>
+                  <path d="M12 21C12 21 20 14.36 20 8.5C20 5.42 17.58 3 14.5 3C12.76 3 11.09 3.81 10 5.09"/>
+                </svg>
+            {%- endcase -%}
+          </div>
+          <h3 class="moby-about-values__title">{{ block.settings.title }}</h3>
+          <p class="moby-about-values__description">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-about-values {
+    background: rgba(245, 245, 240, 0.5);
+  }
+
+  .moby-about-values__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .moby-about-values__badge {
+    display: inline-block;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-sage, #C9C8B6);
+    margin-bottom: 12px;
+  }
+
+  .moby-about-values__heading {
+    font-family: 'Memoir', serif;
+    font-size: 28px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-about-values__heading {
+      font-size: 36px;
+    }
+  }
+
+  .moby-about-values__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-about-values__grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .moby-about-values__card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .moby-about-values__card {
+      padding: 32px;
+    }
+  }
+
+  .moby-about-values__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(245, 245, 240, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .moby-about-values__icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-about-values__title {
+    font-family: 'Memoir', serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 8px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-about-values__title {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .moby-about-values__description {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-about-values__description {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY About Values",
+  "tag": "section",
+  "class": "moby-about-values-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "What We Stand For"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Core Values"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Value",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "sparkles", "label": "Sparkles (Simplicity)" },
+            { "value": "beaker", "label": "Beaker (Science)" },
+            { "value": "shield", "label": "Shield (Quality)" },
+            { "value": "heart", "label": "Heart (Accessibility)" }
+          ],
+          "default": "sparkles"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Value Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Value description text goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY About Values",
+      "blocks": [
+        {
+          "type": "value",
+          "settings": {
+            "icon": "sparkles",
+            "title": "Simplicity",
+            "description": "One stick. One motion. No complexity, no mess—just effortless daily ritual."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "beaker",
+            "title": "Science",
+            "description": "Every formula backed by research. Optimal 5g dose, pharmaceutical-grade purity."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "shield",
+            "title": "Quality",
+            "description": "Produced in Sweden with the highest European standards. Rigorously tested for purity."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "icon": "heart",
+            "title": "Accessibility",
+            "description": "Breaking stereotypes—creatine isn't just for athletes, it's for everyone."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
