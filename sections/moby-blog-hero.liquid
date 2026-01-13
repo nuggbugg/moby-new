@@ -1,0 +1,189 @@
+{% comment %}
+  MOBY Blog Hero Section - "The Power Station"
+  - Full-width background image with blur
+  - Badge, heading, and subheading
+{% endcomment %}
+
+<section class="moby-blog-hero">
+  {%- if section.settings.image != blank -%}
+    <div class="moby-blog-hero__image-wrapper">
+      {{ section.settings.image | image_url: width: 1920 | image_tag:
+        class: 'moby-blog-hero__image',
+        loading: 'eager',
+        sizes: '100vw',
+        widths: '375, 750, 1100, 1500, 1920'
+      }}
+    </div>
+  {%- else -%}
+    <div class="moby-blog-hero__placeholder">
+      <img
+        src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1920&q=80&auto=format&fit=crop"
+        alt="The Power Station"
+        class="moby-blog-hero__image"
+        loading="eager"
+      />
+    </div>
+  {%- endif -%}
+
+  <div class="moby-blog-hero__overlay"></div>
+
+  <div class="moby-blog-hero__content">
+    <!-- Badge -->
+    <div class="moby-blog-hero__badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+      </svg>
+      <span>{{ section.settings.badge_text | default: 'The Power Station' }}</span>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="moby-blog-hero__heading">
+      {{ section.settings.heading | default: 'Science-Backed Wellness Insights' }}
+    </h1>
+
+    <!-- Subheading -->
+    <p class="moby-blog-hero__subheading">
+      {{ section.settings.subheading | default: 'Expert articles on creatine, cognitive health, and optimal supplementation from the MOBY research team.' }}
+    </p>
+  </div>
+</section>
+
+<style>
+  .moby-blog-hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .moby-blog-hero {
+      min-height: 60vh;
+    }
+  }
+
+  .moby-blog-hero__image-wrapper,
+  .moby-blog-hero__placeholder {
+    position: absolute;
+    inset: 0;
+  }
+
+  .moby-blog-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: blur(2px);
+  }
+
+  .moby-blog-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 26, 16, 0.3);
+    pointer-events: none;
+  }
+
+  .moby-blog-hero__content {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 1296px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 96px 0 128px;
+    color: #ffffff;
+  }
+
+  @media (min-width: 768px) {
+    .moby-blog-hero__content {
+      padding: 128px 0 160px;
+    }
+  }
+
+  .moby-blog-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 6px 16px;
+    margin-bottom: 24px;
+  }
+
+  .moby-blog-hero__badge svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .moby-blog-hero__badge span {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .moby-blog-hero__heading {
+    font-family: 'Memoir', serif;
+    font-size: clamp(40px, 8vw, 72px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+
+  .moby-blog-hero__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: clamp(13px, 1.6vw, 16px);
+    font-weight: 300;
+    line-height: 1.6;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Blog Hero",
+  "tag": "section",
+  "class": "moby-blog-hero-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Recommended: 1920x1080px or larger"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "The Power Station"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Science-Backed Wellness Insights"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Expert articles on creatine, cognitive health, and optimal supplementation from the MOBY research team."
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Blog Hero"
+    }
+  ]
+}
+{% endschema %}

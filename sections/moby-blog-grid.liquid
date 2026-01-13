@@ -1,0 +1,481 @@
+{% comment %}
+  MOBY Blog Grid Section
+  - Sticky category filter
+  - Article cards in 3-column grid
+  - Uses Shopify's native blog functionality
+{% endcomment %}
+
+{%- assign current_tag = current_tags | first -%}
+
+<!-- Category Filter -->
+<section class="moby-blog-filter">
+  <div class="moby-container">
+    <div class="moby-blog-filter__nav">
+      <a
+        href="{{ blog.url }}"
+        class="moby-blog-filter__btn{% if current_tag == blank %} moby-blog-filter__btn--active{% endif %}"
+      >
+        All Articles
+      </a>
+      {%- for tag in blog.all_tags -%}
+        <a
+          href="{{ blog.url }}/tagged/{{ tag | handle }}"
+          class="moby-blog-filter__btn{% if current_tag == tag %} moby-blog-filter__btn--active{% endif %}"
+        >
+          {{ tag }}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<!-- Articles Grid -->
+<section class="moby-blog-grid">
+  <div class="moby-container">
+    {%- paginate blog.articles by section.settings.articles_per_page -%}
+      {%- if blog.articles.size > 0 -%}
+        <div class="moby-blog-grid__articles">
+          {%- for article in blog.articles -%}
+            <article class="moby-article-card">
+              <a href="{{ article.url }}" class="moby-article-card__link">
+                <!-- Image -->
+                <div class="moby-article-card__image-wrapper">
+                  {%- if article.image -%}
+                    {{ article.image | image_url: width: 800 | image_tag:
+                      class: 'moby-article-card__image',
+                      loading: 'lazy',
+                      sizes: '(max-width: 767px) 90vw, (max-width: 1023px) 45vw, 30vw',
+                      widths: '300, 400, 500, 600, 800'
+                    }}
+                  {%- else -%}
+                    <div class="moby-article-card__placeholder"></div>
+                  {%- endif -%}
+                </div>
+
+                <!-- Content -->
+                <div class="moby-article-card__content">
+                  <!-- Meta -->
+                  <div class="moby-article-card__meta">
+                    {%- if article.tags.size > 0 -%}
+                      <span class="moby-article-card__tag moby-article-card__tag--{{ article.tags.first | handle }}">
+                        {{ article.tags.first }}
+                      </span>
+                    {%- endif -%}
+                    <span class="moby-article-card__reading-time">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      {%- assign words = article.content | strip_html | number_of_words -%}
+                      {%- assign minutes = words | divided_by: 200 -%}
+                      {%- if minutes < 1 %}{% assign minutes = 1 %}{% endif -%}
+                      {{ minutes }} MIN READ
+                    </span>
+                  </div>
+
+                  <!-- Title -->
+                  <h3 class="moby-article-card__title">
+                    {{ article.title }}
+                  </h3>
+
+                  <!-- Excerpt -->
+                  <p class="moby-article-card__excerpt">
+                    {{ article.excerpt | strip_html | truncate: 120 }}
+                  </p>
+
+                  <!-- Footer -->
+                  <div class="moby-article-card__footer">
+                    <span class="moby-article-card__date">
+                      {{ article.published_at | date: "%B %d, %Y" }}
+                    </span>
+                    <span class="moby-article-card__read-more">
+                      Read More
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        <!-- Pagination -->
+        {%- if paginate.pages > 1 -%}
+          <nav class="moby-blog-grid__pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="moby-blog-grid__page-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Previous
+              </a>
+            {%- endif -%}
+
+            <span class="moby-blog-grid__page-info">
+              Page {{ paginate.current_page }} of {{ paginate.pages }}
+            </span>
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="moby-blog-grid__page-btn">
+                Next
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="moby-blog-grid__empty">
+          <p>No articles found in this category.</p>
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+<style>
+  /* Category Filter */
+  .moby-blog-filter {
+    position: sticky;
+    top: 64px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201, 200, 182, 0.3);
+    z-index: 20;
+  }
+
+  @media (min-width: 768px) {
+    .moby-blog-filter {
+      top: 80px;
+    }
+  }
+
+  .moby-blog-filter__nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .moby-blog-filter__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .moby-blog-filter__btn {
+    flex-shrink: 0;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--moby-dark, #1C1A10);
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .moby-blog-filter__btn:hover {
+    background: rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-blog-filter__btn--active {
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+  }
+
+  .moby-blog-filter__btn--active:hover {
+    background: var(--moby-dark, #1C1A10);
+  }
+
+  /* Articles Grid */
+  .moby-blog-grid {
+    padding: 64px 0 96px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-blog-grid {
+      padding: 96px 0 128px;
+    }
+  }
+
+  .moby-blog-grid__articles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .moby-blog-grid__articles {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .moby-blog-grid__articles {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Article Card */
+  .moby-article-card {
+    background: #ffffff;
+    border: 1px solid rgba(201, 200, 182, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .moby-article-card:hover {
+    border-color: rgba(79, 74, 50, 0.3);
+    box-shadow: 0 8px 32px rgba(28, 26, 16, 0.08);
+  }
+
+  .moby-article-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .moby-article-card__image-wrapper {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .moby-article-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .moby-article-card:hover .moby-article-card__image {
+    transform: scale(1.05);
+  }
+
+  .moby-article-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(201, 200, 182, 0.2);
+  }
+
+  .moby-article-card__content {
+    padding: 24px;
+  }
+
+  .moby-article-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .moby-article-card__tag {
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(79, 74, 50, 0.1);
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-article-card__tag--science {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  .moby-article-card__tag--lifestyle {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+
+  .moby-article-card__tag--guides {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+  }
+
+  .moby-article-card__tag--news {
+    background: rgba(249, 115, 22, 0.1);
+    color: #f97316;
+  }
+
+  .moby-article-card__reading-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-article-card__reading-time svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .moby-article-card__title {
+    font-family: 'Memoir', serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 8px;
+    transition: color 0.2s ease;
+  }
+
+  @media (min-width: 768px) {
+    .moby-article-card__title {
+      font-size: 20px;
+    }
+  }
+
+  .moby-article-card:hover .moby-article-card__title {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-article-card__excerpt {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0 0 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .moby-article-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .moby-article-card__date {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-article-card__read-more {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-article-card__read-more svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .moby-article-card:hover .moby-article-card__read-more {
+    opacity: 1;
+  }
+
+  /* Pagination */
+  .moby-blog-grid__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(201, 200, 182, 0.3);
+  }
+
+  .moby-blog-grid__page-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--moby-dark, #1C1A10);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .moby-blog-grid__page-btn:hover {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-blog-grid__page-info {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  /* Empty State */
+  .moby-blog-grid__empty {
+    text-align: center;
+    padding: 64px 0;
+  }
+
+  .moby-blog-grid__empty p {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--moby-sage, #C9C8B6);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Blog Grid",
+  "tag": "div",
+  "class": "moby-blog-grid-wrapper",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "min": 3,
+      "max": 12,
+      "step": 3,
+      "default": 9,
+      "label": "Articles per page"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Blog Grid"
+    }
+  ]
+}
+{% endschema %}

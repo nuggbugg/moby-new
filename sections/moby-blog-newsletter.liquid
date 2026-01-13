@@ -1,0 +1,226 @@
+{% comment %}
+  MOBY Blog Newsletter CTA Section
+  - Centered layout with icon
+  - Email subscription form
+{% endcomment %}
+
+<section class="moby-blog-newsletter">
+  <div class="moby-container moby-container--narrow">
+    <div class="moby-blog-newsletter__content">
+      <!-- Icon -->
+      <div class="moby-blog-newsletter__icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h2 class="moby-blog-newsletter__heading">
+        {{ section.settings.heading | default: 'Join the Movement' }}
+      </h2>
+
+      <!-- Description -->
+      <p class="moby-blog-newsletter__description">
+        {{ section.settings.description | default: 'Subscribe to receive the latest research, wellness insights, and exclusive content from MOBY Nutrition.' }}
+      </p>
+
+      <!-- Form -->
+      {%- form 'customer', class: 'moby-blog-newsletter__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        <div class="moby-blog-newsletter__form-row">
+          <input
+            type="email"
+            name="contact[email]"
+            id="newsletter-email"
+            class="moby-blog-newsletter__input"
+            placeholder="{{ section.settings.placeholder | default: 'ENTER YOUR EMAIL' }}"
+            required
+            autocomplete="email"
+          >
+          <button type="submit" class="moby-blog-newsletter__button">
+            {{ section.settings.button_text | default: 'Subscribe' }}
+          </button>
+        </div>
+
+        {%- if form.posted_successfully? -%}
+          <p class="moby-blog-newsletter__success">
+            Thanks for subscribing! Check your inbox for confirmation.
+          </p>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <p class="moby-blog-newsletter__error">
+            {{ form.errors.messages['email'] | default: 'Please enter a valid email address.' }}
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-blog-newsletter {
+    padding: 64px 0;
+    background: rgba(201, 200, 182, 0.15);
+  }
+
+  @media (min-width: 768px) {
+    .moby-blog-newsletter {
+      padding: 96px 0;
+    }
+  }
+
+  .moby-blog-newsletter__content {
+    text-align: center;
+  }
+
+  .moby-blog-newsletter__icon {
+    margin-bottom: 16px;
+  }
+
+  .moby-blog-newsletter__icon svg {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-blog-newsletter__heading {
+    font-family: 'Memoir', serif;
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 16px;
+  }
+
+  .moby-blog-newsletter__description {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0 0 32px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .moby-blog-newsletter__form {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .moby-blog-newsletter__form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 640px) {
+    .moby-blog-newsletter__form-row {
+      flex-direction: row;
+    }
+  }
+
+  .moby-blog-newsletter__input {
+    flex: 1;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-dark, #1C1A10);
+    background: #ffffff;
+    border: 1px solid rgba(201, 200, 182, 0.5);
+    border-radius: 4px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .moby-blog-newsletter__input::placeholder {
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-blog-newsletter__input:focus {
+    border-color: var(--moby-olive, #4F4A32);
+    box-shadow: 0 0 0 3px rgba(79, 74, 50, 0.1);
+  }
+
+  .moby-blog-newsletter__button {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffffff;
+    background: var(--moby-olive, #4F4A32);
+    border: none;
+    border-radius: 4px;
+    padding: 14px 28px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .moby-blog-newsletter__button:hover {
+    background: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-blog-newsletter__success {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #22c55e;
+    margin-top: 16px;
+  }
+
+  .moby-blog-newsletter__error {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #ef4444;
+    margin-top: 16px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Blog Newsletter",
+  "tag": "section",
+  "class": "moby-blog-newsletter-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Join the Movement"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Subscribe to receive the latest research, wellness insights, and exclusive content from MOBY Nutrition."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "ENTER YOUR EMAIL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Blog Newsletter"
+    }
+  ]
+}
+{% endschema %}
