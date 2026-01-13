@@ -38,6 +38,12 @@ body {
 }
 
 :root {
+  /* MOBY Brand Colors */
+  --moby-lime: #F9FDB5;
+  --moby-olive: #4F4A32;
+  --moby-sage: #C9C8B6;
+  --moby-dark: #1C1A10;
+
   --hover-lift-amount: 4px;
   --hover-scale-amount: 1.03;
   --hover-subtle-zoom-amount: 1.015;

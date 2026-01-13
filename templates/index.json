@@ -1,1 +1,96 @@
-{"sections":{"hero_G6fHNE":{"type":"hero","blocks":{"text_8BYyrw":{"type":"text","settings":{"text":"<h1>Your life,\u2028optimized in\u2028one motion<\/h1>","width":"fit-content","max_width":"narrow","alignment":"left","type_preset":"h1","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground-heading)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_FrxaCT":{"type":"text","settings":{"text":"<p>Made with care and unconditionally loved by our customers.<\/p>","width":"fit-content","max_width":"narrow","alignment":"left","type_preset":"custom","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"uppercase","wrap":"pretty","color":"var(--color-foreground-heading)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":32,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"button_cB3qPT":{"type":"button","name":"t:names.button","settings":{"label":"Shop Now","link":"shopify:\/\/collections\/all","open_in_new_tab":false,"style_class":"button-secondary","width":"fit-content","custom_width":100,"width_mobile":"fit-content","custom_width_mobile":100},"blocks":{}}},"block_order":["text_8BYyrw","text_FrxaCT","button_cB3qPT"],"name":"t:names.hero","settings":{"media_type_1":"image","image_1":"shopify:\/\/shop_images\/Hyperrealistic_Hero_Image.png","media_type_2":"image","link":"","open_in_new_tab":false,"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":16,"section_width":"page-width","section_height":"custom","section_height_custom":90,"color_scheme":"scheme-1","toggle_overlay":true,"overlay_color":"#00000047","overlay_style":"gradient","gradient_direction":"to top","blurred_reflection":false,"reflection_opacity":75,"padding-block-start":40,"padding-block-end":40}},"marquee_3KbTmw":{"type":"marquee","blocks":{"text_tRE7KC":{"type":"text","settings":{"text":"<p>✔ 100% Satisfaction Guarantee<\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"custom","font":"var(--font-body--family)","font_size":"1rem","line_height":"tight","letter_spacing":"tight","case":"uppercase","wrap":"nowrap","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_4MFUUr":{"type":"text","name":"t:names.text","settings":{"text":"<p>➠ Free shipping over €50<\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"custom","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"uppercase","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_TpWqLt":{"type":"text","name":"t:names.text","settings":{"text":"<p>★★★★★ Trusted by athletes and wellness coaches<\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"custom","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"uppercase","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_Vwrmmf":{"type":"text","name":"t:names.text","settings":{"text":"<p>✔ Premium clean creatine<\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"custom","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"uppercase","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_tRE7KC","text_4MFUUr","text_TpWqLt","text_Vwrmmf"],"name":"t:names.marquee_section","settings":{"movement_direction":"normal","color_scheme":"scheme-2","padding-block-start":24,"padding-block-end":24,"gap_between_elements":24}},"product_list_z7QLNk":{"type":"product-list","blocks":{"static-header":{"type":"_product-list-content","static":true,"settings":{"content_direction":"row","vertical_on_mobile":false,"horizontal_alignment":"space-between","vertical_alignment":"flex-end","align_baseline":true,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"space-between","gap":12,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"product_list_text_U7Eaek":{"type":"_product-list-text","name":"t:names.collection_title","settings":{"text":"<h3>Bestsellers<\/h3>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"collection_link_button_BJRcxp":{"type":"_product-list-button","name":"t:names.product_list_button","settings":{"label":"View all","open_in_new_tab":false,"style_class":"link","width":"fit-content","custom_width":100,"width_mobile":"fit-content","custom_width_mobile":100},"blocks":{}}},"block_order":["product_list_text_U7Eaek","collection_link_button_BJRcxp"]},"static-product-card":{"type":"_product-card","name":"t:names.product_card","static":true,"settings":{"product_card_gap":12,"inherit_color_scheme":true,"color_scheme":"","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"product_card_gallery_EqgxKJ":{"type":"_product-card-gallery","name":"t:names.product_image","settings":{"image_ratio":"portrait","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"group_DxPy8c":{"type":"_product-card-group","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":4,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"text_QGdpYw":{"type":"text","settings":{"text":"<h4>{{ closest.product.title }}<\/h4>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"h5","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"price_d6U8n4":{"type":"price","settings":{"show_sale_price_first":true,"show_installments":false,"show_tax_info":false,"type_preset":"paragraph","width":"100%","alignment":"left","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","color":"var(--color-foreground)","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"swatches_ExhD3a":{"type":"swatches","settings":{"product_swatches_alignment":"flex-start","product_swatches_alignment_mobile":"flex-start","hide_padding":false,"product_swatches_padding_top":4,"product_swatches_padding_bottom":0,"product_swatches_padding_left":0,"product_swatches_padding_right":0},"blocks":{}}},"block_order":["text_QGdpYw","price_d6U8n4","swatches_ExhD3a"]}},"block_order":["product_card_gallery_EqgxKJ","group_DxPy8c"]}},"name":"Featured collection","settings":{"collection":"all","layout_type":"carousel","carousel_on_mobile":false,"max_products":8,"columns":4,"mobile_columns":"2","mobile_card_size":"60cqw","columns_gap":16,"rows_gap":36,"icons_style":"arrow","icons_shape":"circle","section_width":"page-width","horizontal_alignment":"flex-start","gap":28,"color_scheme":"scheme-1","padding-block-start":48,"padding-block-end":48}}},"order":["hero_G6fHNE","marquee_3KbTmw","product_list_z7QLNk"]}
+{
+  "sections": {
+    "moby_hero": {
+      "type": "moby-hero",
+      "settings": {
+        "heading": "SCIENCE-BACKED CLARITY AND STRENGTH",
+        "subheading": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE",
+        "button_text": "SHOP NOW",
+        "button_link": "shopify://collections/all",
+        "show_shipping_badge": true,
+        "shipping_text": "FREE SHIPPING ON ORDERS OVER €43"
+      }
+    },
+    "moby_marquee": {
+      "type": "moby-marquee",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "text": "100% SATISFACTION GUARANTEE"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "text": "FREE SHIPPING OVER €43"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "text": "5-STAR RATED"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "icon": "check",
+            "text": "PREMIUM CLEAN CREATINE MONOHYDRATE"
+          }
+        }
+      },
+      "block_order": ["item_1", "item_2", "item_3", "item_4"]
+    },
+    "moby_features": {
+      "type": "moby-features",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "icon": "flask",
+            "title": "PURE MONOHYDRATE",
+            "description": "Third-party tested creatine with zero fillers"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "icon": "leaf",
+            "title": "100% NATURAL",
+            "description": "Vegan-friendly, no artificial additives"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "icon": "lightning",
+            "title": "READY TO MIX",
+            "description": "Individual sticks for easy daily use"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "icon": "target",
+            "title": "OPTIMAL 5G DOSE",
+            "description": "Clinically proven effective amount"
+          }
+        },
+        "feature_5": {
+          "type": "feature",
+          "settings": {
+            "icon": "star",
+            "title": "PRODUCED IN SWEDEN",
+            "description": "Pharmaceutical-grade precision"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4", "feature_5"]
+    }
+  },
+  "order": ["moby_hero", "moby_marquee", "moby_features"]
+}

@@ -1,0 +1,192 @@
+{% comment %}
+  MOBY Scrolling Marquee/Trust Banner
+  - Continuous scrolling animation
+  - Yellow/lime background
+  - Trust badges and selling points
+{% endcomment %}
+
+<section class="moby-marquee">
+  <div class="moby-marquee__track">
+    {% for i in (1..3) %}
+      <div class="moby-marquee__content">
+        {% for block in section.blocks %}
+          <div class="moby-marquee__item" {{ block.shopify_attributes }}>
+            {% if block.settings.icon == 'check' %}
+              <svg class="moby-marquee__icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                <path d="M8 12L11 15L16 9" stroke="var(--moby-lime)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {% elsif block.settings.icon == 'star' %}
+              <svg class="moby-marquee__icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.9 8.6L22 9.3L17 14.1L18.2 21.2L12 17.8L5.8 21.2L7 14.1L2 9.3L9.1 8.6L12 2Z"/>
+              </svg>
+            {% elsif block.settings.icon == 'truck' %}
+              <svg class="moby-marquee__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="6" width="15" height="10" rx="1"/>
+                <path d="M16 8H20L23 12V16H16V8Z"/>
+                <circle cx="6" cy="18" r="2"/>
+                <circle cx="19" cy="18" r="2"/>
+              </svg>
+            {% elsif block.settings.icon == 'shield' %}
+              <svg class="moby-marquee__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L3 7V12C3 17.5 7 21.5 12 23C17 21.5 21 17.5 21 12V7L12 2Z"/>
+                <path d="M8 12L11 15L16 9"/>
+              </svg>
+            {% elsif block.settings.icon == 'leaf' %}
+              <svg class="moby-marquee__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 21C6 21 8 15 12 12C16 9 20 8 20 8C20 8 18 14 14 17C10 20 6 21 6 21Z"/>
+                <path d="M8 17C8 17 12 13 16 11"/>
+              </svg>
+            {% endif %}
+            <span class="moby-marquee__text">{{ block.settings.text }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .moby-marquee {
+    background: var(--moby-lime);
+    overflow: hidden;
+    padding: 14px 0;
+  }
+
+  .moby-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: moby-marquee-scroll 30s linear infinite;
+  }
+
+  .moby-marquee__track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes moby-marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(calc(-100% / 3));
+    }
+  }
+
+  .moby-marquee__content {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 0 24px;
+  }
+
+  .moby-marquee__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .moby-marquee__icon {
+    color: var(--moby-dark);
+    flex-shrink: 0;
+  }
+
+  .moby-marquee__text {
+    font-family: var(--font-body--family, 'Inter', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--moby-dark);
+  }
+
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .moby-marquee {
+      padding: 12px 0;
+    }
+
+    .moby-marquee__content {
+      gap: 32px;
+      padding: 0 16px;
+    }
+
+    .moby-marquee__text {
+      font-size: 11px;
+    }
+
+    .moby-marquee__track {
+      animation-duration: 20s;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Marquee",
+  "class": "moby-marquee-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Marquee Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "check", "label": "Checkmark" },
+            { "value": "star", "label": "Star" },
+            { "value": "truck", "label": "Shipping truck" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "leaf", "label": "Leaf/Natural" }
+          ],
+          "default": "check"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Trust badge text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Marquee",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "text": "100% SATISFACTION GUARANTEE"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "text": "FREE SHIPPING OVER €43"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "star",
+            "text": "5-STAR RATED"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "check",
+            "text": "PREMIUM CLEAN CREATINE MONOHYDRATE"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
