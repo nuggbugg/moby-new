@@ -134,3 +134,13 @@ Edit `config/settings_schema.json` for new admin options.
 - Declarative Shadow DOM
 - requestIdleCallback for non-blocking JS
 - Shopify image optimization filters
+
+## MOBY Brand Guidelines
+
+Use the `/moby-brand` skill when you need to check brand guidelines for colors, typography, spacing, or other design decisions.
+
+### Design System
+- **Border radius**: 4px (consistent across all buttons, cards, inputs)
+- **Primary dark**: #1B1A0F
+- **Accent lime**: #F9FDB5 (--moby-lime)
+- **No pill-shaped buttons** - always use 4px radius
