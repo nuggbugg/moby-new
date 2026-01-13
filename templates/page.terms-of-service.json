@@ -1,0 +1,305 @@
+{
+  "sections": {
+    "moby_policy": {
+      "type": "moby-policy-content",
+      "settings": {
+        "heading": "Terms of Service",
+        "last_updated": "January 2026"
+      },
+      "blocks": {
+        "section_1": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "1. Company Information",
+            "content": "<p>These Terms of Service govern your use of the website and purchases from:</p>"
+          }
+        },
+        "company_info": {
+          "type": "company_info",
+          "settings": {
+            "company_name": "MOBY Nutrition AB",
+            "org_number": "559547-6259",
+            "address": "Maria Prästgårdsgata 31\n118 52 Stockholm, Sweden",
+            "email": "hello@drinkmoby.com"
+          }
+        },
+        "section_2": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "2. Acceptance of Terms",
+            "content": "<p>By accessing this website and placing an order, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our website or services.</p>"
+          }
+        },
+        "section_3": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "3. Products",
+            "content": "<p>All products displayed on our website are subject to availability. We reserve the right to discontinue any product at any time. Product images are for illustrative purposes; actual products may vary slightly.</p>"
+          }
+        },
+        "products_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>Our dietary supplements are not intended to diagnose, treat, cure, or prevent any disease. Consult a healthcare professional before use if you have any medical conditions or are taking medication.</p>"
+          }
+        },
+        "section_4": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "4. Pricing and Payment",
+            "content": "<p>All prices are displayed in the selected currency and include VAT where applicable. We reserve the right to change prices without prior notice, but any price changes will not affect orders already placed.</p>"
+          }
+        },
+        "payment_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>Payment is processed securely through our payment providers (e.g., Klarna, credit/debit cards). By completing a purchase, you confirm that you are authorized to use the payment method provided.</p>"
+          }
+        },
+        "section_5": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "5. Order Confirmation",
+            "content": "<p>When you place an order, you will receive an order confirmation email. This email confirms that we have received your order. A binding purchase agreement is formed when we ship your order and send a shipping confirmation.</p>"
+          }
+        },
+        "section_6": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "6. Shipping and Delivery",
+            "content": "<p>We aim to process and ship orders within 1-2 business days. Delivery times vary based on your location and the shipping method selected. For detailed shipping information, please see our Shipping & Returns page.</p>"
+          }
+        },
+        "delivery_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>Risk of loss passes to you upon delivery. We are not responsible for delays caused by customs, carriers, or other factors outside our control.</p>"
+          }
+        },
+        "section_7": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "7. Right of Withdrawal (EU Consumers)",
+            "content": "<p>Under the EU Consumer Rights Directive, you have the right to withdraw from your purchase within <strong>14 days</strong> of receiving your order, without giving any reason.</p>"
+          }
+        },
+        "withdrawal_how": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>To exercise this right, notify us at <a href=\"mailto:hello@drinkmoby.com\">hello@drinkmoby.com</a> with a clear statement of your decision to withdraw. You must return the products within 14 days of notifying us.</p>"
+          }
+        },
+        "withdrawal_conditions": {
+          "type": "subsection",
+          "settings": {
+            "title": "Conditions",
+            "content": ""
+          }
+        },
+        "conditions_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Products must be unused, unopened, and in original packaging|You are responsible for return shipping costs|Refunds will be processed within 14 days of receiving the returned goods"
+          }
+        },
+        "withdrawal_exceptions": {
+          "type": "subsection",
+          "settings": {
+            "title": "Exceptions",
+            "content": "<p>The right of withdrawal does not apply to sealed products that have been opened after delivery, for health protection or hygiene reasons.</p>"
+          }
+        },
+        "section_8": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "8. Returns and Refunds",
+            "content": "<p>Beyond the statutory 14-day withdrawal period, we offer a <strong>30-day satisfaction guarantee</strong>. If you are not satisfied with your purchase, contact us within 30 days of delivery for a refund or exchange.</p>"
+          }
+        },
+        "refunds_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>Refunds will be issued to the original payment method within 14 days of receiving and inspecting the returned products.</p>"
+          }
+        },
+        "section_9": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "9. Defective Products",
+            "content": "<p>Under Swedish consumer law (Konsumentköplagen), you have the right to claim remedies for defective products for up to 3 years from purchase. If a product is defective, please contact us immediately. We will offer repair, replacement, or refund as appropriate.</p>"
+          }
+        },
+        "section_10": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "10. Intellectual Property",
+            "content": "<p>All content on this website, including text, images, logos, and trademarks, is the property of MOBY Nutrition AB and is protected by copyright and intellectual property laws. You may not reproduce, distribute, or use any content without our written permission.</p>"
+          }
+        },
+        "section_11": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "11. Limitation of Liability",
+            "content": "<p>To the fullest extent permitted by law, MOBY Nutrition AB shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or services.</p>"
+          }
+        },
+        "liability_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>Nothing in these terms limits your statutory rights as a consumer under Swedish or EU law.</p>"
+          }
+        },
+        "section_12": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "12. Governing Law and Disputes",
+            "content": "<p>These Terms of Service are governed by Swedish law. Any disputes shall be resolved by the Swedish courts.</p>"
+          }
+        },
+        "disputes_eu": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>For EU consumers: You may also use the European Commission's Online Dispute Resolution platform at <a href=\"https://ec.europa.eu/consumers/odr\" target=\"_blank\">https://ec.europa.eu/consumers/odr</a>.</p>"
+          }
+        },
+        "disputes_arn": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>You may also contact Allmänna reklamationsnämnden (ARN) for dispute resolution:<br>Box 174, 101 23 Stockholm, Sweden<br>Website: <a href=\"https://www.arn.se\" target=\"_blank\">www.arn.se</a></p>"
+          }
+        },
+        "section_13": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "13. Changes to Terms",
+            "content": "<p>We reserve the right to update these Terms of Service at any time. Changes will be posted on this page with an updated revision date. Continued use of our website after changes constitutes acceptance of the new terms.</p>"
+          }
+        },
+        "section_14": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "14. Contact",
+            "content": "<p>For questions about these Terms of Service, please contact us:</p>"
+          }
+        },
+        "contact_info": {
+          "type": "company_info",
+          "settings": {
+            "company_name": "MOBY Nutrition AB",
+            "org_number": "",
+            "address": "Maria Prästgårdsgata 31\n118 52 Stockholm, Sweden",
+            "email": "hello@drinkmoby.com"
+          }
+        }
+      },
+      "block_order": [
+        "section_1",
+        "company_info",
+        "section_2",
+        "section_3",
+        "products_note",
+        "section_4",
+        "payment_note",
+        "section_5",
+        "section_6",
+        "delivery_note",
+        "section_7",
+        "withdrawal_how",
+        "withdrawal_conditions",
+        "conditions_list",
+        "withdrawal_exceptions",
+        "section_8",
+        "refunds_note",
+        "section_9",
+        "section_10",
+        "section_11",
+        "liability_note",
+        "section_12",
+        "disputes_eu",
+        "disputes_arn",
+        "section_13",
+        "section_14",
+        "contact_info"
+      ]
+    },
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "/products/moby-creatine-sticks"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/blogs/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-and-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+    }
+  },
+  "order": [
+    "moby_policy",
+    "moby_footer"
+  ]
+}

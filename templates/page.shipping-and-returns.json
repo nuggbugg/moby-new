@@ -1,0 +1,190 @@
+{
+  "sections": {
+    "moby_policy": {
+      "type": "moby-policy-content",
+      "settings": {
+        "heading": "Shipping & Returns",
+        "last_updated": ""
+      },
+      "blocks": {
+        "shipping_heading": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "Shipping Information",
+            "content": ""
+          }
+        },
+        "processing_time": {
+          "type": "subsection",
+          "settings": {
+            "title": "Processing Time",
+            "content": "<p>Orders are typically processed and shipped within 1-2 business days (Monday-Friday, excluding holidays).</p>"
+          }
+        },
+        "shipping_costs": {
+          "type": "subsection",
+          "settings": {
+            "title": "Shipping Costs",
+            "content": ""
+          }
+        },
+        "shipping_costs_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Free shipping on orders over 500 SEK|Standard shipping (3-5 business days): 49 SEK|Express shipping (1-2 business days): 99 SEK"
+          }
+        },
+        "international": {
+          "type": "subsection",
+          "settings": {
+            "title": "International Shipping",
+            "content": "<p>We currently ship to Sweden, Norway, Denmark, Finland, and select EU countries. Customs fees and import duties are the responsibility of the customer.</p>"
+          }
+        },
+        "returns_heading": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "Returns & Exchanges",
+            "content": ""
+          }
+        },
+        "guarantee": {
+          "type": "subsection",
+          "settings": {
+            "title": "30-Day Guarantee",
+            "content": "<p>We stand behind our products. If you're not completely satisfied, you can return your unopened product within 30 days of delivery for a full refund.</p>"
+          }
+        },
+        "return_process": {
+          "type": "subsection",
+          "settings": {
+            "title": "Return Process",
+            "content": ""
+          }
+        },
+        "return_steps": {
+          "type": "numbered_list",
+          "settings": {
+            "title": "",
+            "items": "Contact us at hello@drinkmoby.com with your order number|We'll provide you with a return authorization and instructions|Pack the item securely and ship it back to us|Once received, we'll process your refund within 5-7 business days"
+          }
+        },
+        "exchange": {
+          "type": "subsection",
+          "settings": {
+            "title": "Exchange Policy",
+            "content": "<p>If you'd like to exchange your product for a different quantity or subscription option, contact our customer service team and we'll be happy to help.</p>"
+          }
+        },
+        "damaged": {
+          "type": "subsection",
+          "settings": {
+            "title": "Damaged or Defective Items",
+            "content": "<p>If you receive a damaged or defective product, please contact us immediately with photos. We'll arrange for a replacement at no additional cost.</p>"
+          }
+        },
+        "contact": {
+          "type": "contact_box",
+          "settings": {
+            "heading": "Questions?",
+            "text": "If you have any questions about shipping or returns, our customer service team is here to help.",
+            "email": "hello@drinkmoby.com"
+          }
+        }
+      },
+      "block_order": [
+        "shipping_heading",
+        "processing_time",
+        "shipping_costs",
+        "shipping_costs_list",
+        "international",
+        "returns_heading",
+        "guarantee",
+        "return_process",
+        "return_steps",
+        "exchange",
+        "damaged",
+        "contact"
+      ]
+    },
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "/products/moby-creatine-sticks"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/blogs/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-and-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+    }
+  },
+  "order": [
+    "moby_policy",
+    "moby_footer"
+  ]
+}

@@ -167,7 +167,7 @@
           "type": "support_link",
           "settings": {
             "label": "Shipping & Returns",
-            "link": "/pages/shipping-returns",
+            "link": "/pages/shipping-and-returns",
             "new_tab": false
           }
         },

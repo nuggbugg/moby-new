@@ -1,0 +1,293 @@
+{
+  "sections": {
+    "moby_policy": {
+      "type": "moby-policy-content",
+      "settings": {
+        "heading": "Privacy Policy",
+        "last_updated": "January 2026"
+      },
+      "blocks": {
+        "section_1": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "1. Data Controller",
+            "content": "<p>The data controller responsible for your personal data is:</p>"
+          }
+        },
+        "company_info_1": {
+          "type": "company_info",
+          "settings": {
+            "company_name": "MOBY Nutrition AB",
+            "org_number": "559547-6259",
+            "address": "Maria Prästgårdsgata 31\n118 52 Stockholm, Sweden",
+            "email": "hello@drinkmoby.com"
+          }
+        },
+        "section_2": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "2. What Personal Data We Collect",
+            "content": "<p>We collect and process the following categories of personal data:</p>"
+          }
+        },
+        "data_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Identity data: Name, billing/shipping address|Contact data: Email address, phone number|Transaction data: Purchase history, payment details (processed securely via our payment provider)|Technical data: IP address, browser type, device information, cookies|Marketing data: Your preferences for receiving marketing communications"
+          }
+        },
+        "section_3": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "3. Legal Basis for Processing",
+            "content": "<p>Under the EU General Data Protection Regulation (GDPR), we process your data based on:</p>"
+          }
+        },
+        "legal_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Contract performance: To fulfill orders and provide our services|Legal obligation: To comply with accounting and tax laws|Legitimate interest: To improve our services and prevent fraud|Consent: For marketing communications (you can withdraw at any time)"
+          }
+        },
+        "section_4": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "4. How We Use Your Data",
+            "content": "<p>We use your personal data to:</p>"
+          }
+        },
+        "use_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Process and deliver your orders|Send order confirmations, shipping updates, and receipts|Respond to your customer service inquiries|Send marketing communications (only with your consent)|Improve our website and products|Comply with legal obligations"
+          }
+        },
+        "section_5": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "5. Data Sharing",
+            "content": "<p>We may share your data with:</p>"
+          }
+        },
+        "sharing_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Payment processors: To securely process transactions (e.g., Klarna, Stripe)|Shipping providers: To deliver your orders|IT service providers: For website hosting and maintenance|Authorities: When required by law"
+          }
+        },
+        "sharing_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>We do not sell your personal data to third parties. All service providers are bound by data processing agreements in compliance with GDPR.</p>"
+          }
+        },
+        "section_6": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "6. International Transfers",
+            "content": "<p>Your data may be transferred to countries outside the EU/EEA. When this occurs, we ensure appropriate safeguards are in place, such as Standard Contractual Clauses approved by the European Commission.</p>"
+          }
+        },
+        "section_7": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "7. Data Retention",
+            "content": "<p>We retain your personal data for:</p>"
+          }
+        },
+        "retention_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Order data: 7 years (Swedish accounting law requirements)|Marketing data: Until you withdraw consent or unsubscribe|Customer service inquiries: 2 years after resolution"
+          }
+        },
+        "section_8": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "8. Your Rights Under GDPR",
+            "content": "<p>As an EU resident, you have the following rights:</p>"
+          }
+        },
+        "rights_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Right of access: Request a copy of your personal data|Right to rectification: Correct inaccurate or incomplete data|Right to erasure: Request deletion of your data (\"right to be forgotten\")|Right to restrict processing: Limit how we use your data|Right to data portability: Receive your data in a portable format|Right to object: Object to processing based on legitimate interest|Right to withdraw consent: Withdraw consent at any time for consent-based processing"
+          }
+        },
+        "rights_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>To exercise these rights, contact us at <a href=\"mailto:hello@drinkmoby.com\">hello@drinkmoby.com</a>.</p>"
+          }
+        },
+        "section_9": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "9. Cookies",
+            "content": "<p>Our website uses cookies to enhance your browsing experience. These include:</p>"
+          }
+        },
+        "cookies_list": {
+          "type": "list",
+          "settings": {
+            "title": "",
+            "items": "Essential cookies: Required for website functionality|Analytics cookies: Help us understand how visitors use our site|Marketing cookies: Used to deliver relevant advertisements (with consent)"
+          }
+        },
+        "cookies_note": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p>You can manage cookie preferences in your browser settings.</p>"
+          }
+        },
+        "section_10": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "10. Data Security",
+            "content": "<p>We implement appropriate technical and organizational measures to protect your personal data, including encryption, secure servers, and access controls. However, no method of transmission over the Internet is 100% secure.</p>"
+          }
+        },
+        "section_11": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "11. Complaints",
+            "content": "<p>If you believe we have not handled your data correctly, you have the right to lodge a complaint with the Swedish Authority for Privacy Protection (Integritetsskyddsmyndigheten, IMY):</p>"
+          }
+        },
+        "imy_info": {
+          "type": "text_block",
+          "settings": {
+            "content": "<p><strong>Integritetsskyddsmyndigheten</strong><br>Box 8114<br>104 20 Stockholm, Sweden<br>Website: <a href=\"https://www.imy.se\" target=\"_blank\">www.imy.se</a></p>"
+          }
+        },
+        "section_12": {
+          "type": "section_heading",
+          "settings": {
+            "heading": "12. Contact Us",
+            "content": "<p>For questions about this Privacy Policy or to exercise your rights, please contact us:</p>"
+          }
+        },
+        "company_info_2": {
+          "type": "company_info",
+          "settings": {
+            "company_name": "MOBY Nutrition AB",
+            "org_number": "",
+            "address": "Maria Prästgårdsgata 31\n118 52 Stockholm, Sweden",
+            "email": "hello@drinkmoby.com"
+          }
+        }
+      },
+      "block_order": [
+        "section_1",
+        "company_info_1",
+        "section_2",
+        "data_list",
+        "section_3",
+        "legal_list",
+        "section_4",
+        "use_list",
+        "section_5",
+        "sharing_list",
+        "sharing_note",
+        "section_6",
+        "section_7",
+        "retention_list",
+        "section_8",
+        "rights_list",
+        "rights_note",
+        "section_9",
+        "cookies_list",
+        "cookies_note",
+        "section_10",
+        "section_11",
+        "imy_info",
+        "section_12",
+        "company_info_2"
+      ]
+    },
+    "moby_footer": {
+      "type": "moby-footer",
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "quick_1": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Shop",
+            "link": "/products/moby-creatine-sticks"
+          }
+        },
+        "quick_2": {
+          "type": "quick_link",
+          "settings": {
+            "label": "The Power Station",
+            "link": "/blogs/power-station"
+          }
+        },
+        "quick_3": {
+          "type": "quick_link",
+          "settings": {
+            "label": "About Us",
+            "link": "/pages/about-us"
+          }
+        },
+        "quick_4": {
+          "type": "quick_link",
+          "settings": {
+            "label": "Partner with MOBY",
+            "link": "/pages/contact"
+          }
+        },
+        "support_1": {
+          "type": "support_link",
+          "settings": {
+            "label": "Shipping & Returns",
+            "link": "/pages/shipping-and-returns",
+            "new_tab": false
+          }
+        },
+        "support_2": {
+          "type": "support_link",
+          "settings": {
+            "label": "Manage Subscriptions",
+            "link": "https://shopify.com/96097796444/account",
+            "new_tab": true
+          }
+        },
+        "support_3": {
+          "type": "support_link",
+          "settings": {
+            "label": "Privacy Policy",
+            "link": "/pages/privacy-policy",
+            "new_tab": false
+          }
+        },
+        "support_4": {
+          "type": "support_link",
+          "settings": {
+            "label": "Terms of Service",
+            "link": "/pages/terms-of-service",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+    }
+  },
+  "order": [
+    "moby_policy",
+    "moby_footer"
+  ]
+}
