@@ -1,0 +1,375 @@
+{% comment %}
+  MOBY Science Section
+  - 3-column layout: features | product image | features
+  - Badge at top
+  - "Why Creatine Works" style section
+{% endcomment %}
+
+<section class="moby-section moby-science">
+  <div class="moby-container">
+    <!-- Header -->
+    <div class="moby-science__header">
+      {%- if section.settings.badge_text != blank -%}
+        <span class="moby-science__badge">{{ section.settings.badge_text }}</span>
+      {%- endif -%}
+      
+      {%- if section.settings.heading != blank -%}
+        <h2 class="moby-science__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      
+      {%- if section.settings.subheading != blank -%}
+        <p class="moby-science__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- 3-Column Grid -->
+    <div class="moby-science__grid">
+      <!-- Left Features -->
+      <div class="moby-science__features moby-science__features--left">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.position == 'left' -%}
+            <div class="moby-science__feature moby-science__feature--left" {{ block.shopify_attributes }}>
+              <div class="moby-science__feature-text">
+                <h3 class="moby-science__feature-title">{{ block.settings.title }}</h3>
+                <p class="moby-science__feature-description">{{ block.settings.description }}</p>
+              </div>
+              <div class="moby-science__feature-icon">
+                {%- render 'moby-icon', icon: block.settings.icon -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- Center Image -->
+      <div class="moby-science__image-wrapper">
+        {%- if section.settings.center_image != blank -%}
+          {{ section.settings.center_image | image_url: width: 600 | image_tag:
+            class: 'moby-science__image',
+            loading: 'lazy',
+            sizes: '(min-width: 1024px) 33vw, 80vw',
+            widths: '300, 400, 500, 600'
+          }}
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'moby-science__image' }}
+        {%- endif -%}
+      </div>
+
+      <!-- Right Features -->
+      <div class="moby-science__features moby-science__features--right">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.position == 'right' -%}
+            <div class="moby-science__feature moby-science__feature--right" {{ block.shopify_attributes }}>
+              <div class="moby-science__feature-icon">
+                {%- render 'moby-icon', icon: block.settings.icon -%}
+              </div>
+              <div class="moby-science__feature-text">
+                <h3 class="moby-science__feature-title">{{ block.settings.title }}</h3>
+                <p class="moby-science__feature-description">{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-science {
+    background: rgba(245, 245, 240, 0.5);
+  }
+
+  .moby-science__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-science__header {
+      margin-bottom: 64px;
+    }
+  }
+
+  .moby-science__badge {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  .moby-science__heading {
+    font-family: 'Memoir', serif;
+    font-size: 32px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-science__heading {
+      font-size: 48px;
+    }
+  }
+
+  .moby-science__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    max-width: 672px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .moby-science__subheading {
+      font-size: 18px;
+    }
+  }
+
+  .moby-science__grid {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-science__grid {
+      grid-template-columns: 1fr auto 1fr;
+      gap: 32px;
+    }
+  }
+
+  .moby-science__features {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .moby-science__feature {
+    display: flex;
+    gap: 16px;
+  }
+
+  .moby-science__feature--left {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-science__feature--left {
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+  }
+
+  .moby-science__feature--right {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .moby-science__feature-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(79, 74, 50, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .moby-science__feature-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-science__feature-title {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-science__feature-description {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .moby-science__image-wrapper {
+    display: flex;
+    justify-content: center;
+    order: -1;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-science__image-wrapper {
+      order: 0;
+    }
+  }
+
+  .moby-science__image {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 768px) {
+    .moby-science__image {
+      max-width: 448px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Science",
+  "tag": "section",
+  "class": "moby-science-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Backed by Science"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Creatine Works"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Creatine is one of the most researched supplements in the world, proven to enhance physical and cognitive performance."
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image",
+      "label": "Center image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            { "value": "left", "label": "Left column" },
+            { "value": "right", "label": "Right column" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "microscope", "label": "Microscope" },
+            { "value": "brain", "label": "Brain" },
+            { "value": "zap", "label": "Lightning/Energy" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "users", "label": "Users" }
+          ],
+          "default": "microscope"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Feature description text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Science",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "microscope",
+            "title": "Clinically Proven",
+            "description": "Backed by over 1,000 scientific studies"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "brain",
+            "title": "Cognitive Performance",
+            "description": "Supports mental clarity and focus"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "icon": "zap",
+            "title": "Daily Energy",
+            "description": "Sustained energy throughout your day"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "heart",
+            "title": "Recovery Support",
+            "description": "Faster muscle recovery and repair"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "shield",
+            "title": "Pure Quality",
+            "description": "100% pharmaceutical-grade creatine"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "icon": "users",
+            "title": "For Everyone",
+            "description": "Suitable for all active lifestyles"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

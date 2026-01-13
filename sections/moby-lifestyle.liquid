@@ -1,0 +1,281 @@
+{% comment %}
+  MOBY Optimized Life Section
+  - Full-screen background image
+  - Centered headline and CTA
+  - Floating product card at bottom
+{% endcomment %}
+
+<section class="moby-lifestyle">
+  {%- if section.settings.background_image != blank -%}
+    <img
+      src="{{ section.settings.background_image | image_url: width: 1920 }}"
+      srcset="{{ section.settings.background_image | image_url: width: 800 }} 800w,
+              {{ section.settings.background_image | image_url: width: 1200 }} 1200w,
+              {{ section.settings.background_image | image_url: width: 1600 }} 1600w,
+              {{ section.settings.background_image | image_url: width: 1920 }} 1920w"
+      sizes="100vw"
+      alt="{{ section.settings.background_image.alt | default: '' }}"
+      class="moby-lifestyle__bg"
+      loading="lazy"
+      decoding="async"
+    >
+  {%- else -%}
+    <div class="moby-lifestyle__bg moby-lifestyle__placeholder"></div>
+  {%- endif -%}
+
+  <div class="moby-lifestyle__overlay"></div>
+
+  <div class="moby-lifestyle__content moby-container">
+    <div class="moby-lifestyle__main">
+      {%- if section.settings.tagline != blank -%}
+        <p class="moby-lifestyle__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+      
+      {%- if section.settings.heading != blank -%}
+        <h2 class="moby-lifestyle__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="moby-lifestyle__button">
+          {{ section.settings.button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_product_card -%}
+      {%- assign product = section.settings.product -%}
+      {%- if product != blank -%}
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        <a href="{{ product.url }}" class="moby-lifestyle__product-card">
+          <div class="moby-lifestyle__product-image">
+            {%- if product.featured_image != blank -%}
+              {{ product.featured_image | image_url: width: 200 | image_tag:
+                loading: 'lazy',
+                width: 112,
+                height: 112
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+          </div>
+          
+          <div class="moby-lifestyle__product-info">
+            <p class="moby-lifestyle__product-label">Featured Product</p>
+            <h3 class="moby-lifestyle__product-title">{{ product.title }}</h3>
+            <p class="moby-lifestyle__product-price">{{ current_variant.price | money }}</p>
+          </div>
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .moby-lifestyle {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 0;
+  }
+
+  .moby-lifestyle__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .moby-lifestyle__placeholder {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-lifestyle__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 26, 16, 0.2);
+  }
+
+  .moby-lifestyle__content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .moby-lifestyle__main {
+    margin-bottom: 128px;
+  }
+
+  .moby-lifestyle__tagline {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 16px;
+  }
+
+  .moby-lifestyle__heading {
+    font-family: 'Memoir', serif;
+    font-size: 40px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: #ffffff;
+    max-width: 900px;
+    margin: 0 0 32px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-lifestyle__heading {
+      font-size: 64px;
+    }
+  }
+
+  .moby-lifestyle__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background: var(--moby-lime, #F9FDB5);
+    color: var(--moby-dark, #1C1A10);
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .moby-lifestyle__button:hover {
+    background: rgba(249, 253, 181, 0.9);
+    transform: translateY(-2px);
+  }
+
+  .moby-lifestyle__product-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 768px;
+    width: 100%;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .moby-lifestyle__product-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .moby-lifestyle__product-image {
+    flex-shrink: 0;
+    width: 112px;
+    height: 112px;
+  }
+
+  .moby-lifestyle__product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .moby-lifestyle__product-info {
+    flex: 1;
+    text-align: left;
+  }
+
+  .moby-lifestyle__product-label {
+    font-family: 'N27', sans-serif;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 4px;
+  }
+
+  .moby-lifestyle__product-title {
+    font-family: 'Memoir', serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+
+  .moby-lifestyle__product-price {
+    font-family: 'N27', sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: #ffffff;
+    margin: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Lifestyle",
+  "tag": "section",
+  "class": "moby-lifestyle-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Produced in Sweden"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your life. Optimized in one motion"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Product card"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_card",
+      "label": "Show product card",
+      "default": true
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Lifestyle"
+    }
+  ]
+}
+{% endschema %}

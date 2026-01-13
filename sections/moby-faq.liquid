@@ -1,0 +1,288 @@
+{% comment %}
+  MOBY FAQ Section
+  - Accordion-style FAQ list
+  - Uses moby-container--narrow for narrower width
+{% endcomment %}
+
+<section class="moby-section moby-faq">
+  <div class="moby-container moby-container--narrow">
+    <!-- Header -->
+    <div class="moby-faq__header">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="moby-faq__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      
+      {%- if section.settings.subheading != blank -%}
+        <p class="moby-faq__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- FAQ List -->
+    <div class="moby-faq__list">
+      {%- for block in section.blocks -%}
+        <div class="moby-faq__item" {{ block.shopify_attributes }}>
+          <button 
+            class="moby-faq__question" 
+            type="button"
+            aria-expanded="false"
+            aria-controls="faq-answer-{{ block.id }}"
+          >
+            <span>{{ block.settings.question }}</span>
+            <svg class="moby-faq__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <div 
+            class="moby-faq__answer" 
+            id="faq-answer-{{ block.id }}"
+            hidden
+          >
+            <p>{{ block.settings.answer }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqItems = document.querySelectorAll('.moby-faq__item');
+    
+    faqItems.forEach(item => {
+      const button = item.querySelector('.moby-faq__question');
+      const answer = item.querySelector('.moby-faq__answer');
+      
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        
+        // Close all other items
+        faqItems.forEach(otherItem => {
+          if (otherItem !== item) {
+            const otherButton = otherItem.querySelector('.moby-faq__question');
+            const otherAnswer = otherItem.querySelector('.moby-faq__answer');
+            otherButton.setAttribute('aria-expanded', 'false');
+            otherAnswer.hidden = true;
+            otherItem.classList.remove('moby-faq__item--open');
+          }
+        });
+        
+        // Toggle current item
+        this.setAttribute('aria-expanded', !isExpanded);
+        answer.hidden = isExpanded;
+        item.classList.toggle('moby-faq__item--open', !isExpanded);
+      });
+    });
+  });
+</script>
+
+<style>
+  .moby-faq {
+    background: var(--color-background, #ffffff);
+  }
+
+  .moby-faq__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-faq__header {
+      margin-bottom: 64px;
+    }
+  }
+
+  .moby-faq__heading {
+    font-family: 'Memoir', serif;
+    font-size: 32px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-faq__heading {
+      font-size: 40px;
+    }
+  }
+
+  .moby-faq__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    color: rgba(28, 26, 16, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .moby-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .moby-faq__item {
+    border: 1px solid var(--moby-sage, #C9C8B6);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-background, #ffffff);
+    transition: all 0.2s ease;
+  }
+
+  .moby-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    text-align: left;
+    color: var(--moby-dark, #1C1A10);
+    transition: background 0.2s ease;
+  }
+
+  @media (max-width: 640px) {
+    .moby-faq__question {
+      padding: 16px;
+    }
+  }
+
+  .moby-faq__question:hover {
+    background: rgba(201, 200, 182, 0.1);
+  }
+
+  .moby-faq__chevron {
+    flex-shrink: 0;
+    margin-left: 16px;
+    color: rgba(28, 26, 16, 0.6);
+    transition: transform 0.2s ease;
+  }
+
+  .moby-faq__item--open .moby-faq__chevron {
+    transform: rotate(180deg);
+  }
+
+  .moby-faq__answer {
+    padding: 0 24px 20px;
+  }
+
+  @media (max-width: 640px) {
+    .moby-faq__answer {
+      padding: 0 16px 16px;
+    }
+  }
+
+  .moby-faq__answer p {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    color: rgba(28, 26, 16, 0.6);
+    margin: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY FAQ",
+  "tag": "section",
+  "class": "moby-faq-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Everything you need to know about MOBY creatine."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is creatine?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Creatine is one of the most researched supplements in the world. It supports muscle strength, cognitive function, energy production, and recovery."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is creatine and why should I take it?",
+            "answer": "Creatine is one of the most researched supplements in the world. It supports muscle strength, cognitive function, energy production, and recovery. Recent studies show benefits for everyone — from athletes to office professionals."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How is MOBY different from other creatine supplements?",
+            "answer": "MOBY combines premium Swedish creatine monohydrate with a convenient, portable format. Our single-serving sachets are designed for your lifestyle — easy to mix anywhere, anytime. Plus, we're committed to transparency and quality."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "When should I take MOBY?",
+            "answer": "We recommend taking MOBY as part of your morning routine for consistent energy, focus, and strength throughout the day. Consistency is more important than timing, so find what works best for your schedule."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Is MOBY suitable for everyone?",
+            "answer": "MOBY is designed for anyone looking to enhance their physical and mental performance. Whether you're an athlete, professional, or just starting your wellness journey, creatine can support your goals. Consult your healthcare provider if you have specific health concerns."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How much creatine is in each serving?",
+            "answer": "Each MOBY sachet contains 5g of pure creatine monohydrate — the clinically effective dose recommended by research. No fillers, no artificial additives, just premium creatine."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Where is MOBY produced?",
+            "answer": "MOBY is proudly made in Sweden with premium Swedish ingredients. We maintain the highest quality standards and source our creatine from trusted European suppliers."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
