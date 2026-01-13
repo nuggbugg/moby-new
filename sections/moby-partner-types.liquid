@@ -1,0 +1,262 @@
+{% comment %}
+  MOBY Partner Types Section
+  - 3-column grid of partnership types
+  - "Who We Work With" section
+{% endcomment %}
+
+<section class="moby-section moby-partner-types">
+  <div class="moby-container">
+    <!-- Header -->
+    <div class="moby-partner-types__header">
+      <h2 class="moby-partner-types__heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="moby-partner-types__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- Types Grid -->
+    <div class="moby-partner-types__grid">
+      {%- for block in section.blocks -%}
+        <div class="moby-partner-types__card" {{ block.shopify_attributes }}>
+          <div class="moby-partner-types__icon">
+            {%- case block.settings.icon -%}
+              {%- when 'pharmacy' -%}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 6V18"/>
+                  <path d="M6 12H18"/>
+                </svg>
+              {%- when 'dumbbell' -%}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6.5 6.5L17.5 17.5"/>
+                  <path d="M21 12L12 21L3 12L12 3L21 12Z"/>
+                  <path d="M3 3L6.5 6.5"/>
+                  <path d="M17.5 17.5L21 21"/>
+                </svg>
+              {%- when 'store' -%}
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9L12 2L21 9V20C21 20.5 20.5 21 20 21H4C3.5 21 3 20.5 3 20V9Z"/>
+                  <path d="M9 21V12H15V21"/>
+                </svg>
+            {%- endcase -%}
+          </div>
+          <h3 class="moby-partner-types__title">{{ block.settings.title }}</h3>
+          <p class="moby-partner-types__description">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-partner-types {
+    background: rgba(245, 245, 240, 0.3);
+    padding: 80px 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types {
+      padding: 112px 0;
+    }
+  }
+
+  .moby-partner-types__header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .moby-partner-types__heading {
+    font-family: 'Memoir', serif;
+    font-size: 28px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 16px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__heading {
+      font-size: 36px;
+    }
+  }
+
+  .moby-partner-types__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-sage, #C9C8B6);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .moby-partner-types__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .moby-partner-types__card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 4px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__card {
+      padding: 32px;
+    }
+  }
+
+  .moby-partner-types__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(245, 245, 240, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 24px;
+    }
+  }
+
+  .moby-partner-types__icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__icon svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .moby-partner-types__title {
+    font-family: 'Memoir', serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 12px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__title {
+      font-size: 20px;
+    }
+  }
+
+  .moby-partner-types__description {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-types__description {
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Partner Types",
+  "tag": "section",
+  "class": "moby-partner-types-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Who We Work With"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Partnership opportunities for various retail channels"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "type",
+      "name": "Partner Type",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "pharmacy", "label": "Cross (Pharmacy)" },
+            { "value": "dumbbell", "label": "Dumbbell (Gym)" },
+            { "value": "store", "label": "Store (Retail)" }
+          ],
+          "default": "pharmacy"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Partner Type"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Description text goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Partner Types",
+      "blocks": [
+        {
+          "type": "type",
+          "settings": {
+            "icon": "pharmacy",
+            "title": "Pharmacies & Health Stores",
+            "description": "Premium positioning alongside trusted health products. Staff training and POS materials included."
+          }
+        },
+        {
+          "type": "type",
+          "settings": {
+            "icon": "dumbbell",
+            "title": "Gyms & Fitness Centers",
+            "description": "Perfect for members seeking cognitive and physical performance. Bulk ordering available."
+          }
+        },
+        {
+          "type": "type",
+          "settings": {
+            "icon": "store",
+            "title": "Wellness Retailers",
+            "description": "Stand out with a Swedish-made, pharmaceutical-grade supplement that appeals to discerning customers."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

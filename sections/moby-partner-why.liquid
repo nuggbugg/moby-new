@@ -1,0 +1,291 @@
+{% comment %}
+  MOBY Partner Why Section
+  - 2-column: product image left, checklist right
+  - "Why MOBY" section with quote
+{% endcomment %}
+
+<section class="moby-section moby-partner-why">
+  <div class="moby-container">
+    <div class="moby-partner-why__grid">
+      <!-- Image Column -->
+      <div class="moby-partner-why__image-col">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 600 | image_tag:
+            class: 'moby-partner-why__image',
+            loading: 'lazy',
+            sizes: '(min-width: 768px) 40vw, 80vw',
+            widths: '300, 400, 500, 600'
+          }}
+        {%- else -%}
+          <div class="moby-partner-why__placeholder"></div>
+        {%- endif -%}
+      </div>
+
+      <!-- Content Column -->
+      <div class="moby-partner-why__content-col">
+        <h2 class="moby-partner-why__heading">{{ section.settings.heading }}</h2>
+
+        <ul class="moby-partner-why__list">
+          {%- for block in section.blocks -%}
+            <li class="moby-partner-why__item" {{ block.shopify_attributes }}>
+              <svg class="moby-partner-why__check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>{{ block.settings.text }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.settings.quote != blank -%}
+          <blockquote class="moby-partner-why__quote">
+            <p>{{ section.settings.quote }}</p>
+          </blockquote>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-partner-why {
+    background: #ffffff;
+    padding: 64px 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why {
+      padding: 112px 0;
+    }
+  }
+
+  .moby-partner-why__grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+  }
+
+  .moby-partner-why__image-col {
+    order: 2;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__image-col {
+      order: 1;
+    }
+  }
+
+  .moby-partner-why__image {
+    max-width: 280px;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__image {
+      max-width: 400px;
+    }
+  }
+
+  .moby-partner-why__placeholder {
+    width: 280px;
+    height: 280px;
+    background: var(--moby-olive, #4F4A32);
+    margin: 0 auto;
+    border-radius: 4px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__placeholder {
+      width: 400px;
+      height: 400px;
+    }
+  }
+
+  .moby-partner-why__content-col {
+    order: 1;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__content-col {
+      order: 2;
+    }
+  }
+
+  .moby-partner-why__heading {
+    font-family: 'Memoir', serif;
+    font-size: 24px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__heading {
+      font-size: 36px;
+      margin-bottom: 32px;
+    }
+  }
+
+  .moby-partner-why__list {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__list {
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+  }
+
+  .moby-partner-why__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__item {
+      font-size: 15px;
+    }
+  }
+
+  .moby-partner-why__check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--moby-dark, #1C1A10);
+    margin-top: 1px;
+  }
+
+  .moby-partner-why__quote {
+    border-left: 2px solid var(--moby-dark, #1C1A10);
+    padding-left: 16px;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__quote {
+      padding-left: 24px;
+    }
+  }
+
+  .moby-partner-why__quote p {
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-why__quote p {
+      font-size: 17px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Partner Why",
+  "tag": "section",
+  "class": "moby-partner-why-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image",
+      "info": "Recommended: Product box image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why MOBY"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "\"A product built on complexity and science, yet effortless to use.\""
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Point text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Partner Why",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "text": "Produced in Sweden"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "text": "Pharmaceutical-grade purity"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "text": "5g optimal daily dose"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "text": "Premium stick-pack format"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "text": "Targets both cognitive & physical performance"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "text": "Breaking stereotypes - appeals beyond athletes"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

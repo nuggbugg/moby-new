@@ -31,13 +31,18 @@
 
       <!-- Desktop Navigation -->
       <ul class="moby-header__menu">
-        {% for link in section.settings.menu.links %}
-          <li class="moby-header__menu-item">
-            <a href="{{ link.url }}" class="moby-header__menu-link">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endfor %}
+        <li class="moby-header__menu-item">
+          <a href="/products/moby-creatine-sticks" class="moby-header__menu-link">Shop</a>
+        </li>
+        <li class="moby-header__menu-item">
+          <a href="/blogs/power-station" class="moby-header__menu-link">The Power Station</a>
+        </li>
+        <li class="moby-header__menu-item">
+          <a href="/pages/about-us" class="moby-header__menu-link">About Us</a>
+        </li>
+        <li class="moby-header__menu-item">
+          <a href="/pages/contact" class="moby-header__menu-link">Partner with MOBY</a>
+        </li>
       </ul>
 
       <!-- Desktop Right Actions (hidden on mobile) -->
@@ -50,14 +55,32 @@
           </svg>
         </a>
 
-        <!-- Currency Selector -->
-        <button type="button" class="moby-header__currency-btn">
-          <span class="moby-header__currency-symbol">€</span>
-          <span class="moby-header__currency-code">EUR</span>
-          <svg class="moby-header__caret" width="10" height="6" viewBox="0 0 10 6" fill="none">
-            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        <!-- Currency/Country Selector -->
+        <div class="moby-header__localization">
+          <button type="button" class="moby-header__currency-btn" aria-expanded="false" aria-controls="currency-dropdown">
+            <span class="moby-header__currency-symbol">{{ localization.country.currency.symbol }}</span>
+            <span class="moby-header__currency-code">{{ localization.country.currency.iso_code }}</span>
+            <svg class="moby-header__caret" width="10" height="6" viewBox="0 0 10 6" fill="none">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="moby-header__currency-dropdown" id="currency-dropdown" hidden>
+            {%- form 'localization', id: 'header-localization-form', class: 'moby-header__localization-form' -%}
+              <ul class="moby-header__currency-list">
+                {%- for country in localization.available_countries -%}
+                  <li>
+                    <button type="submit" name="country_code" value="{{ country.iso_code }}" class="moby-header__currency-option{% if country.iso_code == localization.country.iso_code %} moby-header__currency-option--active{% endif %}">
+                      <span class="moby-header__currency-option-symbol">{{ country.currency.symbol }}</span>
+                      <span class="moby-header__currency-option-name">{{ country.name }}</span>
+                      <span class="moby-header__currency-option-code">{{ country.currency.iso_code }}</span>
+                    </button>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endform -%}
+          </div>
+        </div>
 
         <!-- Cart Button (Desktop) -->
         <a href="{{ routes.cart_url }}" class="moby-header__cart">
@@ -102,13 +125,18 @@
   <div class="moby-header__mobile-menu" id="mobile-menu" aria-hidden="true" hidden>
     <div class="moby-header__mobile-inner">
       <ul class="moby-header__mobile-links">
-        {% for link in section.settings.menu.links %}
-          <li>
-            <a href="{{ link.url }}" class="moby-header__mobile-link">
-              {{ link.title }}
-            </a>
-          </li>
-        {% endfor %}
+        <li>
+          <a href="/products/moby-creatine-sticks" class="moby-header__mobile-link">Shop</a>
+        </li>
+        <li>
+          <a href="/blogs/power-station" class="moby-header__mobile-link">The Power Station</a>
+        </li>
+        <li>
+          <a href="/pages/about-us" class="moby-header__mobile-link">About Us</a>
+        </li>
+        <li>
+          <a href="/pages/contact" class="moby-header__mobile-link">Partner with MOBY</a>
+        </li>
         <li>
           <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="moby-header__mobile-link">
             My Account
@@ -116,7 +144,7 @@
         </li>
       </ul>
       <div class="moby-header__mobile-divider"></div>
-      <a href="{{ routes.all_products_collection_url }}" class="moby-header__mobile-cta">
+      <a href="/products/moby-creatine-sticks" class="moby-header__mobile-cta">
         Shop Now
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"/>
@@ -354,6 +382,88 @@
     transition: transform 200ms ease;
   }
 
+  .moby-header__currency-btn[aria-expanded="true"] .moby-header__caret {
+    transform: rotate(180deg);
+  }
+
+  /* Currency Dropdown */
+  .moby-header__localization {
+    position: relative;
+  }
+
+  .moby-header__currency-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 220px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #1B1A0F;
+    border-radius: var(--moby-radius);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    z-index: 200;
+  }
+
+  .moby-header__currency-dropdown[hidden] {
+    display: none;
+  }
+
+  .moby-header__localization-form {
+    margin: 0;
+  }
+
+  .moby-header__currency-list {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+  }
+
+  .moby-header__currency-list li {
+    margin: 0;
+  }
+
+  .moby-header__currency-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--font-body--family, system-ui, sans-serif);
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .moby-header__currency-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+  }
+
+  .moby-header__currency-option--active {
+    background: rgba(249, 253, 181, 0.12);
+    color: var(--moby-lime);
+  }
+
+  .moby-header__currency-option-symbol {
+    width: 20px;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .moby-header__currency-option-name {
+    flex: 1;
+    font-weight: 300;
+  }
+
+  .moby-header__currency-option-code {
+    font-weight: 300;
+    opacity: 0.6;
+  }
+
   /* Cart */
   .moby-header__cart {
     display: flex;
@@ -532,12 +642,21 @@
       this.handleScroll = this.handleScroll.bind(this);
       this.handleMobileToggle = this.handleMobileToggle.bind(this);
       this.closeMobileMenu = this.closeMobileMenu.bind(this);
+      this.handleCurrencyToggle = this.handleCurrencyToggle.bind(this);
+      this.handleClickOutside = this.handleClickOutside.bind(this);
 
       window.addEventListener('scroll', this.handleScroll, { passive: true });
+      document.addEventListener('click', this.handleClickOutside);
 
       const mobileToggle = this.querySelector('.moby-header__mobile-toggle');
       if (mobileToggle) {
         mobileToggle.addEventListener('click', this.handleMobileToggle);
+      }
+
+      // Currency dropdown toggle
+      const currencyBtn = this.querySelector('.moby-header__currency-btn');
+      if (currencyBtn) {
+        currencyBtn.addEventListener('click', this.handleCurrencyToggle);
       }
 
       // Close mobile menu when clicking on links
@@ -551,6 +670,31 @@
 
     disconnectedCallback() {
       window.removeEventListener('scroll', this.handleScroll);
+      document.removeEventListener('click', this.handleClickOutside);
+    }
+
+    handleCurrencyToggle(e) {
+      e.stopPropagation();
+      const btn = this.querySelector('.moby-header__currency-btn');
+      const dropdown = this.querySelector('.moby-header__currency-dropdown');
+
+      if (!btn || !dropdown) return;
+
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !isOpen);
+      dropdown.hidden = isOpen;
+    }
+
+    handleClickOutside(e) {
+      const localization = this.querySelector('.moby-header__localization');
+      if (localization && !localization.contains(e.target)) {
+        const btn = this.querySelector('.moby-header__currency-btn');
+        const dropdown = this.querySelector('.moby-header__currency-dropdown');
+        if (btn && dropdown) {
+          btn.setAttribute('aria-expanded', 'false');
+          dropdown.hidden = true;
+        }
+      }
     }
 
     handleScroll() {

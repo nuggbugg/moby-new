@@ -6,7 +6,7 @@
         "heading": "SCIENCE-BACKED CLARITY AND STRENGTH",
         "subheading": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE",
         "button_text": "SHOP NOW",
-        "button_link": "shopify://collections/all",
+        "button_link": "/products/moby-creatine-sticks",
         "show_shipping_badge": true,
         "shipping_text": "FREE SHIPPING ON ORDERS OVER €43"
       }
@@ -200,7 +200,7 @@
         "tagline": "Produced in Sweden",
         "heading": "Your life. Optimized in one motion",
         "button_label": "Shop Now",
-        "button_link": "shopify://collections/all",
+        "button_link": "/products/moby-creatine-sticks",
         "show_product_card": true
       }
     },
@@ -280,7 +280,7 @@
           "type": "quick_link",
           "settings": {
             "label": "Shop",
-            "link": "shopify://collections/all"
+            "link": "/products/moby-creatine-sticks"
           }
         },
         "quick_2": {

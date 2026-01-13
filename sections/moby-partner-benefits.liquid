@@ -1,0 +1,262 @@
+{% comment %}
+  MOBY Partner Benefits Section
+  - 4-column grid of partnership benefits
+  - "Why Partner With Us" section
+{% endcomment %}
+
+<section class="moby-section moby-partner-benefits">
+  <div class="moby-container">
+    <!-- Header -->
+    <div class="moby-partner-benefits__header">
+      <h2 class="moby-partner-benefits__heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="moby-partner-benefits__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- Benefits Grid -->
+    <div class="moby-partner-benefits__grid">
+      {%- for block in section.blocks -%}
+        <div class="moby-partner-benefits__card" {{ block.shopify_attributes }}>
+          <div class="moby-partner-benefits__icon">
+            {%- case block.settings.icon -%}
+              {%- when 'trending-up' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+              {%- when 'shield' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2L20 6V12C20 16.4 16.5 20.3 12 22C7.5 20.3 4 16.4 4 12V6L12 2Z"/>
+                </svg>
+              {%- when 'users' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              {%- when 'line-chart' -%}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="12" x2="21" y2="12"/>
+                  <polyline points="7 8 3 12 7 16"/>
+                  <polyline points="17 8 21 12 17 16"/>
+                  <line x1="12" y1="3" x2="12" y2="21"/>
+                </svg>
+            {%- endcase -%}
+          </div>
+          <h3 class="moby-partner-benefits__title">{{ block.settings.title }}</h3>
+          <p class="moby-partner-benefits__description">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-partner-benefits {
+    background: #ffffff;
+    padding: 80px 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-benefits {
+      padding: 112px 0;
+    }
+  }
+
+  .moby-partner-benefits__header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .moby-partner-benefits__heading {
+    font-family: 'Memoir', serif;
+    font-size: 28px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 16px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-benefits__heading {
+      font-size: 36px;
+    }
+  }
+
+  .moby-partner-benefits__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-sage, #C9C8B6);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .moby-partner-benefits__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .moby-partner-benefits__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .moby-partner-benefits__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .moby-partner-benefits__card {
+    background: rgba(245, 245, 240, 0.3);
+    padding: 24px;
+    border-radius: 4px;
+  }
+
+  .moby-partner-benefits__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(245, 245, 240, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .moby-partner-benefits__icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-partner-benefits__title {
+    font-family: 'Memoir', serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 8px;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-benefits__title {
+      font-size: 18px;
+    }
+  }
+
+  .moby-partner-benefits__description {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-partner-benefits__description {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Partner Benefits",
+  "tag": "section",
+  "class": "moby-partner-benefits-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Partner With Us"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join a growing network of premium wellness retailers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "trending-up", "label": "Trending Up (Growth)" },
+            { "value": "shield", "label": "Shield (Quality)" },
+            { "value": "users", "label": "Users (Support)" },
+            { "value": "line-chart", "label": "Chart (Flexibility)" }
+          ],
+          "default": "trending-up"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Benefit Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Benefit description text goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Partner Benefits",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "trending-up",
+            "title": "Expanding Reach",
+            "description": "Tap into the growing wellness market with a premium, science-backed product."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "title": "Unmatched Quality",
+            "description": "Pharmaceutical-grade creatine manufactured in Sweden to the highest European standards."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "users",
+            "title": "Dedicated Support",
+            "description": "Full marketing support, training materials, and dedicated account management."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "line-chart",
+            "title": "Growing Together",
+            "description": "Flexible ordering, competitive margins, and co-marketing opportunities."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
