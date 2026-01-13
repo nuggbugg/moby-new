@@ -167,7 +167,7 @@
                 <circle cx="6" cy="18" r="2"/>
                 <circle cx="19" cy="18" r="2"/>
               </svg>
-              <span>Free shipping over {{ free_shipping_threshold | money_without_trailing_zeros }}</span>
+              <span>Free shipping over {{ free_shipping_threshold }}{{ localization.country.currency.symbol }}</span>
             </div>
           </div>
         </div>
@@ -489,7 +489,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--moby-sage, #C9C8B6);
+    color: rgba(28, 26, 16, 0.6);
   }
 
   .moby-featured-product__trust-item span {
