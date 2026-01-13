@@ -246,49 +246,9 @@
           </label>
         </div>
 
-        <!-- Purchase Type Selector -->
-        <div class="moby-buy-box__purchase-type" id="purchase-type">
-          <!-- One-time Purchase -->
-          <label class="moby-buy-box__option active" data-type="one-time">
-            <input type="radio" name="purchase_type" value="one-time" checked>
-            <div class="moby-buy-box__option-radio"></div>
-            <div class="moby-buy-box__option-content">
-              <div class="moby-buy-box__option-row">
-                <div class="moby-buy-box__option-info">
-                  <span class="moby-buy-box__option-title">One-time Purchase</span>
-                  <span class="moby-buy-box__option-subtitle">Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}, volume discount.</span>
-                </div>
-                <div class="moby-buy-box__option-price">
-                  <span class="moby-buy-box__price-current" id="onetime-price">{{ current_variant.price | money }}</span>
-                  <span class="moby-buy-box__price-original" id="onetime-original" style="display: none;"></span>
-                </div>
-              </div>
-            </div>
-          </label>
-
-          <!-- Subscribe & Save -->
-          <label class="moby-buy-box__option moby-buy-box__option--subscribe" data-type="subscribe">
-            <input type="radio" name="purchase_type" value="subscribe">
-            <span class="moby-buy-box__option-badge">Recommended</span>
-            <div class="moby-buy-box__option-radio"></div>
-            <div class="moby-buy-box__option-content">
-              <div class="moby-buy-box__option-row">
-                <div class="moby-buy-box__option-info">
-                  <span class="moby-buy-box__option-title">Subscribe & Save <span id="subscribe-discount">(-10%)</span></span>
-                  <span class="moby-buy-box__option-subtitle">Lowest price! Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}. Cancel anytime.</span>
-                </div>
-                <div class="moby-buy-box__option-price">
-                  <span class="moby-buy-box__price-current" id="subscribe-price">{{ current_variant.price | times: 0.9 | money }}</span>
-                  <span class="moby-buy-box__price-original" id="subscribe-original">{{ current_variant.price | money }}</span>
-                </div>
-              </div>
-
-              <!-- Frequency Selector - Shopify Subscription App Embed -->
-              <div class="moby-buy-box__frequency" id="frequency-selector" style="display: none;">
-                <div class="subscriptions_app_embed_block"></div>
-              </div>
-            </div>
-          </label>
+        <!-- Shopify Subscription Widget -->
+        <div class="moby-buy-box__subscription-widget">
+          <div class="subscriptions_app_embed_block"></div>
         </div>
 
         <!-- Add to Cart Form -->
@@ -813,198 +773,9 @@
     }
   }
 
-  /* Purchase Type Options */
-  .moby-buy-box__purchase-type {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .moby-buy-box__option {
-    position: relative;
-    display: block;
-    padding: 16px;
-    border: 2px solid rgba(28, 26, 16, 0.12);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  @media (min-width: 768px) {
-    .moby-buy-box__option {
-      padding: 20px;
-    }
-  }
-
-  .moby-buy-box__option input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .moby-buy-box__option:hover {
-    border-color: rgba(79, 74, 50, 0.3);
-  }
-
-  .moby-buy-box__option.active {
-    border-color: var(--moby-olive, #4F4A32);
-    background: rgba(79, 74, 50, 0.05);
-  }
-
-  .moby-buy-box__option--subscribe {
-    border-color: rgba(79, 74, 50, 0.3);
-  }
-
-  .moby-buy-box__option--subscribe:hover {
-    border-color: rgba(79, 74, 50, 0.5);
-  }
-
-  .moby-buy-box__option-badge {
-    position: absolute;
-    top: -10px;
-    left: 16px;
-    font-family: 'N27', sans-serif;
-    font-size: 10px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 4px 12px;
-    background: var(--moby-olive, #4F4A32);
-    color: #ffffff;
-    border-radius: 4px;
-  }
-
-  .moby-buy-box__option-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .moby-buy-box__option-content {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .moby-buy-box__option-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding-left: 28px;
-  }
-
-  .moby-buy-box__option-radio {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    border: 2px solid rgba(28, 26, 16, 0.3);
-    border-radius: 50%;
-    transition: all 0.2s ease;
-  }
-
-  .moby-buy-box__option--subscribe .moby-buy-box__option-radio {
-    top: 28px;
-    transform: none;
-  }
-
-  .moby-buy-box__option.active .moby-buy-box__option-radio {
-    border-color: var(--moby-olive, #4F4A32);
-    background: var(--moby-olive, #4F4A32);
-    box-shadow: inset 0 0 0 3px #ffffff;
-  }
-
-  .moby-buy-box__option-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .moby-buy-box__option-title {
-    font-family: 'N27', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var(--moby-dark, #1C1A10);
-  }
-
-  @media (min-width: 768px) {
-    .moby-buy-box__option-title {
-      font-size: 14px;
-    }
-  }
-
-  .moby-buy-box__option-subtitle {
-    font-family: 'N27', sans-serif;
-    font-size: 10px;
-    font-weight: 300;
-    color: rgba(28, 26, 16, 0.75);
-  }
-
-  @media (min-width: 768px) {
-    .moby-buy-box__option-subtitle {
-      font-size: 12px;
-    }
-  }
-
-  .moby-buy-box__option-price {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-  }
-
-  .moby-buy-box__price-current {
-    font-family: 'N27', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--moby-dark, #1C1A10);
-    white-space: nowrap;
-  }
-
-  @media (min-width: 768px) {
-    .moby-buy-box__price-current {
-      font-size: 18px;
-    }
-  }
-
-  .moby-buy-box__price-original {
-    font-family: 'N27', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    color: rgba(28, 26, 16, 0.7);
-    text-decoration: line-through;
-    white-space: nowrap;
-  }
-
-  /* Frequency Selector - Subscription App Embed */
-  .moby-buy-box__frequency {
-    padding-left: 28px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(28, 26, 16, 0.1);
-  }
-
-  .moby-buy-box__frequency select {
-    width: 100%;
-    padding: 12px 16px;
-    font-family: 'N27', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--moby-dark, #1C1A10);
-    background: #ffffff;
-    border: 1px solid rgba(28, 26, 16, 0.15);
-    border-radius: 6px;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s ease;
-  }
-
-  .moby-buy-box__frequency select:focus {
-    border-color: var(--moby-olive, #4F4A32);
+  /* Subscription Widget */
+  .moby-buy-box__subscription-widget {
+    margin-bottom: 16px;
   }
 
   /* Style Shopify Subscription App Embed */
@@ -1138,20 +909,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const basePrice = {{ current_variant.price }};
   const packSelector = section.querySelector('#pack-selector');
-  const purchaseType = section.querySelector('#purchase-type');
-  const frequencySelector = section.querySelector('#frequency-selector');
   const quantityInput = section.querySelector('#quantity-input');
-  const sellingPlanInput = section.querySelector('#selling-plan-input');
   const btnPrice = section.querySelector('#btn-price');
-  const btnText = section.querySelector('#btn-text');
-  const onetimePrice = section.querySelector('#onetime-price');
-  const onetimeOriginal = section.querySelector('#onetime-original');
-  const subscribePrice = section.querySelector('#subscribe-price');
-  const subscribeOriginal = section.querySelector('#subscribe-original');
-  const subscribeDiscount = section.querySelector('#subscribe-discount');
 
   let currentQuantity = 1;
-  let currentType = 'one-time';
 
   function formatMoney(cents) {
     return (cents / 100).toLocaleString('{{ localization.language.iso_code | default: "en" }}', {
@@ -1166,72 +927,25 @@ document.addEventListener('DOMContentLoaded', function() {
     return 0;
   }
 
-  function updatePrices() {
+  function updateButton() {
     const packDiscount = getPackDiscount(currentQuantity);
-    const subscriptionDiscount = 0.10;
-
-    // One-time price
-    const onetimeTotal = basePrice * currentQuantity * (1 - packDiscount);
-    onetimePrice.textContent = formatMoney(onetimeTotal);
-
-    if (packDiscount > 0) {
-      onetimeOriginal.style.display = 'block';
-      onetimeOriginal.textContent = formatMoney(basePrice * currentQuantity);
-    } else {
-      onetimeOriginal.style.display = 'none';
-    }
-
-    // Subscribe price
-    const priceAfterPack = basePrice * (1 - packDiscount);
-    const subscribeTotal = priceAfterPack * (1 - subscriptionDiscount) * currentQuantity;
-    subscribePrice.textContent = formatMoney(subscribeTotal);
-    subscribeOriginal.textContent = formatMoney(basePrice * currentQuantity);
-
-    // Calculate total discount for subscribe
-    const totalDiscount = 1 - ((1 - packDiscount) * (1 - subscriptionDiscount));
-    subscribeDiscount.textContent = `(-${Math.round(totalDiscount * 100)}%)`;
-
-    // Update button
-    const finalPrice = currentType === 'subscribe' ? subscribeTotal : onetimeTotal;
-    btnPrice.textContent = formatMoney(finalPrice);
-    btnText.textContent = currentType === 'subscribe' ? 'Subscribe' : 'Join the Movement';
-
-    // Update quantity input
-    quantityInput.value = currentQuantity;
+    const total = basePrice * currentQuantity * (1 - packDiscount);
+    if (btnPrice) btnPrice.textContent = formatMoney(total);
+    if (quantityInput) quantityInput.value = currentQuantity;
   }
 
   // Pack selection
-  packSelector.querySelectorAll('.moby-buy-box__pack').forEach(pack => {
-    pack.addEventListener('click', function() {
-      packSelector.querySelectorAll('.moby-buy-box__pack').forEach(p => p.classList.remove('active'));
-      this.classList.add('active');
-      this.querySelector('input').checked = true;
-      currentQuantity = parseInt(this.dataset.quantity);
-      updatePrices();
+  if (packSelector) {
+    packSelector.querySelectorAll('.moby-buy-box__pack').forEach(pack => {
+      pack.addEventListener('click', function() {
+        packSelector.querySelectorAll('.moby-buy-box__pack').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        this.querySelector('input').checked = true;
+        currentQuantity = parseInt(this.dataset.quantity);
+        updateButton();
+      });
     });
-  });
-
-  // Purchase type selection
-  purchaseType.querySelectorAll('.moby-buy-box__option').forEach(option => {
-    option.addEventListener('click', function() {
-      purchaseType.querySelectorAll('.moby-buy-box__option').forEach(o => o.classList.remove('active'));
-      this.classList.add('active');
-      this.querySelector('input').checked = true;
-      currentType = this.dataset.type;
-
-      // Show/hide frequency selector
-      if (currentType === 'subscribe') {
-        frequencySelector.style.display = 'block';
-        // Set selling plan (you'll need to map these to actual selling plan IDs)
-        sellingPlanInput.value = ''; // Needs actual selling plan ID from Shopify
-      } else {
-        frequencySelector.style.display = 'none';
-        sellingPlanInput.value = '';
-      }
-
-      updatePrices();
-    });
-  });
+  }
 
   // Thumbnail gallery
   section.querySelectorAll('.moby-buy-box__thumbnail').forEach(thumb => {
@@ -1246,7 +960,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Initial update
-  updatePrices();
+  updateButton();
 });
 </script>
 
