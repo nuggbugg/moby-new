@@ -306,6 +306,7 @@
     "moby_cta_banner": {
       "type": "moby-cta-banner",
       "settings": {
+        "background_image": "shopify://shop_images/B2B_bakgrund_1344x768_4573ad00-fe89-4c80-bd6a-709081108a56.webp",
         "heading": "Partner with MOBY",
         "description": "Available for distribution in pharmacies, gyms, and wellness retailers. Bring science-backed performance to your customers.",
         "button_label": "Partner with Moby",
