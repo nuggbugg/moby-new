@@ -1306,7 +1306,17 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.add('active');
       const mainImage = section.querySelector('.moby-buy-box__image');
       if (mainImage && this.dataset.imageUrl) {
-        mainImage.src = this.dataset.imageUrl;
+        const newImageUrl = this.dataset.imageUrl;
+        // Update src
+        mainImage.src = newImageUrl;
+        // Clear srcset so browser uses src instead
+        mainImage.srcset = '';
+        // Generate new srcset with different widths for the new image
+        const baseUrl = newImageUrl.split('?')[0];
+        const srcset = [400, 600, 800].map(w => {
+          return `${baseUrl}?width=${w} ${w}w`;
+        }).join(', ');
+        mainImage.srcset = srcset;
       }
     });
   });
