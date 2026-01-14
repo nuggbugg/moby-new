@@ -259,11 +259,7 @@
 
           <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
             {%- if current_variant.available -%}
-              <svg class="moby-buy-box__btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
-              <span id="btn-text">Join the Movement</span>
+              <span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>
             {%- else -%}
               Sold Out
             {%- endif -%}
@@ -986,34 +982,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     width: 100%;
-    height: 60px;
+    height: 56px;
     font-family: 'N27', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--moby-dark, #1C1A10);
-    background: var(--moby-lime, #F9FDB5);
+    color: #ffffff;
+    background: var(--moby-olive, #4F4A32);
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
-  .moby-buy-box__btn-icon {
-    flex-shrink: 0;
-  }
-
   .moby-buy-box__add-btn:hover:not(:disabled) {
-    background: #f0f4a0;
-    transform: translateY(-1px);
+    background: var(--moby-dark, #1C1A10);
   }
 
   .moby-buy-box__add-btn:disabled {
-    background: rgba(79, 74, 50, 0.4);
-    color: #ffffff;
+    background: rgba(79, 74, 50, 0.5);
     cursor: not-allowed;
   }
 
