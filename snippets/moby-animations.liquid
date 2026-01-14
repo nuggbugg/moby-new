@@ -1,0 +1,347 @@
+{% comment %}
+  MOBY Animations
+  - Scroll-triggered reveal animations
+  - Page transition effects
+  - Reusable animation classes
+{% endcomment %}
+
+<style>
+  /* ========================================
+     ANIMATION KEYFRAMES
+     ======================================== */
+
+  @keyframes mobyFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes mobyFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes mobyFadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes mobyFadeLeft {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes mobyFadeRight {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes mobyScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes mobyBlur {
+    from {
+      opacity: 0;
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  /* ========================================
+     SCROLL-TRIGGERED ANIMATIONS
+     ======================================== */
+
+  /* Elements waiting to animate */
+  [data-animate] {
+    opacity: 0;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    [data-animate] {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: none;
+      animation: none;
+    }
+  }
+
+  /* Animated state */
+  [data-animate].animated {
+    animation-duration: 0.7s;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Animation types */
+  [data-animate="fade"].animated {
+    animation-name: mobyFadeIn;
+  }
+
+  [data-animate="fade-up"].animated {
+    animation-name: mobyFadeUp;
+  }
+
+  [data-animate="fade-down"].animated {
+    animation-name: mobyFadeDown;
+  }
+
+  [data-animate="fade-left"].animated {
+    animation-name: mobyFadeLeft;
+  }
+
+  [data-animate="fade-right"].animated {
+    animation-name: mobyFadeRight;
+  }
+
+  [data-animate="scale"].animated {
+    animation-name: mobyScale;
+  }
+
+  [data-animate="blur"].animated {
+    animation-name: mobyBlur;
+  }
+
+  /* Staggered delays for children */
+  [data-animate-stagger] > *:nth-child(1) { animation-delay: 0ms; }
+  [data-animate-stagger] > *:nth-child(2) { animation-delay: 100ms; }
+  [data-animate-stagger] > *:nth-child(3) { animation-delay: 200ms; }
+  [data-animate-stagger] > *:nth-child(4) { animation-delay: 300ms; }
+  [data-animate-stagger] > *:nth-child(5) { animation-delay: 400ms; }
+  [data-animate-stagger] > *:nth-child(6) { animation-delay: 500ms; }
+  [data-animate-stagger] > *:nth-child(7) { animation-delay: 600ms; }
+  [data-animate-stagger] > *:nth-child(8) { animation-delay: 700ms; }
+
+  /* Custom delay modifiers */
+  [data-animate-delay="100"] { animation-delay: 100ms; }
+  [data-animate-delay="200"] { animation-delay: 200ms; }
+  [data-animate-delay="300"] { animation-delay: 300ms; }
+  [data-animate-delay="400"] { animation-delay: 400ms; }
+  [data-animate-delay="500"] { animation-delay: 500ms; }
+
+  /* ========================================
+     SECTION TRANSITIONS
+     ======================================== */
+
+  /* Smooth section headers */
+  .moby-section .moby-stickpacks__header,
+  .moby-section .moby-research__header,
+  .moby-why-moby__content,
+  .moby-product-tabs__nav,
+  .moby-about-hero__content,
+  .moby-featured-product__content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .moby-section.in-view .moby-stickpacks__header,
+  .moby-section.in-view .moby-research__header,
+  .moby-why-moby.in-view .moby-why-moby__content,
+  .moby-product-tabs.in-view .moby-product-tabs__nav,
+  .moby-about-hero.in-view .moby-about-hero__content,
+  .moby-featured-product.in-view .moby-featured-product__content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Cards and grid items */
+  .moby-why-moby__card,
+  .moby-stickpacks__benefit,
+  .moby-research__study,
+  .moby-product-tabs__card {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .in-view .moby-why-moby__card,
+  .in-view .moby-stickpacks__benefit,
+  .in-view .moby-research__study,
+  .in-view .moby-product-tabs__card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered card animations */
+  .in-view .moby-why-moby__card:nth-child(1),
+  .in-view .moby-stickpacks__benefit:nth-child(1),
+  .in-view .moby-research__study:nth-child(1) { transition-delay: 0ms; }
+
+  .in-view .moby-why-moby__card:nth-child(2),
+  .in-view .moby-stickpacks__benefit:nth-child(2),
+  .in-view .moby-research__study:nth-child(2) { transition-delay: 100ms; }
+
+  .in-view .moby-why-moby__card:nth-child(3),
+  .in-view .moby-stickpacks__benefit:nth-child(3),
+  .in-view .moby-research__study:nth-child(3) { transition-delay: 200ms; }
+
+  .in-view .moby-stickpacks__benefit:nth-child(4),
+  .in-view .moby-research__study:nth-child(4) { transition-delay: 300ms; }
+
+  /* Product tabs cards */
+  .moby-product-tabs__panel.moby-product-tabs__panel--active .moby-product-tabs__card:nth-child(1) { transition-delay: 0ms; }
+  .moby-product-tabs__panel.moby-product-tabs__panel--active .moby-product-tabs__card:nth-child(2) { transition-delay: 150ms; }
+
+  /* Comparison table */
+  .moby-stickpacks__comparison {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .in-view .moby-stickpacks__comparison {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 150ms;
+  }
+
+  /* Buy box animations */
+  .moby-buy-box__gallery {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .moby-buy-box__info {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .moby-buy-box.in-view .moby-buy-box__gallery,
+  .moby-buy-box.in-view .moby-buy-box__info {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .moby-buy-box.in-view .moby-buy-box__info {
+    transition-delay: 150ms;
+  }
+
+  /* Trust badges */
+  .moby-buy-box__trust-item {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .in-view .moby-buy-box__trust-item:nth-child(1) { transition-delay: 300ms; }
+  .in-view .moby-buy-box__trust-item:nth-child(2) { transition-delay: 400ms; }
+  .in-view .moby-buy-box__trust-item:nth-child(3) { transition-delay: 500ms; }
+
+  .in-view .moby-buy-box__trust-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ========================================
+     PAGE LOAD TRANSITION
+     ======================================== */
+
+  .page-transition-wrapper {
+    animation: mobyFadeIn 0.4s ease forwards;
+  }
+
+  /* Hero sections - faster animation */
+  .moby-buy-box,
+  .moby-about-hero {
+    animation: mobyFadeIn 0.5s ease forwards;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Intersection Observer for scroll-triggered animations
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -10% 0px',
+      threshold: 0.1
+    };
+
+    const animationObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+
+          // If element has data-animate attribute, add animated class
+          if (entry.target.hasAttribute('data-animate')) {
+            entry.target.classList.add('animated');
+          }
+
+          // Optionally stop observing after animation
+          if (!entry.target.hasAttribute('data-animate-repeat')) {
+            animationObserver.unobserve(entry.target);
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe sections
+    const animatedElements = document.querySelectorAll(`
+      .moby-section,
+      .moby-buy-box,
+      .moby-why-moby,
+      .moby-product-tabs,
+      .moby-about-hero,
+      .moby-featured-product,
+      [data-animate]
+    `);
+
+    animatedElements.forEach(el => {
+      animationObserver.observe(el);
+    });
+
+    // Trigger animations for elements already in viewport on load
+    setTimeout(() => {
+      animatedElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          el.classList.add('in-view');
+          if (el.hasAttribute('data-animate')) {
+            el.classList.add('animated');
+          }
+        }
+      });
+    }, 100);
+  });
+</script>
