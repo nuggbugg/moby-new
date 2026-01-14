@@ -1310,7 +1310,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // AJAX Add to Cart - prevents redirect, opens drawer instead
-  // Includes stock validation to prevent overselling
+  // Includes real-time stock validation to prevent overselling
   if (form) {
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -1327,24 +1327,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(form);
         const variantId = formData.get('id');
         const requestedQty = parseInt(formData.get('quantity')) || 1;
+        const productId = {{ product.id }};
 
-        // Get inventory data from form attributes
-        const inventoryQty = parseInt(form.dataset.inventoryQuantity) || 999;
-        const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
+        // Fetch real-time product data and cart in parallel
+        const [productResponse, cartResponse] = await Promise.all([
+          fetch('/products/{{ product.handle }}.js', { headers: { 'Accept': 'application/json' } }),
+          fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+        ]);
 
-        // Check stock before adding (only if inventory policy is 'deny')
-        if (inventoryPolicy === 'deny') {
-          // Fetch current cart to check existing quantity
-          const cartResponse = await fetch('/cart.js', {
-            headers: { 'Accept': 'application/json' }
-          });
-          const cart = await cartResponse.json();
+        const productData = await productResponse.json();
+        const cart = await cartResponse.json();
 
-          // Count how many of this variant are already in cart (including subscription variants)
+        // Find the variant to get real-time inventory
+        const variant = productData.variants.find(v => String(v.id) === String(variantId));
+
+        if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+          const inventoryQty = variant.inventory_quantity || 0;
+
+          // Count ALL items of this product in cart (both regular and subscription)
           let currentQtyInCart = 0;
           cart.items.forEach(item => {
-            // Check both variant_id and product_id to catch subscriptions
-            if (String(item.variant_id) === String(variantId) || String(item.product_id) === String({{ product.id }})) {
+            if (String(item.product_id) === String(productId)) {
               currentQtyInCart += item.quantity;
             }
           });

@@ -117,16 +117,13 @@
           </div>
 
           <!-- Buttons -->
-          {%- assign variant_inventory = current_variant.inventory_quantity | default: 999 -%}
-          {%- assign inventory_policy = current_variant.inventory_policy | default: 'deny' -%}
           <div class="moby-featured-product__buttons">
             <button
               type="button"
               class="moby-featured-product__add-to-cart"
               data-variant-id="{{ current_variant.id }}"
               data-product-id="{{ product.id }}"
-              data-inventory-quantity="{{ variant_inventory }}"
-              data-inventory-policy="{{ inventory_policy }}"
+              data-product-handle="{{ product.handle }}"
               {% unless current_variant.available %}disabled{% endunless %}
             >
               {%- if current_variant.available -%}
@@ -187,14 +184,13 @@
       });
     });
 
-    // Add to cart - with stock validation to prevent overselling
+    // Add to cart - with real-time stock validation to prevent overselling
     const addToCartBtn = document.querySelector('.moby-featured-product__add-to-cart');
     if (addToCartBtn) {
       addToCartBtn.addEventListener('click', async function() {
         const variantId = this.dataset.variantId;
         const productId = this.dataset.productId;
-        const inventoryQty = parseInt(this.dataset.inventoryQuantity) || 999;
-        const inventoryPolicy = this.dataset.inventoryPolicy || 'deny';
+        const productHandle = this.dataset.productHandle;
 
         if (!variantId) return;
 
@@ -202,18 +198,25 @@
         this.textContent = 'Adding...';
 
         try {
-          // Check stock before adding (only if inventory policy is 'deny')
-          if (inventoryPolicy === 'deny') {
-            const cartResponse = await fetch('/cart.js', {
-              headers: { 'Accept': 'application/json' }
-            });
-            const cart = await cartResponse.json();
+          // Fetch real-time product data and cart in parallel
+          const [productResponse, cartResponse] = await Promise.all([
+            fetch(`/products/${productHandle}.js`, { headers: { 'Accept': 'application/json' } }),
+            fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+          ]);
 
-            // Count how many of this product are already in cart
+          const productData = await productResponse.json();
+          const cart = await cartResponse.json();
+
+          // Find the variant to get real-time inventory
+          const variant = productData.variants.find(v => String(v.id) === String(variantId));
+
+          if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+            const inventoryQty = variant.inventory_quantity || 0;
+
+            // Count ALL items of this product in cart
             let currentQtyInCart = 0;
             cart.items.forEach(item => {
-              if (String(item.variant_id) === String(variantId) ||
-                  String(item.product_id) === String(productId)) {
+              if (String(item.product_id) === String(productId)) {
                 currentQtyInCart += item.quantity;
               }
             });
