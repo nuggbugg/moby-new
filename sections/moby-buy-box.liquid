@@ -1393,59 +1393,47 @@ document.addEventListener('DOMContentLoaded', function() {
   updateButton();
 
   // Sync Judge.me review count to custom stars display
+  let reviewCountUpdated = false;
+
   function updateReviewCount() {
+    if (reviewCountUpdated) return; // Only update once
+
     const countDisplay = section.querySelector('.moby-buy-box__stars-count');
     if (!countDisplay) return;
 
-    // Try multiple sources for review count
-    // 1. Look for Judge.me badge in our section
+    // Try to get review count from Judge.me
     const jdgmBadge = section.querySelector('.jdgm-preview-badge');
     if (jdgmBadge) {
-      const badgeText = jdgmBadge.textContent || jdgmBadge.innerText;
-      const match = badgeText.match(/(\d+)\s*review/i);
-      if (match && match[1] !== '0') {
-        countDisplay.textContent = match[1] + ' reviews';
-        return;
-      }
-      // Check data attribute
       const reviewCount = jdgmBadge.getAttribute('data-number-of-reviews');
       if (reviewCount && reviewCount !== '0') {
         countDisplay.textContent = reviewCount + ' reviews';
+        reviewCountUpdated = true;
         return;
       }
-    }
 
-    // 2. Look for any Judge.me widget on the page
-    const anyJdgmWidget = document.querySelector('[data-number-of-reviews]');
-    if (anyJdgmWidget) {
-      const count = anyJdgmWidget.getAttribute('data-number-of-reviews');
-      if (count && count !== '0') {
-        countDisplay.textContent = count + ' reviews';
-        return;
-      }
-    }
-
-    // 3. Look for Judge.me review count in any format on page
-    const jdgmTextElements = document.querySelectorAll('.jdgm-prev-badge__text, .jdgm-preview-badge');
-    for (const el of jdgmTextElements) {
-      const text = el.textContent || el.innerText;
-      const match = text.match(/(\d+)\s*review/i);
+      const badgeText = jdgmBadge.textContent || '';
+      const match = badgeText.match(/(\d+)\s*review/i);
       if (match && match[1] !== '0') {
         countDisplay.textContent = match[1] + ' reviews';
+        reviewCountUpdated = true;
         return;
+      }
+    }
+
+    // Fallback: check any Judge.me widget
+    const anyWidget = document.querySelector('[data-number-of-reviews]');
+    if (anyWidget) {
+      const count = anyWidget.getAttribute('data-number-of-reviews');
+      if (count && count !== '0') {
+        countDisplay.textContent = count + ' reviews';
+        reviewCountUpdated = true;
       }
     }
   }
 
-  // Run after Judge.me loads (with multiple delays)
-  setTimeout(updateReviewCount, 500);
-  setTimeout(updateReviewCount, 1500);
+  // Run after Judge.me loads - simple timeouts only, no MutationObserver
+  setTimeout(updateReviewCount, 1000);
   setTimeout(updateReviewCount, 3000);
-  setTimeout(updateReviewCount, 5000);
-
-  // Also observe for changes on the whole document
-  const observer = new MutationObserver(updateReviewCount);
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
 });
 </script>
 
