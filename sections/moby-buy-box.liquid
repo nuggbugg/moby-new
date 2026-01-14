@@ -259,7 +259,11 @@
 
           <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
             {%- if current_variant.available -%}
-              <span id="btn-text">Join the Movement</span> - <span id="btn-price">{{ current_variant.price | money }}</span>
+              <svg class="moby-buy-box__btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span id="btn-text">Join the Movement</span>
             {%- else -%}
               Sold Out
             {%- endif -%}
@@ -776,7 +780,7 @@
   }
 
   /* ========================================
-     AGGRESSIVE SHOPIFY SUBSCRIPTION STYLING
+     SHOPIFY SUBSCRIPTION STYLING - REACT DESIGN
      ======================================== */
 
   /* Reset all Shopify widget styles */
@@ -815,63 +819,82 @@
     position: relative !important;
     display: block !important;
     border: 2px solid rgba(28, 26, 16, 0.12) !important;
-    border-radius: 8px !important;
-    padding: 16px 20px !important;
+    border-radius: 12px !important;
+    padding: 20px 24px !important;
     background: #ffffff !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
   }
 
-  .subscriptions_app_embed_block [data-option]:hover,
-  .subscriptions_app_embed_block > div > div:hover,
-  .subscriptions_app_embed_block fieldset > div:hover {
-    border-color: rgba(79, 74, 50, 0.3) !important;
-  }
-
-  /* Selected state */
-  .subscriptions_app_embed_block [data-option]:has(input:checked),
-  .subscriptions_app_embed_block > div > div:has(input:checked),
-  .subscriptions_app_embed_block fieldset > div:has(input:checked),
-  .subscriptions_app_embed_block div:has(> input[type="radio"]:checked) {
+  /* One-time purchase option (1st) - white bg, selected state with border */
+  .subscriptions_app_embed_block [data-option]:first-child:has(input:checked),
+  .subscriptions_app_embed_block > div > div:first-child:has(input:checked),
+  .subscriptions_app_embed_block fieldset > div:first-child:has(input:checked) {
     border-color: var(--moby-olive, #4F4A32) !important;
-    background: rgba(249, 253, 181, 0.15) !important;
+    background: #ffffff !important;
   }
 
-  /* Subscription option (2nd) - add Recommended badge */
+  /* Subscription option (2nd) - ALWAYS lime background */
   .subscriptions_app_embed_block [data-option]:nth-child(2),
   .subscriptions_app_embed_block > div > div:nth-child(2),
   .subscriptions_app_embed_block fieldset > div:nth-child(2) {
-    margin-top: 4px !important;
+    margin-top: 8px !important;
+    background: rgba(249, 253, 181, 0.5) !important;
+    border-color: rgba(249, 253, 181, 0.8) !important;
   }
 
+  .subscriptions_app_embed_block [data-option]:nth-child(2):has(input:checked),
+  .subscriptions_app_embed_block > div > div:nth-child(2):has(input:checked),
+  .subscriptions_app_embed_block fieldset > div:nth-child(2):has(input:checked) {
+    border-color: var(--moby-olive, #4F4A32) !important;
+    background: rgba(249, 253, 181, 0.6) !important;
+  }
+
+  /* RECOMMENDED badge on subscription */
   .subscriptions_app_embed_block [data-option]:nth-child(2)::before,
   .subscriptions_app_embed_block > div > div:nth-child(2)::before,
   .subscriptions_app_embed_block fieldset > div:nth-child(2)::before {
-    content: 'Recommended' !important;
+    content: 'RECOMMENDED' !important;
     position: absolute !important;
-    top: -10px !important;
-    left: 16px !important;
+    top: -12px !important;
+    left: 20px !important;
     font-family: 'N27', sans-serif !important;
     font-size: 10px !important;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.04em !important;
-    padding: 4px 12px !important;
+    letter-spacing: 0.06em !important;
+    padding: 6px 14px !important;
     background: var(--moby-olive, #4F4A32) !important;
     color: #ffffff !important;
     border-radius: 4px !important;
     z-index: 1 !important;
   }
 
-  /* Main labels */
+  /* Main option labels - flex row with space between */
+  .subscriptions_app_embed_block > div > div > label:first-of-type,
+  .subscriptions_app_embed_block fieldset > div > label:first-of-type,
+  .subscriptions_app_embed_block [data-option] > label:first-of-type {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em !important;
+    color: var(--moby-dark, #1C1A10) !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* All other labels */
   .subscriptions_app_embed_block label {
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
     font-size: 14px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.02em !important;
+    font-weight: 400 !important;
     color: var(--moby-dark, #1C1A10) !important;
     cursor: pointer !important;
     margin: 0 !important;
@@ -882,10 +905,10 @@
   .subscriptions_app_embed_block input[type="radio"] {
     appearance: none !important;
     -webkit-appearance: none !important;
-    width: 18px !important;
-    height: 18px !important;
-    min-width: 18px !important;
-    border: 2px solid rgba(28, 26, 16, 0.3) !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    border: 2px solid rgba(28, 26, 16, 0.25) !important;
     border-radius: 50% !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
@@ -897,55 +920,38 @@
 
   .subscriptions_app_embed_block input[type="radio"]:checked {
     border-color: var(--moby-olive, #4F4A32) !important;
-    background: var(--moby-olive, #4F4A32) !important;
-    box-shadow: inset 0 0 0 3px #ffffff !important;
+    border-width: 6px !important;
+    background: #ffffff !important;
   }
 
-  /* Frequency options - show as dropdown style or hide nested radios */
+  /* Hide frequency radio buttons, show only dropdown */
   .subscriptions_app_embed_block ul,
-  .subscriptions_app_embed_block [class*="selling-plan"],
-  .subscriptions_app_embed_block [class*="delivery"],
-  .subscriptions_app_embed_block [class*="frequency"] {
-    list-style: none !important;
-    padding: 12px 0 0 30px !important;
-    margin: 12px 0 0 0 !important;
-    border-top: 1px solid rgba(28, 26, 16, 0.1) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
+  .subscriptions_app_embed_block [class*="selling-plan-group"],
+  .subscriptions_app_embed_block [class*="delivery-options"],
+  .subscriptions_app_embed_block [class*="frequency-options"] {
+    display: none !important;
   }
 
-  .subscriptions_app_embed_block ul label,
-  .subscriptions_app_embed_block [class*="selling-plan"] label,
-  .subscriptions_app_embed_block [class*="frequency"] label {
-    font-size: 13px !important;
-    font-weight: 300 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    color: rgba(28, 26, 16, 0.75) !important;
-  }
-
-  .subscriptions_app_embed_block ul input[type="radio"],
-  .subscriptions_app_embed_block [class*="selling-plan"] input[type="radio"],
-  .subscriptions_app_embed_block [class*="frequency"] input[type="radio"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-  }
-
-  /* Select dropdown styling */
+  /* Style the select dropdown for frequency */
   .subscriptions_app_embed_block select {
+    display: block !important;
     width: 100% !important;
-    padding: 12px 16px !important;
+    padding: 14px 20px !important;
     font-family: 'N27', sans-serif !important;
-    font-size: 13px !important;
-    font-weight: 300 !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
     color: var(--moby-dark, #1C1A10) !important;
     background: #ffffff !important;
     border: 1px solid rgba(28, 26, 16, 0.15) !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     cursor: pointer !important;
-    margin-top: 12px !important;
+    margin-top: 16px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 16px center !important;
+    padding-right: 44px !important;
   }
 
   .subscriptions_app_embed_block select:focus {
@@ -953,53 +959,87 @@
     border-color: var(--moby-olive, #4F4A32) !important;
   }
 
+  /* Price display styling */
+  .subscriptions_app_embed_block [class*="price"],
+  .subscriptions_app_embed_block span[class*="price"],
+  .subscriptions_app_embed_block .price {
+    font-family: 'N27', sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: var(--moby-dark, #1C1A10) !important;
+  }
+
+  /* Compare at price (strikethrough) */
+  .subscriptions_app_embed_block s,
+  .subscriptions_app_embed_block del,
+  .subscriptions_app_embed_block [class*="compare"],
+  .subscriptions_app_embed_block .compare-price {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: rgba(28, 26, 16, 0.5) !important;
+    text-decoration: line-through !important;
+    margin-left: 8px !important;
+  }
+
   /* Footer disclaimer */
   .subscriptions_app_embed_block p:last-of-type,
   .subscriptions_app_embed_block > p,
   .subscriptions_app_embed_block [class*="note"],
   .subscriptions_app_embed_block [class*="disclaimer"],
-  .subscriptions_app_embed_block > span {
+  .subscriptions_app_embed_block > span:last-child {
     font-size: 12px !important;
     font-weight: 300 !important;
-    color: rgba(28, 26, 16, 0.6) !important;
-    margin: 4px 0 0 !important;
+    color: rgba(28, 26, 16, 0.5) !important;
+    margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     background: transparent !important;
+    display: none !important;
   }
 
   /* Hide any unwanted elements */
-  .subscriptions_app_embed_block hr {
+  .subscriptions_app_embed_block hr,
+  .subscriptions_app_embed_block legend {
     display: none !important;
   }
 
   /* Add to Cart Button */
   .moby-buy-box__form {
-    margin-top: 8px;
+    margin-top: 16px;
   }
 
   .moby-buy-box__add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     width: 100%;
-    height: 56px;
+    height: 60px;
     font-family: 'N27', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
+    font-size: 14px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #ffffff;
-    background: var(--moby-olive, #4F4A32);
+    letter-spacing: 0.06em;
+    color: var(--moby-dark, #1C1A10);
+    background: var(--moby-lime, #F9FDB5);
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+  }
+
+  .moby-buy-box__btn-icon {
+    flex-shrink: 0;
   }
 
   .moby-buy-box__add-btn:hover:not(:disabled) {
-    background: var(--moby-dark, #1C1A10);
+    background: #f0f4a0;
+    transform: translateY(-1px);
   }
 
   .moby-buy-box__add-btn:disabled {
-    opacity: 0.5;
+    background: rgba(79, 74, 50, 0.4);
+    color: #ffffff;
     cursor: not-allowed;
   }
 
