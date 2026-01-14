@@ -142,6 +142,7 @@
     {% render 'moby-animations' %}
 
     {%- comment -%} Global Cart Interceptor - Prevents redirects, opens drawer instead {%- endcomment -%}
+    {%- comment -%} Includes stock validation to prevent overselling {%- endcomment -%}
     <script>
     (function() {
       // Intercept ALL form submissions to /cart/add
@@ -173,6 +174,39 @@
           // Ensure quantity is a number
           if (data.quantity) data.quantity = parseInt(data.quantity) || 1;
 
+          // Check stock if inventory data is available on the form
+          const inventoryQty = form.dataset.inventoryQuantity ? parseInt(form.dataset.inventoryQuantity) : null;
+          const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
+          const productId = form.dataset.productId;
+
+          if (inventoryQty !== null && inventoryPolicy === 'deny') {
+            // Fetch current cart to check existing quantity
+            const cartResponse = await fetch('/cart.js', {
+              headers: { 'Accept': 'application/json' }
+            });
+            const cart = await cartResponse.json();
+
+            // Count how many of this variant/product are already in cart
+            let currentQtyInCart = 0;
+            cart.items.forEach(item => {
+              if (String(item.variant_id) === String(data.id) ||
+                  (productId && String(item.product_id) === String(productId))) {
+                currentQtyInCart += item.quantity;
+              }
+            });
+
+            const totalAfterAdd = currentQtyInCart + data.quantity;
+
+            if (totalAfterAdd > inventoryQty) {
+              const remaining = inventoryQty - currentQtyInCart;
+              if (remaining <= 0) {
+                throw new Error('No more stock available');
+              } else {
+                throw new Error(`Only ${remaining} more available`);
+              }
+            }
+          }
+
           const response = await fetch('/cart/add.js', {
             method: 'POST',
             headers: {
@@ -183,8 +217,8 @@
           });
 
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.description || 'Failed to add to cart');
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.description || errorData.message || 'Failed to add to cart');
           }
 
           // Success
@@ -204,7 +238,8 @@
         } catch (error) {
           console.error('Add to cart error:', error);
           if (submitBtn) {
-            submitBtn.innerHTML = '<span>Error</span>';
+            const errorText = error.message && error.message.length < 50 ? error.message : 'Error';
+            submitBtn.innerHTML = `<span>${errorText}</span>`;
             setTimeout(() => {
               submitBtn.innerHTML = originalContent;
               submitBtn.disabled = false;
