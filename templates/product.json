@@ -225,6 +225,7 @@
         "pillar_3"
       ],
       "settings": {
+        "background_image": "shopify://shop_images/Why_Moby_Background.webp",
         "badge": "Why Choose MOBY",
         "heading": "Creatine Made Clean, Simple, and Precise",
         "subheading": "Pure creatine, nothing else. Third-party tested, precisely dosed, and produced in Sweden under the strictest standards."
