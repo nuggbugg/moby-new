@@ -131,10 +131,21 @@
 
       <!-- Product Info -->
       <div class="moby-buy-box__info">
-        <!-- Judge.me Reviews Badge -->
-        <div class="moby-buy-box__reviews">
-          <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}"></div>
-        </div>
+        <!-- Stars & Review Count - Above Product Title -->
+        <a href="#judgeme_product_reviews" class="moby-buy-box__reviews-link">
+          <div class="moby-buy-box__stars">
+            <div class="moby-buy-box__stars-icons">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="moby-buy-box__stars-count jdgm-prev-badge__text" data-number-of-reviews></span>
+          </div>
+          {%- comment -%} Hidden Judge.me widget to populate data {%- endcomment -%}
+          <span class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="display: none !important;"></span>
+        </a>
 
         <!-- Title & Stock -->
         <div class="moby-buy-box__header">
@@ -555,8 +566,43 @@
     gap: 16px;
   }
 
-  .moby-buy-box__reviews {
-    min-height: 20px;
+  .moby-buy-box__reviews-link {
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .moby-buy-box__reviews-link:hover .moby-buy-box__stars {
+    opacity: 0.75;
+  }
+
+  .moby-buy-box__stars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s ease;
+  }
+
+  .moby-buy-box__stars-icons {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-buy-box__stars-icons svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .moby-buy-box__stars-count {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-buy-box__stars-count:empty::after {
+    content: 'reviews';
   }
 
   .moby-buy-box__header {
@@ -1336,6 +1382,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initial update
   updateButton();
+
+  // Sync Judge.me review count to custom stars display
+  function updateReviewCount() {
+    const jdgmBadge = section.querySelector('.jdgm-preview-badge');
+    const countDisplay = section.querySelector('.moby-buy-box__stars-count');
+
+    if (jdgmBadge && countDisplay) {
+      // Try to get the review count from Judge.me badge text
+      const badgeText = jdgmBadge.textContent || jdgmBadge.innerText;
+      const match = badgeText.match(/(\d+)\s*review/i);
+
+      if (match) {
+        countDisplay.textContent = match[1] + ' reviews';
+      } else {
+        // Fallback: check for data attribute
+        const reviewCount = jdgmBadge.getAttribute('data-number-of-reviews');
+        if (reviewCount) {
+          countDisplay.textContent = reviewCount + ' reviews';
+        }
+      }
+    }
+  }
+
+  // Run after Judge.me loads (with delay and mutation observer)
+  setTimeout(updateReviewCount, 1000);
+  setTimeout(updateReviewCount, 2500);
+
+  // Also observe for changes
+  const observer = new MutationObserver(updateReviewCount);
+  const jdgmBadge = section.querySelector('.jdgm-preview-badge');
+  if (jdgmBadge) {
+    observer.observe(jdgmBadge, { childList: true, subtree: true, characterData: true });
+  }
 });
 </script>
 
