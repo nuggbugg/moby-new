@@ -38,7 +38,13 @@
                 <path d="M8 17C8 17 12 13 16 11"/>
               </svg>
             {% endif %}
-            <span class="moby-marquee__text">{{ block.settings.text }}</span>
+            <span class="moby-marquee__text">
+              {%- if block.settings.text contains 'FREE SHIPPING' -%}
+                {% render 'moby-free-shipping-threshold', prefix: 'FREE SHIPPING OVER ' %}
+              {%- else -%}
+                {{ block.settings.text }}
+              {%- endif -%}
+            </span>
           </div>
         {% endfor %}
       </div>

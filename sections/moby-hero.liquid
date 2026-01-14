@@ -67,7 +67,7 @@
               <circle cx="12" cy="12" r="10" fill="var(--moby-lime, #F9FDB5)"/>
               <path d="M8 12L11 15L16 9" stroke="var(--moby-olive, #4F4A32)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <span>{{ section.settings.shipping_text | default: "FREE SHIPPING ON ORDERS OVER €43" }}</span>
+            {% render 'moby-free-shipping-threshold', prefix: 'FREE SHIPPING ON ORDERS OVER ' %}
           </div>
         {% endif %}
       </div>

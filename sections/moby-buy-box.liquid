@@ -282,7 +282,7 @@
                 <span class="moby-buy-box__option-title">One-time Purchase</span>
                 <span class="moby-buy-box__option-price" data-onetime-price>{{ current_variant.price | money }}</span>
               </div>
-              <p class="moby-buy-box__option-desc">Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}, volume discount.</p>
+              <p class="moby-buy-box__option-desc">Free shipping over {% render 'moby-free-shipping-threshold' %}, volume discount.</p>
             </div>
           </label>
 
@@ -302,7 +302,7 @@
                     <span class="moby-buy-box__option-compare">{{ current_variant.price | money }}</span>
                   </div>
                 </div>
-                <p class="moby-buy-box__option-desc">Lowest price! Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}. Cancel anytime.</p>
+                <p class="moby-buy-box__option-desc">Lowest price! Free shipping over {% render 'moby-free-shipping-threshold' %}. Cancel anytime.</p>
 
                 <!-- Delivery Frequency Dropdown -->
                 <div class="moby-buy-box__frequency">
@@ -388,7 +388,7 @@
               <circle cx="5.5" cy="18.5" r="2.5"/>
               <circle cx="18.5" cy="18.5" r="2.5"/>
             </svg>
-            <p>Free Shipping Over<br>{{ section.settings.free_shipping_threshold | default: '500 kr' }}</p>
+            <p>Free Shipping Over<br>{% render 'moby-free-shipping-threshold' %}</p>
           </div>
           <div class="moby-buy-box__trust-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

@@ -13,15 +13,6 @@
   
   assign current_variant = product.selected_or_first_available_variant
   assign featured_image = product.featured_image
-  
-  assign free_shipping_threshold = 500
-  if localization.country.currency.iso_code == 'EUR'
-    assign free_shipping_threshold = 43
-  elsif localization.country.currency.iso_code == 'USD'
-    assign free_shipping_threshold = 47
-  elsif localization.country.currency.iso_code == 'GBP'
-    assign free_shipping_threshold = 37
-  endif
 -%}
 
 <section class="moby-section moby-featured-product">
@@ -163,7 +154,7 @@
                 <circle cx="6" cy="18" r="2"/>
                 <circle cx="19" cy="18" r="2"/>
               </svg>
-              <span>Free shipping over {{ free_shipping_threshold }}{{ localization.country.currency.symbol }}</span>
+              <span>Free shipping over {% render 'moby-free-shipping-threshold' %}</span>
             </div>
           </div>
         </div>
@@ -197,23 +188,39 @@
       addToCartBtn.addEventListener('click', async function() {
         const variantId = this.dataset.variantId;
         if (!variantId) return;
-        
+
         this.disabled = true;
         this.textContent = 'Adding...';
-        
+
         try {
           const response = await fetch('/cart/add.js', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: variantId, quantity: 1 })
           });
-          
+
           if (response.ok) {
             this.textContent = 'Added!';
+
+            // Update cart counter in navbar
+            const cartResponse = await fetch('/cart.js');
+            const cartData = await cartResponse.json();
+            const cartCountElements = document.querySelectorAll('.moby-header__cart-count, [data-cart-count]');
+            cartCountElements.forEach(el => {
+              el.textContent = cartData.item_count;
+              if (cartData.item_count > 0) {
+                el.style.display = 'flex';
+              }
+            });
+
+            // Open cart drawer
             setTimeout(() => {
-              this.textContent = 'Add to Cart';
+              if (typeof window.openCartDrawer === 'function') {
+                window.openCartDrawer();
+              }
+              this.textContent = 'ADD TO CART';
               this.disabled = false;
-            }, 2000);
+            }, 300);
           } else {
             throw new Error('Failed to add to cart');
           }

@@ -1,0 +1,40 @@
+{%- comment -%}
+  Dynamic Free Shipping Threshold Snippet
+  Outputs the correct free shipping threshold based on current currency
+
+  Usage: {% render 'moby-free-shipping-threshold' %}
+  With prefix: {% render 'moby-free-shipping-threshold', prefix: 'FREE SHIPPING OVER ' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign currency = cart.currency.iso_code | default: 'EUR'
+  assign prefix = prefix | default: ''
+
+  case currency
+    when 'SEK'
+      assign threshold = 500
+      assign symbol = ''
+      assign suffix = ' kr'
+    when 'NOK'
+      assign threshold = 500
+      assign symbol = ''
+      assign suffix = ' kr'
+    when 'DKK'
+      assign threshold = 350
+      assign symbol = ''
+      assign suffix = ' kr'
+    when 'USD'
+      assign threshold = 50
+      assign symbol = '$'
+      assign suffix = ''
+    when 'GBP'
+      assign threshold = 40
+      assign symbol = '£'
+      assign suffix = ''
+    else
+      assign threshold = 43
+      assign symbol = '€'
+      assign suffix = ''
+  endcase
+-%}
+<span class="moby-free-shipping-text" data-free-shipping-threshold="{{ threshold }}" data-currency="{{ currency }}">{{ prefix }}{{ symbol }}{{ threshold }}{{ suffix }}</span>
