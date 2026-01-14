@@ -780,45 +780,50 @@
   }
 
   /* ========================================
-     SHOPIFY SUBSCRIPTION STYLING - REACT DESIGN
+     SHOPIFY SUBSCRIPTION WIDGET STYLING
+     Targets Shopify's native subscription app
      ======================================== */
 
-  /* Reset all Shopify widget styles */
-  .subscriptions_app_embed_block,
-  .subscriptions_app_embed_block * {
-    box-sizing: border-box;
+  /* Target all possible subscription widget wrappers */
+  [data-shopify-subscription-widget],
+  [data-subscription-widget],
+  .shopify-subscription-widget,
+  .subscription-widget,
+  [class*="SubscriptionWidget"],
+  [class*="subscription-widget"],
+  [class*="selling-plan"],
+  .moby-buy-box__subscription-widget > div,
+  .moby-buy-box [class*="subscription"] {
     font-family: 'N27', sans-serif !important;
   }
 
-  .subscriptions_app_embed_block {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  /* Target the main wrapper - remove its border */
-  .subscriptions_app_embed_block > div:first-child,
-  .subscriptions_app_embed_block > fieldset,
-  .subscriptions_app_embed_block > section {
+  /* Main container styling */
+  [data-shopify-subscription-widget] > fieldset,
+  .shopify-subscription-widget > fieldset,
+  [class*="subscription"] fieldset,
+  .moby-buy-box fieldset {
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    background: transparent !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 12px !important;
   }
 
-  /* Each purchase option as a card */
-  .subscriptions_app_embed_block [data-option],
-  .subscriptions_app_embed_block > div > div,
-  .subscriptions_app_embed_block > fieldset > div,
-  .subscriptions_app_embed_block fieldset > div,
-  .subscriptions_app_embed_block > div > label,
-  .subscriptions_app_embed_block section > div {
+  /* Hide legends */
+  [data-shopify-subscription-widget] legend,
+  .shopify-subscription-widget legend,
+  .moby-buy-box fieldset legend {
+    display: none !important;
+  }
+
+  /* Each purchase option card */
+  [data-shopify-subscription-widget] fieldset > div,
+  .shopify-subscription-widget fieldset > div,
+  [class*="subscription"] fieldset > div,
+  .moby-buy-box fieldset > div {
     position: relative !important;
-    display: block !important;
-    border: 2px solid rgba(28, 26, 16, 0.12) !important;
+    border: 2px solid rgba(28, 26, 16, 0.15) !important;
     border-radius: 12px !important;
     padding: 20px 24px !important;
     background: #ffffff !important;
@@ -826,34 +831,33 @@
     transition: all 0.2s ease !important;
   }
 
-  /* One-time purchase option (1st) - white bg, selected state with border */
-  .subscriptions_app_embed_block [data-option]:first-child:has(input:checked),
-  .subscriptions_app_embed_block > div > div:first-child:has(input:checked),
-  .subscriptions_app_embed_block fieldset > div:first-child:has(input:checked) {
+  /* Selected option state */
+  [data-shopify-subscription-widget] fieldset > div:has(input:checked),
+  .shopify-subscription-widget fieldset > div:has(input:checked),
+  .moby-buy-box fieldset > div:has(input:checked) {
     border-color: var(--moby-olive, #4F4A32) !important;
-    background: #ffffff !important;
   }
 
-  /* Subscription option (2nd) - ALWAYS lime background */
-  .subscriptions_app_embed_block [data-option]:nth-child(2),
-  .subscriptions_app_embed_block > div > div:nth-child(2),
-  .subscriptions_app_embed_block fieldset > div:nth-child(2) {
+  /* Subscription option (2nd child) - lime background + RECOMMENDED badge */
+  [data-shopify-subscription-widget] fieldset > div:nth-child(2),
+  .shopify-subscription-widget fieldset > div:nth-child(2),
+  .moby-buy-box fieldset > div:nth-child(2) {
     margin-top: 8px !important;
-    background: rgba(249, 253, 181, 0.5) !important;
-    border-color: rgba(249, 253, 181, 0.8) !important;
+    background: rgba(249, 253, 181, 0.4) !important;
+    border-color: rgba(249, 253, 181, 0.6) !important;
   }
 
-  .subscriptions_app_embed_block [data-option]:nth-child(2):has(input:checked),
-  .subscriptions_app_embed_block > div > div:nth-child(2):has(input:checked),
-  .subscriptions_app_embed_block fieldset > div:nth-child(2):has(input:checked) {
-    border-color: var(--moby-olive, #4F4A32) !important;
+  [data-shopify-subscription-widget] fieldset > div:nth-child(2):has(input:checked),
+  .shopify-subscription-widget fieldset > div:nth-child(2):has(input:checked),
+  .moby-buy-box fieldset > div:nth-child(2):has(input:checked) {
     background: rgba(249, 253, 181, 0.6) !important;
+    border-color: var(--moby-olive, #4F4A32) !important;
   }
 
-  /* RECOMMENDED badge on subscription */
-  .subscriptions_app_embed_block [data-option]:nth-child(2)::before,
-  .subscriptions_app_embed_block > div > div:nth-child(2)::before,
-  .subscriptions_app_embed_block fieldset > div:nth-child(2)::before {
+  /* RECOMMENDED badge */
+  [data-shopify-subscription-widget] fieldset > div:nth-child(2)::before,
+  .shopify-subscription-widget fieldset > div:nth-child(2)::before,
+  .moby-buy-box fieldset > div:nth-child(2)::before {
     content: 'RECOMMENDED' !important;
     position: absolute !important;
     top: -12px !important;
@@ -870,137 +874,107 @@
     z-index: 1 !important;
   }
 
-  /* Main option labels - flex row with space between */
-  .subscriptions_app_embed_block > div > div > label:first-of-type,
-  .subscriptions_app_embed_block fieldset > div > label:first-of-type,
-  .subscriptions_app_embed_block [data-option] > label:first-of-type {
+  /* Option labels */
+  [data-shopify-subscription-widget] label,
+  .shopify-subscription-widget label,
+  .moby-buy-box fieldset label {
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    font-size: 15px !important;
+    gap: 12px !important;
+    font-family: 'N27', sans-serif !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.02em !important;
     color: var(--moby-dark, #1C1A10) !important;
     cursor: pointer !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* All other labels */
-  .subscriptions_app_embed_block label {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: var(--moby-dark, #1C1A10) !important;
-    cursor: pointer !important;
-    margin: 0 !important;
-    padding: 0 !important;
   }
 
   /* Custom radio buttons */
-  .subscriptions_app_embed_block input[type="radio"] {
+  [data-shopify-subscription-widget] input[type="radio"],
+  .shopify-subscription-widget input[type="radio"],
+  .moby-buy-box fieldset input[type="radio"] {
     appearance: none !important;
     -webkit-appearance: none !important;
     width: 20px !important;
     height: 20px !important;
     min-width: 20px !important;
-    border: 2px solid rgba(28, 26, 16, 0.25) !important;
+    border: 2px solid rgba(28, 26, 16, 0.3) !important;
     border-radius: 50% !important;
+    background: #ffffff !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.15s ease !important;
     flex-shrink: 0 !important;
     margin: 0 !important;
-    padding: 0 !important;
-    background: #ffffff !important;
   }
 
-  .subscriptions_app_embed_block input[type="radio"]:checked {
+  [data-shopify-subscription-widget] input[type="radio"]:checked,
+  .shopify-subscription-widget input[type="radio"]:checked,
+  .moby-buy-box fieldset input[type="radio"]:checked {
     border-color: var(--moby-olive, #4F4A32) !important;
     border-width: 6px !important;
     background: #ffffff !important;
   }
 
-  /* Hide frequency radio buttons, show only dropdown */
-  .subscriptions_app_embed_block ul,
-  .subscriptions_app_embed_block [class*="selling-plan-group"],
-  .subscriptions_app_embed_block [class*="delivery-options"],
-  .subscriptions_app_embed_block [class*="frequency-options"] {
-    display: none !important;
+  /* Frequency sub-options */
+  [data-shopify-subscription-widget] ul,
+  .shopify-subscription-widget ul,
+  .moby-buy-box fieldset ul {
+    list-style: none !important;
+    padding: 16px 0 0 32px !important;
+    margin: 12px 0 0 0 !important;
+    border-top: 1px solid rgba(28, 26, 16, 0.1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
   }
 
-  /* Style the select dropdown for frequency */
-  .subscriptions_app_embed_block select {
-    display: block !important;
+  [data-shopify-subscription-widget] ul label,
+  .shopify-subscription-widget ul label,
+  .moby-buy-box fieldset ul label {
+    font-size: 13px !important;
+    font-weight: 300 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: rgba(28, 26, 16, 0.75) !important;
+  }
+
+  [data-shopify-subscription-widget] ul input[type="radio"],
+  .shopify-subscription-widget ul input[type="radio"],
+  .moby-buy-box fieldset ul input[type="radio"] {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+  }
+
+  /* Select dropdown */
+  [data-shopify-subscription-widget] select,
+  .shopify-subscription-widget select,
+  .moby-buy-box fieldset select {
     width: 100% !important;
-    padding: 14px 20px !important;
+    padding: 14px 40px 14px 16px !important;
     font-family: 'N27', sans-serif !important;
     font-size: 14px !important;
     font-weight: 400 !important;
     color: var(--moby-dark, #1C1A10) !important;
-    background: #ffffff !important;
+    background: #ffffff url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center !important;
     border: 1px solid rgba(28, 26, 16, 0.15) !important;
     border-radius: 8px !important;
     cursor: pointer !important;
-    margin-top: 16px !important;
+    margin-top: 12px !important;
     appearance: none !important;
     -webkit-appearance: none !important;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 16px center !important;
-    padding-right: 44px !important;
   }
 
-  .subscriptions_app_embed_block select:focus {
-    outline: none !important;
-    border-color: var(--moby-olive, #4F4A32) !important;
-  }
-
-  /* Price display styling */
-  .subscriptions_app_embed_block [class*="price"],
-  .subscriptions_app_embed_block span[class*="price"],
-  .subscriptions_app_embed_block .price {
+  /* Footer text */
+  [data-shopify-subscription-widget] > p,
+  .shopify-subscription-widget > p,
+  .moby-buy-box fieldset + p {
     font-family: 'N27', sans-serif !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
-    color: var(--moby-dark, #1C1A10) !important;
-  }
-
-  /* Compare at price (strikethrough) */
-  .subscriptions_app_embed_block s,
-  .subscriptions_app_embed_block del,
-  .subscriptions_app_embed_block [class*="compare"],
-  .subscriptions_app_embed_block .compare-price {
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: rgba(28, 26, 16, 0.5) !important;
-    text-decoration: line-through !important;
-    margin-left: 8px !important;
-  }
-
-  /* Footer disclaimer */
-  .subscriptions_app_embed_block p:last-of-type,
-  .subscriptions_app_embed_block > p,
-  .subscriptions_app_embed_block [class*="note"],
-  .subscriptions_app_embed_block [class*="disclaimer"],
-  .subscriptions_app_embed_block > span:last-child {
     font-size: 12px !important;
     font-weight: 300 !important;
     color: rgba(28, 26, 16, 0.5) !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    background: transparent !important;
-    display: none !important;
-  }
-
-  /* Hide any unwanted elements */
-  .subscriptions_app_embed_block hr,
-  .subscriptions_app_embed_block legend {
-    display: none !important;
+    margin: 8px 0 0 !important;
   }
 
   /* Add to Cart Button */
