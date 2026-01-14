@@ -79,11 +79,14 @@
 
         <!-- Cart Button (Desktop) -->
         <button type="button" class="moby-header__cart" onclick="window.openCartDrawer()" aria-label="Open cart">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <span class="moby-header__cart-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="moby-header__cart-count" data-cart-count style="{% if cart.item_count == 0 %}display: none;{% endif %}">{{ cart.item_count }}</span>
+          </span>
           <span class="moby-header__cart-text">CART</span>
         </button>
       </div>
@@ -92,11 +95,14 @@
       <div class="moby-header__actions moby-header__actions--mobile">
         <!-- Cart Button (Mobile) -->
         <button type="button" class="moby-header__cart" onclick="window.openCartDrawer()" aria-label="Open cart">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <span class="moby-header__cart-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="moby-header__cart-count" data-cart-count style="{% if cart.item_count == 0 %}display: none;{% endif %}">{{ cart.item_count }}</span>
+          </span>
           <span class="moby-header__cart-text">CART</span>
         </button>
 
@@ -499,6 +505,34 @@
   .moby-header__cart-text {
     display: inline;
     white-space: nowrap;
+  }
+
+  /* Cart Icon Wrapper for count badge positioning */
+  .moby-header__cart-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Cart Count Badge */
+  .moby-header__cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--moby-core-contrast, #1C1A10);
+    background: #ffffff;
+    border-radius: 9px;
+    line-height: 1;
   }
 
   /* Mobile Toggle */

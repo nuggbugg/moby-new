@@ -1,7 +1,7 @@
 {% comment %}
   MOBY Research Section
   - Clinical studies with expandable accordions
-  - Bar chart visualizations
+  - Animated bar chart visualizations
 {% endcomment %}
 
 <section class="moby-section moby-research">
@@ -16,9 +16,9 @@
     <!-- Studies List -->
     <div class="moby-research__studies">
       {%- for block in section.blocks -%}
-        <div class="moby-research__study" {{ block.shopify_attributes }}>
-          <button 
-            class="moby-research__study-header" 
+        <div class="moby-research__study" {{ block.shopify_attributes }} data-study>
+          <button
+            class="moby-research__study-header"
             type="button"
             aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
             aria-controls="study-content-{{ block.id }}"
@@ -38,48 +38,58 @@
             </svg>
           </button>
 
-          <div 
-            class="moby-research__study-content{% if forloop.first %} moby-research__study-content--open{% endif %}" 
+          <div
+            class="moby-research__study-content{% if forloop.first %} moby-research__study-content--open{% endif %}"
             id="study-content-{{ block.id }}"
-            {% unless forloop.first %}hidden{% endunless %}
+            data-content
           >
-            <p class="moby-research__study-finding">{{ block.settings.finding }}</p>
+            <div class="moby-research__study-inner">
+              <p class="moby-research__study-finding">{{ block.settings.finding }}</p>
 
-            <!-- Bar Chart -->
-            <div class="moby-research__chart">
-              <p class="moby-research__chart-label">{{ block.settings.metric }} Comparison</p>
-              
-              <div class="moby-research__bar-group">
-                <div class="moby-research__bar-row">
-                  <span class="moby-research__bar-label">Placebo</span>
-                  <span class="moby-research__bar-value">{{ block.settings.placebo_result }}{{ block.settings.unit }}</span>
+              <!-- Bar Chart -->
+              <div class="moby-research__chart" data-chart>
+                <p class="moby-research__chart-label">{{ block.settings.metric }} Comparison</p>
+
+                <div class="moby-research__bar-group">
+                  <div class="moby-research__bar-row">
+                    <span class="moby-research__bar-label">Placebo</span>
+                    <span class="moby-research__bar-value">{{ block.settings.placebo_result }}{{ block.settings.unit }}</span>
+                  </div>
+                  <div class="moby-research__bar-track">
+                    <div
+                      class="moby-research__bar moby-research__bar--placebo"
+                      data-bar
+                      data-width="{{ block.settings.placebo_result | divided_by: 1.2 }}"
+                    ></div>
+                  </div>
                 </div>
-                <div class="moby-research__bar-track">
-                  <div class="moby-research__bar moby-research__bar--placebo" style="--bar-width: {{ block.settings.placebo_result | divided_by: 1.2 }}%"></div>
+
+                <div class="moby-research__bar-group">
+                  <div class="moby-research__bar-row">
+                    <span class="moby-research__bar-label moby-research__bar-label--highlight">Creatine</span>
+                    <span class="moby-research__bar-value moby-research__bar-value--highlight">{{ block.settings.creatine_result }}{{ block.settings.unit }}</span>
+                  </div>
+                  <div class="moby-research__bar-track">
+                    <div
+                      class="moby-research__bar moby-research__bar--creatine"
+                      data-bar
+                      data-width="{{ block.settings.creatine_result | divided_by: 1.2 }}"
+                    ></div>
+                  </div>
                 </div>
+
+                <p class="moby-research__chart-note">Higher is better</p>
               </div>
 
-              <div class="moby-research__bar-group">
-                <div class="moby-research__bar-row">
-                  <span class="moby-research__bar-label moby-research__bar-label--highlight">Creatine</span>
-                  <span class="moby-research__bar-value moby-research__bar-value--highlight">{{ block.settings.creatine_result }}{{ block.settings.unit }}</span>
-                </div>
-                <div class="moby-research__bar-track">
-                  <div class="moby-research__bar moby-research__bar--creatine" style="--bar-width: {{ block.settings.creatine_result | divided_by: 1.2 }}%"></div>
-                </div>
-              </div>
-
-              <p class="moby-research__chart-note">Higher is better</p>
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" target="_blank" rel="noopener noreferrer" class="moby-research__study-link">
+                  <span>View Study</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                  </svg>
+                </a>
+              {%- endif -%}
             </div>
-
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}" target="_blank" rel="noopener noreferrer" class="moby-research__study-link">
-                View Study
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                </svg>
-              </a>
-            {%- endif -%}
           </div>
         </div>
       {%- endfor -%}
@@ -89,30 +99,82 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const studies = document.querySelectorAll('.moby-research__study');
-    
+    const studies = document.querySelectorAll('[data-study]');
+
+    // Animate bars when they come into view
+    function animateBars(content) {
+      const bars = content.querySelectorAll('[data-bar]');
+      bars.forEach((bar, index) => {
+        // Reset width first
+        bar.style.width = '0%';
+        // Animate after a small delay (stagger effect)
+        setTimeout(() => {
+          const targetWidth = bar.dataset.width || 0;
+          bar.style.width = targetWidth + '%';
+        }, 100 + (index * 150));
+      });
+    }
+
+    // Set initial state for first open study
+    const firstStudy = document.querySelector('[data-study]');
+    if (firstStudy) {
+      const firstContent = firstStudy.querySelector('[data-content]');
+      if (firstContent && firstContent.classList.contains('moby-research__study-content--open')) {
+        // Set height for initial open state
+        const inner = firstContent.querySelector('.moby-research__study-inner');
+        if (inner) {
+          firstContent.style.maxHeight = inner.scrollHeight + 'px';
+        }
+        // Animate bars on initial load
+        setTimeout(() => animateBars(firstContent), 300);
+      }
+    }
+
     studies.forEach(study => {
       const button = study.querySelector('.moby-research__study-header');
-      const content = study.querySelector('.moby-research__study-content');
-      
+      const content = study.querySelector('[data-content]');
+      const inner = content.querySelector('.moby-research__study-inner');
+
       button.addEventListener('click', function() {
         const isExpanded = this.getAttribute('aria-expanded') === 'true';
-        
-        // Close all other studies
+
+        // Close all other studies with animation
         studies.forEach(otherStudy => {
           if (otherStudy !== study) {
             const otherButton = otherStudy.querySelector('.moby-research__study-header');
-            const otherContent = otherStudy.querySelector('.moby-research__study-content');
-            otherButton.setAttribute('aria-expanded', 'false');
-            otherContent.hidden = true;
-            otherContent.classList.remove('moby-research__study-content--open');
+            const otherContent = otherStudy.querySelector('[data-content]');
+
+            if (otherButton.getAttribute('aria-expanded') === 'true') {
+              otherButton.setAttribute('aria-expanded', 'false');
+              otherContent.style.maxHeight = '0px';
+              otherContent.classList.remove('moby-research__study-content--open');
+
+              // Reset bars
+              const otherBars = otherContent.querySelectorAll('[data-bar]');
+              otherBars.forEach(bar => bar.style.width = '0%');
+            }
           }
         });
-        
-        // Toggle current study
-        this.setAttribute('aria-expanded', !isExpanded);
-        content.hidden = isExpanded;
-        content.classList.toggle('moby-research__study-content--open', !isExpanded);
+
+        // Toggle current study with smooth animation
+        if (isExpanded) {
+          // Closing
+          this.setAttribute('aria-expanded', 'false');
+          content.style.maxHeight = '0px';
+          content.classList.remove('moby-research__study-content--open');
+
+          // Reset bars
+          const bars = content.querySelectorAll('[data-bar]');
+          bars.forEach(bar => bar.style.width = '0%');
+        } else {
+          // Opening
+          this.setAttribute('aria-expanded', 'true');
+          content.style.maxHeight = inner.scrollHeight + 'px';
+          content.classList.add('moby-research__study-content--open');
+
+          // Animate bars after content opens
+          setTimeout(() => animateBars(content), 350);
+        }
       });
     });
   });
@@ -181,6 +243,11 @@
     border: 1px solid rgba(201, 200, 182, 0.5);
     border-radius: 8px;
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .moby-research__study:has(.moby-research__study-header[aria-expanded="true"]) {
+    box-shadow: 0 4px 20px rgba(28, 26, 16, 0.08);
   }
 
   .moby-research__study-header {
@@ -242,22 +309,32 @@
   .moby-research__chevron {
     flex-shrink: 0;
     color: var(--moby-sage, #C9C8B6);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .moby-research__study-header[aria-expanded="true"] .moby-research__chevron {
     transform: rotate(180deg);
   }
 
-  /* Content */
+  /* Content with smooth height animation */
   .moby-research__study-content {
-    padding: 0 24px 24px;
-    border-top: 1px solid rgba(201, 200, 182, 0.3);
-    margin-top: -1px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .moby-research__study-content--open {
-    padding-top: 16px;
+  .moby-research__study-inner {
+    padding: 0 24px 24px;
+    border-top: 1px solid rgba(201, 200, 182, 0.3);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+  }
+
+  .moby-research__study-content--open .moby-research__study-inner {
+    padding-top: 20px;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .moby-research__study-finding {
@@ -271,96 +348,156 @@
 
   /* Bar Chart */
   .moby-research__chart {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    background: rgba(245, 245, 240, 0.5);
+    padding: 20px;
+    border-radius: 8px;
   }
 
   .moby-research__chart-label {
     font-family: 'N27', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: rgba(28, 26, 16, 0.6);
+    letter-spacing: 0.06em;
+    color: rgba(28, 26, 16, 0.5);
     text-align: center;
-    margin: 0 0 16px;
+    margin: 0 0 20px;
   }
 
   .moby-research__bar-group {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+  }
+
+  .moby-research__bar-group:last-of-type {
+    margin-bottom: 0;
   }
 
   .moby-research__bar-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .moby-research__bar-label {
     font-family: 'N27', sans-serif;
     font-size: 12px;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: rgba(28, 26, 16, 0.6);
+    color: rgba(28, 26, 16, 0.5);
   }
 
   .moby-research__bar-label--highlight {
     color: var(--moby-olive, #4F4A32);
+    font-weight: 500;
   }
 
   .moby-research__bar-value {
     font-family: 'N27', sans-serif;
     font-size: 12px;
     font-weight: 500;
+    color: rgba(28, 26, 16, 0.6);
   }
 
   .moby-research__bar-value--highlight {
     color: var(--moby-olive, #4F4A32);
+    font-weight: 600;
   }
 
   .moby-research__bar-track {
-    height: 32px;
-    background: rgba(201, 200, 182, 0.2);
-    border-radius: 4px;
+    height: 36px;
+    background: rgba(201, 200, 182, 0.25);
+    border-radius: 6px;
     overflow: hidden;
+    position: relative;
   }
 
   .moby-research__bar {
     height: 100%;
-    border-radius: 4px;
-    width: var(--bar-width, 0%);
-    transition: width 0.8s ease;
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Shimmer effect on bars */
+  .moby-research__bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer 2s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
   .moby-research__bar--placebo {
-    background: rgba(201, 200, 182, 0.5);
+    background: rgba(201, 200, 182, 0.6);
   }
 
   .moby-research__bar--creatine {
-    background: var(--moby-olive, #4F4A32);
+    background: linear-gradient(90deg, var(--moby-olive, #4F4A32) 0%, #5a5438 100%);
   }
 
   .moby-research__chart-note {
     font-family: 'N27', sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     text-align: center;
-    color: rgba(28, 26, 16, 0.6);
-    margin: 8px 0 0;
+    color: rgba(28, 26, 16, 0.4);
+    margin: 16px 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
+  /* View Study Link */
   .moby-research__study-link {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     font-family: 'N27', sans-serif;
     font-size: 12px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--moby-olive, #4F4A32);
+    letter-spacing: 0.06em;
+    color: #ffffff;
+    background: var(--moby-olive, #4F4A32);
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    padding: 12px 20px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    margin-top: 4px;
   }
 
   .moby-research__study-link:hover {
-    opacity: 0.8;
+    background: var(--moby-dark, #1C1A10);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(28, 26, 16, 0.15);
+  }
+
+  .moby-research__study-link svg {
+    transition: transform 0.3s ease;
+  }
+
+  .moby-research__study-link:hover svg {
+    transform: translate(2px, -2px);
   }
 </style>
 

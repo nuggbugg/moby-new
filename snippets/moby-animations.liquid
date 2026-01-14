@@ -1,347 +1,702 @@
 {% comment %}
-  MOBY Animations
-  - Scroll-triggered reveal animations
-  - Page transition effects
-  - Reusable animation classes
+  MOBY Animations - Powered by GSAP
+  - Professional scroll-triggered animations
+  - Staggered reveals with easing
+  - Parallax effects
+  - Respects reduced motion preference
 {% endcomment %}
+
+<!-- GSAP Core + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <style>
   /* ========================================
-     ANIMATION KEYFRAMES
+     GSAP ANIMATION BASE STATES
      ======================================== */
 
-  @keyframes mobyFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes mobyFadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes mobyFadeDown {
-    from {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes mobyFadeLeft {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes mobyFadeRight {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes mobyScale {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes mobyBlur {
-    from {
-      opacity: 0;
-      filter: blur(10px);
-    }
-    to {
-      opacity: 1;
-      filter: blur(0);
-    }
-  }
-
-  /* ========================================
-     SCROLL-TRIGGERED ANIMATIONS
-     ======================================== */
-
-  /* Elements waiting to animate */
-  [data-animate] {
-    opacity: 0;
+  /* Elements waiting to animate - set by GSAP */
+  [data-gsap],
+  [data-gsap-fade],
+  [data-gsap-slide],
+  [data-gsap-scale],
+  [data-gsap-stagger] > * {
+    visibility: hidden;
   }
 
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-    [data-animate] {
-      opacity: 1;
-      transform: none;
-      filter: none;
-      transition: none;
-      animation: none;
+    [data-gsap],
+    [data-gsap-fade],
+    [data-gsap-slide],
+    [data-gsap-scale],
+    [data-gsap-stagger] > * {
+      visibility: visible !important;
+      opacity: 1 !important;
+      transform: none !important;
     }
   }
 
-  /* Animated state */
-  [data-animate].animated {
-    animation-duration: 0.7s;
-    animation-fill-mode: forwards;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* Animation types */
-  [data-animate="fade"].animated {
-    animation-name: mobyFadeIn;
-  }
-
-  [data-animate="fade-up"].animated {
-    animation-name: mobyFadeUp;
-  }
-
-  [data-animate="fade-down"].animated {
-    animation-name: mobyFadeDown;
-  }
-
-  [data-animate="fade-left"].animated {
-    animation-name: mobyFadeLeft;
-  }
-
-  [data-animate="fade-right"].animated {
-    animation-name: mobyFadeRight;
-  }
-
-  [data-animate="scale"].animated {
-    animation-name: mobyScale;
-  }
-
-  [data-animate="blur"].animated {
-    animation-name: mobyBlur;
-  }
-
-  /* Staggered delays for children */
-  [data-animate-stagger] > *:nth-child(1) { animation-delay: 0ms; }
-  [data-animate-stagger] > *:nth-child(2) { animation-delay: 100ms; }
-  [data-animate-stagger] > *:nth-child(3) { animation-delay: 200ms; }
-  [data-animate-stagger] > *:nth-child(4) { animation-delay: 300ms; }
-  [data-animate-stagger] > *:nth-child(5) { animation-delay: 400ms; }
-  [data-animate-stagger] > *:nth-child(6) { animation-delay: 500ms; }
-  [data-animate-stagger] > *:nth-child(7) { animation-delay: 600ms; }
-  [data-animate-stagger] > *:nth-child(8) { animation-delay: 700ms; }
-
-  /* Custom delay modifiers */
-  [data-animate-delay="100"] { animation-delay: 100ms; }
-  [data-animate-delay="200"] { animation-delay: 200ms; }
-  [data-animate-delay="300"] { animation-delay: 300ms; }
-  [data-animate-delay="400"] { animation-delay: 400ms; }
-  [data-animate-delay="500"] { animation-delay: 500ms; }
-
   /* ========================================
-     SECTION TRANSITIONS
+     SECTION TRANSITION BASE STATES
      ======================================== */
 
-  /* Smooth section headers */
-  .moby-section .moby-stickpacks__header,
-  .moby-section .moby-research__header,
-  .moby-why-moby__content,
-  .moby-product-tabs__nav,
+  /* Section headers */
+  .moby-research__header,
+  .moby-stickpacks__header,
+  .moby-why-moby__header,
+  .moby-product-tabs__header,
+  .moby-features__header,
   .moby-about-hero__content,
-  .moby-featured-product__content {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .moby-section.in-view .moby-stickpacks__header,
-  .moby-section.in-view .moby-research__header,
-  .moby-why-moby.in-view .moby-why-moby__content,
-  .moby-product-tabs.in-view .moby-product-tabs__nav,
-  .moby-about-hero.in-view .moby-about-hero__content,
-  .moby-featured-product.in-view .moby-featured-product__content {
-    opacity: 1;
-    transform: translateY(0);
+  .moby-partner-hero__content {
+    will-change: transform, opacity;
   }
 
   /* Cards and grid items */
   .moby-why-moby__card,
   .moby-stickpacks__benefit,
   .moby-research__study,
-  .moby-product-tabs__card {
-    opacity: 0;
-    transform: translateY(25px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+  .moby-features__item,
+  .moby-partner-benefit {
+    will-change: transform, opacity;
   }
 
-  .in-view .moby-why-moby__card,
-  .in-view .moby-stickpacks__benefit,
-  .in-view .moby-research__study,
-  .in-view .moby-product-tabs__card {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Staggered card animations */
-  .in-view .moby-why-moby__card:nth-child(1),
-  .in-view .moby-stickpacks__benefit:nth-child(1),
-  .in-view .moby-research__study:nth-child(1) { transition-delay: 0ms; }
-
-  .in-view .moby-why-moby__card:nth-child(2),
-  .in-view .moby-stickpacks__benefit:nth-child(2),
-  .in-view .moby-research__study:nth-child(2) { transition-delay: 100ms; }
-
-  .in-view .moby-why-moby__card:nth-child(3),
-  .in-view .moby-stickpacks__benefit:nth-child(3),
-  .in-view .moby-research__study:nth-child(3) { transition-delay: 200ms; }
-
-  .in-view .moby-stickpacks__benefit:nth-child(4),
-  .in-view .moby-research__study:nth-child(4) { transition-delay: 300ms; }
-
-  /* Product tabs cards */
-  .moby-product-tabs__panel.moby-product-tabs__panel--active .moby-product-tabs__card:nth-child(1) { transition-delay: 0ms; }
-  .moby-product-tabs__panel.moby-product-tabs__panel--active .moby-product-tabs__card:nth-child(2) { transition-delay: 150ms; }
-
-  /* Comparison table */
-  .moby-stickpacks__comparison {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .in-view .moby-stickpacks__comparison {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    transition-delay: 150ms;
-  }
-
-  /* Buy box animations */
-  .moby-buy-box__gallery {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
+  /* Buy box elements */
+  .moby-buy-box__gallery,
   .moby-buy-box__info {
-    opacity: 0;
-    transform: translateX(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .moby-buy-box.in-view .moby-buy-box__gallery,
-  .moby-buy-box.in-view .moby-buy-box__info {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .moby-buy-box.in-view .moby-buy-box__info {
-    transition-delay: 150ms;
-  }
-
-  /* Trust badges */
-  .moby-buy-box__trust-item {
-    opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-
-  .in-view .moby-buy-box__trust-item:nth-child(1) { transition-delay: 300ms; }
-  .in-view .moby-buy-box__trust-item:nth-child(2) { transition-delay: 400ms; }
-  .in-view .moby-buy-box__trust-item:nth-child(3) { transition-delay: 500ms; }
-
-  .in-view .moby-buy-box__trust-item {
-    opacity: 1;
-    transform: translateY(0);
+    will-change: transform, opacity;
   }
 
   /* ========================================
-     PAGE LOAD TRANSITION
+     SMOOTH SCROLLING
      ======================================== */
 
-  .page-transition-wrapper {
-    animation: mobyFadeIn 0.4s ease forwards;
+  html {
+    scroll-behavior: smooth;
   }
 
-  /* Hero sections - faster animation */
-  .moby-buy-box,
-  .moby-about-hero {
-    animation: mobyFadeIn 0.5s ease forwards;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* ========================================
+     HOVER MICRO-INTERACTIONS
+     ======================================== */
+
+  /* Button lift effect */
+  .moby-cta-btn,
+  .moby-buy-box__add-btn,
+  .moby-research__study-link,
+  .moby-partner-form__submit {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+
+  .moby-cta-btn:hover,
+  .moby-buy-box__add-btn:hover,
+  .moby-research__study-link:hover,
+  .moby-partner-form__submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(28, 26, 16, 0.15);
+  }
+
+  /* Card hover effect */
+  .moby-why-moby__card,
+  .moby-stickpacks__benefit,
+  .moby-features__item {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  }
+
+  .moby-why-moby__card:hover,
+  .moby-stickpacks__benefit:hover,
+  .moby-features__item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(28, 26, 16, 0.1);
+  }
+
+  /* Image zoom on hover */
+  .moby-buy-box__main-image img,
+  .moby-featured-product__image img {
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .moby-buy-box__main-image:hover img,
+  .moby-featured-product__image:hover img {
+    transform: scale(1.05);
   }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Intersection Observer for scroll-triggered animations
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px 0px -10% 0px',
-      threshold: 0.1
-    };
+document.addEventListener('DOMContentLoaded', function() {
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const animationObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
+  if (prefersReducedMotion) {
+    // Show all elements without animation
+    gsap.set('[data-gsap], [data-gsap-fade], [data-gsap-slide], [data-gsap-scale], [data-gsap-stagger] > *', {
+      visibility: 'visible',
+      opacity: 1,
+      y: 0,
+      x: 0,
+      scale: 1
+    });
+    return;
+  }
 
-          // If element has data-animate attribute, add animated class
-          if (entry.target.hasAttribute('data-animate')) {
-            entry.target.classList.add('animated');
-          }
+  // Register ScrollTrigger
+  gsap.registerPlugin(ScrollTrigger);
 
-          // Optionally stop observing after animation
-          if (!entry.target.hasAttribute('data-animate-repeat')) {
-            animationObserver.unobserve(entry.target);
-          }
+  // Default easing - smooth and professional
+  const defaultEase = 'power3.out';
+  const bounceEase = 'back.out(1.2)';
+  const smoothEase = 'power2.out';
+
+  // ========================================
+  // HERO SECTION ANIMATIONS
+  // ========================================
+
+  // Buy Box - Slide in from sides
+  const buyBox = document.querySelector('.moby-buy-box');
+  if (buyBox) {
+    const gallery = buyBox.querySelector('.moby-buy-box__gallery');
+    const info = buyBox.querySelector('.moby-buy-box__info');
+    const trustItems = buyBox.querySelectorAll('.moby-buy-box__trust-item');
+    const trustIcons = buyBox.querySelectorAll('.moby-buy-box__trust-icon');
+
+    if (gallery) {
+      gsap.fromTo(gallery,
+        { x: -60, opacity: 0, visibility: 'hidden' },
+        {
+          x: 0,
+          opacity: 1,
+          visibility: 'visible',
+          duration: 1,
+          ease: defaultEase,
+          delay: 0.2
         }
-      });
-    }, observerOptions);
+      );
+    }
 
-    // Observe sections
-    const animatedElements = document.querySelectorAll(`
-      .moby-section,
-      .moby-buy-box,
-      .moby-why-moby,
-      .moby-product-tabs,
-      .moby-about-hero,
-      .moby-featured-product,
-      [data-animate]
-    `);
+    if (info) {
+      gsap.fromTo(info,
+        { x: 60, opacity: 0, visibility: 'hidden' },
+        {
+          x: 0,
+          opacity: 1,
+          visibility: 'visible',
+          duration: 1,
+          ease: defaultEase,
+          delay: 0.4
+        }
+      );
+    }
 
-    animatedElements.forEach(el => {
-      animationObserver.observe(el);
+    if (trustItems.length > 0) {
+      gsap.fromTo(trustItems,
+        { y: 20, opacity: 0, visibility: 'hidden' },
+        {
+          y: 0,
+          opacity: 1,
+          visibility: 'visible',
+          duration: 0.6,
+          stagger: 0.1,
+          ease: bounceEase,
+          delay: 0.8
+        }
+      );
+    }
+
+    if (trustIcons.length > 0) {
+      gsap.fromTo(trustIcons,
+        { y: 30, opacity: 0, visibility: 'hidden' },
+        {
+          y: 0,
+          opacity: 1,
+          visibility: 'visible',
+          duration: 0.6,
+          stagger: 0.15,
+          ease: bounceEase,
+          delay: 1
+        }
+      );
+    }
+  }
+
+  // ========================================
+  // SECTION HEADER ANIMATIONS
+  // ========================================
+
+  const sectionHeaders = document.querySelectorAll(`
+    .moby-research__header,
+    .moby-stickpacks__header,
+    .moby-why-moby__header,
+    .moby-product-tabs__header,
+    .moby-features__header,
+    .moby-about-mission__header,
+    .moby-about-values__header,
+    .moby-partner-benefits__header
+  `);
+
+  sectionHeaders.forEach(header => {
+    const badge = header.querySelector('[class*="badge"]');
+    const heading = header.querySelector('[class*="heading"], h2');
+    const subheading = header.querySelector('[class*="subheading"], p');
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: header,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
     });
 
-    // Trigger animations for elements already in viewport on load
-    setTimeout(() => {
-      animatedElements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          el.classList.add('in-view');
-          if (el.hasAttribute('data-animate')) {
-            el.classList.add('animated');
-          }
-        }
-      });
-    }, 100);
+    if (badge) {
+      tl.fromTo(badge,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: defaultEase }
+      );
+    }
+
+    if (heading) {
+      tl.fromTo(heading,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: defaultEase },
+        badge ? '-=0.3' : 0
+      );
+    }
+
+    if (subheading) {
+      tl.fromTo(subheading,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: defaultEase },
+        '-=0.4'
+      );
+    }
   });
+
+  // ========================================
+  // FEATURES SECTION - Staggered grid
+  // ========================================
+
+  const featuresGrid = document.querySelector('.moby-features__grid');
+  if (featuresGrid) {
+    const items = featuresGrid.querySelectorAll('.moby-features__item');
+
+    gsap.fromTo(items,
+      { y: 40, opacity: 0, scale: 0.95 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: featuresGrid,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // WHY STICKPACKS - Benefits cards
+  // ========================================
+
+  const stickpacksBenefits = document.querySelectorAll('.moby-stickpacks__benefit');
+  if (stickpacksBenefits.length > 0) {
+    gsap.fromTo(stickpacksBenefits,
+      { y: 50, opacity: 0, scale: 0.9 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: stickpacksBenefits[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // Comparison table
+  const comparisonTable = document.querySelector('.moby-stickpacks__comparison');
+  if (comparisonTable) {
+    gsap.fromTo(comparisonTable,
+      { y: 40, opacity: 0, scale: 0.95 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: defaultEase,
+        scrollTrigger: {
+          trigger: comparisonTable,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // WHY MOBY - Cards
+  // ========================================
+
+  const whyMobyCards = document.querySelectorAll('.moby-why-moby__card');
+  if (whyMobyCards.length > 0) {
+    gsap.fromTo(whyMobyCards,
+      { y: 60, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: defaultEase,
+        scrollTrigger: {
+          trigger: whyMobyCards[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // RESEARCH SECTION - Studies accordion
+  // ========================================
+
+  const researchStudies = document.querySelectorAll('.moby-research__study');
+  if (researchStudies.length > 0) {
+    gsap.fromTo(researchStudies,
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: smoothEase,
+        scrollTrigger: {
+          trigger: researchStudies[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // PRODUCT TABS
+  // ========================================
+
+  const productTabsNav = document.querySelector('.moby-product-tabs__nav');
+  if (productTabsNav) {
+    const tabs = productTabsNav.querySelectorAll('.moby-product-tabs__tab');
+
+    gsap.fromTo(tabs,
+      { y: 20, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: productTabsNav,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // ABOUT PAGE SECTIONS
+  // ========================================
+
+  // About Hero
+  const aboutHero = document.querySelector('.moby-about-hero');
+  if (aboutHero) {
+    const content = aboutHero.querySelector('.moby-about-hero__content');
+    const image = aboutHero.querySelector('.moby-about-hero__image');
+
+    if (content) {
+      gsap.fromTo(content,
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: defaultEase, delay: 0.2 }
+      );
+    }
+
+    if (image) {
+      gsap.fromTo(image,
+        { scale: 1.1, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1.2, ease: smoothEase, delay: 0.1 }
+      );
+    }
+  }
+
+  // About Mission
+  const missionCards = document.querySelectorAll('.moby-about-mission__card');
+  if (missionCards.length > 0) {
+    gsap.fromTo(missionCards,
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: missionCards[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // About Values
+  const valueCards = document.querySelectorAll('.moby-about-values__card');
+  if (valueCards.length > 0) {
+    gsap.fromTo(valueCards,
+      { y: 40, opacity: 0, scale: 0.95 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: valueCards[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // PARTNER PAGE SECTIONS
+  // ========================================
+
+  // Partner Hero
+  const partnerHero = document.querySelector('.moby-partner-hero');
+  if (partnerHero) {
+    const content = partnerHero.querySelector('.moby-partner-hero__content');
+
+    if (content) {
+      gsap.fromTo(content,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: defaultEase, delay: 0.3 }
+      );
+    }
+  }
+
+  // Partner Benefits
+  const partnerBenefits = document.querySelectorAll('.moby-partner-benefit');
+  if (partnerBenefits.length > 0) {
+    gsap.fromTo(partnerBenefits,
+      { y: 40, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: partnerBenefits[0].parentElement,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // Partner Form
+  const partnerForm = document.querySelector('.moby-partner-form__form');
+  if (partnerForm) {
+    gsap.fromTo(partnerForm,
+      { y: 30, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: defaultEase,
+        scrollTrigger: {
+          trigger: partnerForm,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  }
+
+  // ========================================
+  // FEATURED PRODUCT
+  // ========================================
+
+  const featuredProduct = document.querySelector('.moby-featured-product');
+  if (featuredProduct) {
+    const image = featuredProduct.querySelector('.moby-featured-product__image');
+    const content = featuredProduct.querySelector('.moby-featured-product__content');
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: featuredProduct,
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    if (image) {
+      tl.fromTo(image,
+        { x: -50, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.8, ease: defaultEase }
+      );
+    }
+
+    if (content) {
+      tl.fromTo(content,
+        { x: 50, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.8, ease: defaultEase },
+        '-=0.5'
+      );
+    }
+  }
+
+  // ========================================
+  // GENERIC DATA ATTRIBUTE ANIMATIONS
+  // ========================================
+
+  // Fade animations
+  document.querySelectorAll('[data-gsap-fade]').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, visibility: 'hidden' },
+      {
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.8,
+        ease: defaultEase,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  });
+
+  // Slide up animations
+  document.querySelectorAll('[data-gsap-slide]').forEach(el => {
+    const direction = el.dataset.gsapSlide || 'up';
+    const from = {
+      up: { y: 50 },
+      down: { y: -50 },
+      left: { x: 50 },
+      right: { x: -50 }
+    };
+
+    gsap.fromTo(el,
+      { ...from[direction], opacity: 0, visibility: 'hidden' },
+      {
+        x: 0,
+        y: 0,
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.8,
+        ease: defaultEase,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  });
+
+  // Scale animations
+  document.querySelectorAll('[data-gsap-scale]').forEach(el => {
+    gsap.fromTo(el,
+      { scale: 0.9, opacity: 0, visibility: 'hidden' },
+      {
+        scale: 1,
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.8,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  });
+
+  // Stagger container animations
+  document.querySelectorAll('[data-gsap-stagger]').forEach(container => {
+    const children = container.children;
+    const staggerDelay = parseFloat(container.dataset.gsapStagger) || 0.1;
+
+    gsap.fromTo(children,
+      { y: 30, opacity: 0, visibility: 'hidden' },
+      {
+        y: 0,
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.6,
+        stagger: staggerDelay,
+        ease: bounceEase,
+        scrollTrigger: {
+          trigger: container,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  });
+
+  // ========================================
+  // PARALLAX EFFECTS
+  // ========================================
+
+  document.querySelectorAll('[data-gsap-parallax]').forEach(el => {
+    const speed = parseFloat(el.dataset.gsapParallax) || 0.3;
+
+    gsap.to(el, {
+      y: () => window.innerHeight * speed * -1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+  });
+
+  // ========================================
+  // REFRESH ON RESIZE
+  // ========================================
+
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+  });
+
+  // Refresh ScrollTrigger after images load
+  window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+  });
+});
 </script>
