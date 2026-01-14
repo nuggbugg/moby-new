@@ -216,6 +216,7 @@
     height: 52px;
     gap: 8px;
     transition: all 300ms ease-in-out;
+    overflow: visible;
   }
 
   @media (max-width: 768px) {
@@ -386,6 +387,7 @@
   /* Currency Dropdown */
   .moby-header__localization {
     position: relative;
+    z-index: 1000;
   }
 
   .moby-header__currency-dropdown {
@@ -398,7 +400,7 @@
     background: #1B1A0F;
     border-radius: var(--moby-radius);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-    z-index: 200;
+    z-index: 1001;
   }
 
   .moby-header__currency-dropdown[hidden] {
