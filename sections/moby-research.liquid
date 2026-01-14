@@ -471,29 +471,25 @@
   .moby-research__study-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-family: 'N27', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #ffffff;
-    background: var(--moby-olive, #4F4A32);
-    text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--moby-olive, #4F4A32);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
     margin-top: 4px;
   }
 
   .moby-research__study-link:hover {
-    background: var(--moby-dark, #1C1A10);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(28, 26, 16, 0.15);
+    color: var(--moby-dark, #1C1A10);
   }
 
   .moby-research__study-link svg {
-    transition: transform 0.3s ease;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s ease;
   }
 
   .moby-research__study-link:hover svg {
