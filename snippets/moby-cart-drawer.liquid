@@ -813,6 +813,8 @@
     }
 
     // Initialize event listeners using event delegation (works after innerHTML changes)
+    let isProcessing = false;
+
     function initCartDrawerEvents() {
       // Use event delegation on drawer - attach once, works for all dynamic content
       drawer.addEventListener('click', async function(e) {
@@ -822,18 +824,29 @@
           return;
         }
 
+        // Prevent double-clicks while processing
+        if (isProcessing) return;
+
         // Quantity minus
         const minusBtn = e.target.closest('[data-quantity-minus]');
         if (minusBtn) {
+          e.preventDefault();
           const line = minusBtn.dataset.line;
           const item = minusBtn.closest('[data-cart-item]');
+          if (!item) return;
           const qtyValue = item.querySelector('[data-quantity-value]');
-          const currentQty = parseInt(qtyValue.textContent);
+          if (!qtyValue) return;
+          const currentQty = parseInt(qtyValue.textContent) || 1;
 
-          if (currentQty > 1) {
-            await updateCartQuantity(line, currentQty - 1);
-          } else {
-            await updateCartQuantity(line, 0);
+          isProcessing = true;
+          try {
+            if (currentQty > 1) {
+              await updateCartQuantity(line, currentQty - 1);
+            } else {
+              await updateCartQuantity(line, 0);
+            }
+          } finally {
+            isProcessing = false;
           }
           return;
         }
@@ -841,20 +854,34 @@
         // Quantity plus
         const plusBtn = e.target.closest('[data-quantity-plus]');
         if (plusBtn) {
+          e.preventDefault();
           const line = plusBtn.dataset.line;
           const item = plusBtn.closest('[data-cart-item]');
+          if (!item) return;
           const qtyValue = item.querySelector('[data-quantity-value]');
-          const currentQty = parseInt(qtyValue.textContent);
+          if (!qtyValue) return;
+          const currentQty = parseInt(qtyValue.textContent) || 1;
 
-          await updateCartQuantity(line, currentQty + 1);
+          isProcessing = true;
+          try {
+            await updateCartQuantity(line, currentQty + 1);
+          } finally {
+            isProcessing = false;
+          }
           return;
         }
 
         // Remove item
         const removeBtn = e.target.closest('[data-remove-item]');
         if (removeBtn) {
+          e.preventDefault();
           const line = removeBtn.dataset.line;
-          await updateCartQuantity(line, 0);
+          isProcessing = true;
+          try {
+            await updateCartQuantity(line, 0);
+          } finally {
+            isProcessing = false;
+          }
           return;
         }
       });
