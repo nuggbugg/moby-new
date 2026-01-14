@@ -141,10 +141,10 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <span class="moby-buy-box__stars-count jdgm-prev-badge__text" data-number-of-reviews></span>
+            <span class="moby-buy-box__stars-count">reviews</span>
           </div>
           {%- comment -%} Hidden Judge.me widget to populate data {%- endcomment -%}
-          <span class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="display: none !important;"></span>
+          <span class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="position: absolute; opacity: 0; pointer-events: none;"></span>
         </a>
 
         <!-- Title & Stock -->
@@ -598,11 +598,8 @@
     font-family: 'N27', sans-serif;
     font-size: 14px;
     font-weight: 400;
+    font-style: italic;
     color: var(--moby-olive, #4F4A32);
-  }
-
-  .moby-buy-box__stars-count:empty::after {
-    content: 'reviews';
   }
 
   .moby-buy-box__header {
@@ -1396,36 +1393,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Sync Judge.me review count to custom stars display
   function updateReviewCount() {
-    const jdgmBadge = section.querySelector('.jdgm-preview-badge');
     const countDisplay = section.querySelector('.moby-buy-box__stars-count');
+    if (!countDisplay) return;
 
-    if (jdgmBadge && countDisplay) {
-      // Try to get the review count from Judge.me badge text
+    // Try multiple sources for review count
+    // 1. Look for Judge.me badge in our section
+    const jdgmBadge = section.querySelector('.jdgm-preview-badge');
+    if (jdgmBadge) {
       const badgeText = jdgmBadge.textContent || jdgmBadge.innerText;
       const match = badgeText.match(/(\d+)\s*review/i);
-
-      if (match) {
+      if (match && match[1] !== '0') {
         countDisplay.textContent = match[1] + ' reviews';
-      } else {
-        // Fallback: check for data attribute
-        const reviewCount = jdgmBadge.getAttribute('data-number-of-reviews');
-        if (reviewCount) {
-          countDisplay.textContent = reviewCount + ' reviews';
-        }
+        return;
+      }
+      // Check data attribute
+      const reviewCount = jdgmBadge.getAttribute('data-number-of-reviews');
+      if (reviewCount && reviewCount !== '0') {
+        countDisplay.textContent = reviewCount + ' reviews';
+        return;
+      }
+    }
+
+    // 2. Look for any Judge.me widget on the page
+    const anyJdgmWidget = document.querySelector('[data-number-of-reviews]');
+    if (anyJdgmWidget) {
+      const count = anyJdgmWidget.getAttribute('data-number-of-reviews');
+      if (count && count !== '0') {
+        countDisplay.textContent = count + ' reviews';
+        return;
+      }
+    }
+
+    // 3. Look for Judge.me review count in any format on page
+    const jdgmTextElements = document.querySelectorAll('.jdgm-prev-badge__text, .jdgm-preview-badge');
+    for (const el of jdgmTextElements) {
+      const text = el.textContent || el.innerText;
+      const match = text.match(/(\d+)\s*review/i);
+      if (match && match[1] !== '0') {
+        countDisplay.textContent = match[1] + ' reviews';
+        return;
       }
     }
   }
 
-  // Run after Judge.me loads (with delay and mutation observer)
-  setTimeout(updateReviewCount, 1000);
-  setTimeout(updateReviewCount, 2500);
+  // Run after Judge.me loads (with multiple delays)
+  setTimeout(updateReviewCount, 500);
+  setTimeout(updateReviewCount, 1500);
+  setTimeout(updateReviewCount, 3000);
+  setTimeout(updateReviewCount, 5000);
 
-  // Also observe for changes
+  // Also observe for changes on the whole document
   const observer = new MutationObserver(updateReviewCount);
-  const jdgmBadge = section.querySelector('.jdgm-preview-badge');
-  if (jdgmBadge) {
-    observer.observe(jdgmBadge, { childList: true, subtree: true, characterData: true });
-  }
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
 });
 </script>
 
