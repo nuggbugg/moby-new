@@ -265,11 +265,24 @@
 
     if (!stickyBar || !mainAddToCart) return;
 
-    // Intersection Observer to show/hide sticky bar when add-to-cart button is out of view
+    // Intersection Observer to show/hide sticky bar
+    // Only show when scrolled DOWN past the button (not when button is below viewport)
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky bar when the add-to-cart button is NOT visible
-        stickyBar.setAttribute('data-hidden', entry.isIntersecting ? 'true' : 'false');
+        // Check if button is above the viewport (scrolled past it)
+        // boundingClientRect.bottom < rootBounds means element is above viewport
+        const isAboveViewport = entry.boundingClientRect.bottom < 80; // 80px for header
+
+        if (entry.isIntersecting) {
+          // Button is visible - hide sticky bar
+          stickyBar.setAttribute('data-hidden', 'true');
+        } else if (isAboveViewport) {
+          // Button is above viewport (scrolled past) - show sticky bar
+          stickyBar.setAttribute('data-hidden', 'false');
+        } else {
+          // Button is below viewport (not scrolled to yet) - hide sticky bar
+          stickyBar.setAttribute('data-hidden', 'true');
+        }
       },
       {
         threshold: 0,
