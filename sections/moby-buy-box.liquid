@@ -131,22 +131,6 @@
 
       <!-- Product Info -->
       <div class="moby-buy-box__info">
-        <!-- Stars & Review Count - Above Product Title -->
-        <a href="#judgeme_product_reviews" class="moby-buy-box__reviews-link">
-          <div class="moby-buy-box__stars">
-            <div class="moby-buy-box__stars-icons">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <span class="moby-buy-box__stars-count">reviews</span>
-          </div>
-          {%- comment -%} Hidden Judge.me widget to populate data {%- endcomment -%}
-          <span class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="position: absolute; opacity: 0; pointer-events: none;"></span>
-        </a>
-
         <!-- Title & Stock -->
         <div class="moby-buy-box__header">
           <h1 class="moby-buy-box__title">{{ product.title }}</h1>
@@ -564,42 +548,6 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-  }
-
-  .moby-buy-box__reviews-link {
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  .moby-buy-box__reviews-link:hover .moby-buy-box__stars {
-    opacity: 0.75;
-  }
-
-  .moby-buy-box__stars {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s ease;
-  }
-
-  .moby-buy-box__stars-icons {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    color: var(--moby-olive, #4F4A32);
-  }
-
-  .moby-buy-box__stars-icons svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .moby-buy-box__stars-count {
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--moby-olive, #4F4A32);
   }
 
   .moby-buy-box__header {
@@ -1404,49 +1352,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initial update
   updateButton();
-
-  // Sync Judge.me review count to custom stars display
-  let reviewCountUpdated = false;
-
-  function updateReviewCount() {
-    if (reviewCountUpdated) return; // Only update once
-
-    const countDisplay = section.querySelector('.moby-buy-box__stars-count');
-    if (!countDisplay) return;
-
-    // Try to get review count from Judge.me
-    const jdgmBadge = section.querySelector('.jdgm-preview-badge');
-    if (jdgmBadge) {
-      const reviewCount = jdgmBadge.getAttribute('data-number-of-reviews');
-      if (reviewCount && reviewCount !== '0') {
-        countDisplay.textContent = reviewCount + ' reviews';
-        reviewCountUpdated = true;
-        return;
-      }
-
-      const badgeText = jdgmBadge.textContent || '';
-      const match = badgeText.match(/(\d+)\s*review/i);
-      if (match && match[1] !== '0') {
-        countDisplay.textContent = match[1] + ' reviews';
-        reviewCountUpdated = true;
-        return;
-      }
-    }
-
-    // Fallback: check any Judge.me widget
-    const anyWidget = document.querySelector('[data-number-of-reviews]');
-    if (anyWidget) {
-      const count = anyWidget.getAttribute('data-number-of-reviews');
-      if (count && count !== '0') {
-        countDisplay.textContent = count + ' reviews';
-        reviewCountUpdated = true;
-      }
-    }
-  }
-
-  // Run after Judge.me loads - simple timeouts only, no MutationObserver
-  setTimeout(updateReviewCount, 1000);
-  setTimeout(updateReviewCount, 3000);
 });
 </script>
 
