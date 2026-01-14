@@ -252,16 +252,29 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const stickyBar = document.getElementById('moby-sticky-bar');
-    const mainAddToCart = document.querySelector('[data-product-form], .product-form, form[action*="/cart/add"]');
+
+    // Find the actual add-to-cart button (prioritize MOBY buy box, then default product forms)
+    const mainAddToCart = document.querySelector(
+      '.moby-buy-box__add-btn, ' +
+      '#moby-buy-box-form, ' +
+      '.moby-buy-box__form, ' +
+      '[data-product-form] button[type="submit"], ' +
+      '.product-form__submit, ' +
+      'form[action*="/cart/add"] button[type="submit"]'
+    );
 
     if (!stickyBar || !mainAddToCart) return;
 
-    // Intersection Observer to show/hide sticky bar
+    // Intersection Observer to show/hide sticky bar when add-to-cart button is out of view
     const observer = new IntersectionObserver(
       ([entry]) => {
+        // Show sticky bar when the add-to-cart button is NOT visible
         stickyBar.setAttribute('data-hidden', entry.isIntersecting ? 'true' : 'false');
       },
-      { threshold: 0, rootMargin: '0px' }
+      {
+        threshold: 0,
+        rootMargin: '-80px 0px 0px 0px' // Account for sticky header
+      }
     );
 
     observer.observe(mainAddToCart);
