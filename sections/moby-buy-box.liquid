@@ -246,9 +246,71 @@
           </label>
         </div>
 
-        <!-- Shopify Subscription Widget -->
-        <div class="moby-buy-box__subscription-widget">
-          <div class="subscriptions_app_embed_block"></div>
+        <!-- Custom Subscription Widget using Shopify Selling Plans -->
+        <div class="moby-buy-box__purchase-options" id="purchase-options">
+          {%- assign has_selling_plans = false -%}
+          {%- assign first_selling_plan = nil -%}
+          {%- assign subscription_discount = 10 -%}
+
+          {%- for group in product.selling_plan_groups -%}
+            {%- assign has_selling_plans = true -%}
+            {%- if first_selling_plan == nil -%}
+              {%- assign first_selling_plan = group.selling_plans.first -%}
+              {%- if first_selling_plan.price_adjustments.first.value > 0 -%}
+                {%- assign subscription_discount = first_selling_plan.price_adjustments.first.value -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          <!-- One-Time Purchase Option -->
+          <label class="moby-buy-box__option moby-buy-box__option--onetime" data-option="onetime">
+            <input type="radio" name="purchase_option" value="onetime" checked>
+            <div class="moby-buy-box__option-content">
+              <div class="moby-buy-box__option-header">
+                <span class="moby-buy-box__option-radio"></span>
+                <span class="moby-buy-box__option-title">One-time Purchase</span>
+                <span class="moby-buy-box__option-price" data-onetime-price>{{ current_variant.price | money }}</span>
+              </div>
+              <p class="moby-buy-box__option-desc">Free shipping over €43, volume discount.</p>
+            </div>
+          </label>
+
+          <!-- Subscribe & Save Option -->
+          {%- if has_selling_plans -%}
+            <label class="moby-buy-box__option moby-buy-box__option--subscribe" data-option="subscribe">
+              <span class="moby-buy-box__option-badge">Recommended</span>
+              <input type="radio" name="purchase_option" value="subscribe">
+              <div class="moby-buy-box__option-content">
+                <div class="moby-buy-box__option-header">
+                  <span class="moby-buy-box__option-radio"></span>
+                  <span class="moby-buy-box__option-title">Subscribe & Save (-{{ subscription_discount }}%)</span>
+                  <div class="moby-buy-box__option-prices">
+                    {%- assign discounted_price = current_variant.price | times: 100 | minus: current_variant.price | times: subscription_discount | divided_by: 100 -%}
+                    <span class="moby-buy-box__option-price" data-subscribe-price>{{ discounted_price | money }}</span>
+                    <span class="moby-buy-box__option-compare">{{ current_variant.price | money }}</span>
+                  </div>
+                </div>
+                <p class="moby-buy-box__option-desc">Lowest price! Free shipping over €43. Cancel anytime.</p>
+
+                <!-- Delivery Frequency Dropdown -->
+                <div class="moby-buy-box__frequency">
+                  <select id="selling-plan-select" class="moby-buy-box__frequency-select">
+                    {%- for group in product.selling_plan_groups -%}
+                      {%- for plan in group.selling_plans -%}
+                        <option
+                          value="{{ plan.id }}"
+                          data-discount="{{ plan.price_adjustments.first.value }}"
+                          {% if forloop.first and forloop.parentloop.first %}selected{% endif %}
+                        >
+                          {{ plan.name }}
+                        </option>
+                      {%- endfor -%}
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            </label>
+          {%- endif -%}
         </div>
 
         <!-- Add to Cart Form -->
@@ -770,207 +832,180 @@
     }
   }
 
-  /* Subscription Widget */
-  .moby-buy-box__subscription-widget {
+  /* ========================================
+     CUSTOM SUBSCRIPTION WIDGET
+     Built with Shopify Selling Plans API
+     ======================================== */
+
+  .moby-buy-box__purchase-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     margin-bottom: 16px;
   }
 
-  /* ========================================
-     SHOPIFY SUBSCRIPTION WIDGET STYLING
-     Targets Shopify's native subscription app
-     ======================================== */
-
-  /* Target all possible subscription widget wrappers */
-  [data-shopify-subscription-widget],
-  [data-subscription-widget],
-  .shopify-subscription-widget,
-  .subscription-widget,
-  [class*="SubscriptionWidget"],
-  [class*="subscription-widget"],
-  [class*="selling-plan"],
-  .moby-buy-box__subscription-widget > div,
-  .moby-buy-box [class*="subscription"] {
-    font-family: 'N27', sans-serif !important;
+  /* Purchase Option Card */
+  .moby-buy-box__option {
+    position: relative;
+    display: block;
+    border: 2px solid rgba(28, 26, 16, 0.15);
+    border-radius: 12px;
+    padding: 20px 24px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
 
-  /* Main container styling */
-  [data-shopify-subscription-widget] > fieldset,
-  .shopify-subscription-widget > fieldset,
-  [class*="subscription"] fieldset,
-  .moby-buy-box fieldset {
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
+  .moby-buy-box__option:hover {
+    border-color: rgba(28, 26, 16, 0.3);
   }
 
-  /* Hide legends */
-  [data-shopify-subscription-widget] legend,
-  .shopify-subscription-widget legend,
-  .moby-buy-box fieldset legend {
+  /* Hide native radio */
+  .moby-buy-box__option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Selected state */
+  .moby-buy-box__option.is-selected {
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Subscribe option - lime background */
+  .moby-buy-box__option--subscribe {
+    background: rgba(249, 253, 181, 0.4);
+    border-color: rgba(249, 253, 181, 0.6);
+    margin-top: 4px;
+    padding-top: 28px;
+  }
+
+  .moby-buy-box__option--subscribe.is-selected {
+    background: rgba(249, 253, 181, 0.6);
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Recommended badge */
+  .moby-buy-box__option-badge {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    font-family: 'N27', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 14px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    border-radius: 4px;
+  }
+
+  /* Option content */
+  .moby-buy-box__option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-buy-box__option-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Custom radio button */
+  .moby-buy-box__option-radio {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid rgba(28, 26, 16, 0.3);
+    border-radius: 50%;
+    background: #ffffff;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .moby-buy-box__option.is-selected .moby-buy-box__option-radio {
+    border-color: var(--moby-olive, #4F4A32);
+    border-width: 6px;
+  }
+
+  /* Option title */
+  .moby-buy-box__option-title {
+    flex: 1;
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  /* Option price */
+  .moby-buy-box__option-price {
+    font-family: 'N27', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-buy-box__option-prices {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .moby-buy-box__option-compare {
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(28, 26, 16, 0.5);
+    text-decoration: line-through;
+  }
+
+  /* Option description */
+  .moby-buy-box__option-desc {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(28, 26, 16, 0.6);
+    margin: 0;
+    padding-left: 32px;
+  }
+
+  /* Frequency dropdown */
+  .moby-buy-box__frequency {
+    padding-left: 32px;
+    padding-top: 8px;
+  }
+
+  .moby-buy-box__frequency-select {
+    width: 100%;
+    padding: 14px 44px 14px 16px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--moby-dark, #1C1A10);
+    background: #ffffff url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .moby-buy-box__frequency-select:focus {
+    outline: none;
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Hide Shopify's native subscription widget if it appears */
+  .moby-buy-box [class*="SubscriptionWidget"],
+  .moby-buy-box [data-shopify-subscription-widget],
+  .moby-buy-box .shopify-subscription-widget,
+  .moby-buy-box__subscription-widget {
     display: none !important;
-  }
-
-  /* Each purchase option card */
-  [data-shopify-subscription-widget] fieldset > div,
-  .shopify-subscription-widget fieldset > div,
-  [class*="subscription"] fieldset > div,
-  .moby-buy-box fieldset > div {
-    position: relative !important;
-    border: 2px solid rgba(28, 26, 16, 0.15) !important;
-    border-radius: 12px !important;
-    padding: 20px 24px !important;
-    background: #ffffff !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-  }
-
-  /* Selected option state */
-  [data-shopify-subscription-widget] fieldset > div:has(input:checked),
-  .shopify-subscription-widget fieldset > div:has(input:checked),
-  .moby-buy-box fieldset > div:has(input:checked) {
-    border-color: var(--moby-olive, #4F4A32) !important;
-  }
-
-  /* Subscription option (2nd child) - lime background + RECOMMENDED badge */
-  [data-shopify-subscription-widget] fieldset > div:nth-child(2),
-  .shopify-subscription-widget fieldset > div:nth-child(2),
-  .moby-buy-box fieldset > div:nth-child(2) {
-    margin-top: 8px !important;
-    background: rgba(249, 253, 181, 0.4) !important;
-    border-color: rgba(249, 253, 181, 0.6) !important;
-  }
-
-  [data-shopify-subscription-widget] fieldset > div:nth-child(2):has(input:checked),
-  .shopify-subscription-widget fieldset > div:nth-child(2):has(input:checked),
-  .moby-buy-box fieldset > div:nth-child(2):has(input:checked) {
-    background: rgba(249, 253, 181, 0.6) !important;
-    border-color: var(--moby-olive, #4F4A32) !important;
-  }
-
-  /* RECOMMENDED badge */
-  [data-shopify-subscription-widget] fieldset > div:nth-child(2)::before,
-  .shopify-subscription-widget fieldset > div:nth-child(2)::before,
-  .moby-buy-box fieldset > div:nth-child(2)::before {
-    content: 'RECOMMENDED' !important;
-    position: absolute !important;
-    top: -12px !important;
-    left: 20px !important;
-    font-family: 'N27', sans-serif !important;
-    font-size: 10px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.06em !important;
-    padding: 6px 14px !important;
-    background: var(--moby-olive, #4F4A32) !important;
-    color: #ffffff !important;
-    border-radius: 4px !important;
-    z-index: 1 !important;
-  }
-
-  /* Option labels */
-  [data-shopify-subscription-widget] label,
-  .shopify-subscription-widget label,
-  .moby-buy-box fieldset label {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    font-family: 'N27', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.02em !important;
-    color: var(--moby-dark, #1C1A10) !important;
-    cursor: pointer !important;
-  }
-
-  /* Custom radio buttons */
-  [data-shopify-subscription-widget] input[type="radio"],
-  .shopify-subscription-widget input[type="radio"],
-  .moby-buy-box fieldset input[type="radio"] {
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    border: 2px solid rgba(28, 26, 16, 0.3) !important;
-    border-radius: 50% !important;
-    background: #ffffff !important;
-    cursor: pointer !important;
-    transition: all 0.15s ease !important;
-    flex-shrink: 0 !important;
-    margin: 0 !important;
-  }
-
-  [data-shopify-subscription-widget] input[type="radio"]:checked,
-  .shopify-subscription-widget input[type="radio"]:checked,
-  .moby-buy-box fieldset input[type="radio"]:checked {
-    border-color: var(--moby-olive, #4F4A32) !important;
-    border-width: 6px !important;
-    background: #ffffff !important;
-  }
-
-  /* Frequency sub-options */
-  [data-shopify-subscription-widget] ul,
-  .shopify-subscription-widget ul,
-  .moby-buy-box fieldset ul {
-    list-style: none !important;
-    padding: 16px 0 0 32px !important;
-    margin: 12px 0 0 0 !important;
-    border-top: 1px solid rgba(28, 26, 16, 0.1) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-  }
-
-  [data-shopify-subscription-widget] ul label,
-  .shopify-subscription-widget ul label,
-  .moby-buy-box fieldset ul label {
-    font-size: 13px !important;
-    font-weight: 300 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    color: rgba(28, 26, 16, 0.75) !important;
-  }
-
-  [data-shopify-subscription-widget] ul input[type="radio"],
-  .shopify-subscription-widget ul input[type="radio"],
-  .moby-buy-box fieldset ul input[type="radio"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-  }
-
-  /* Select dropdown */
-  [data-shopify-subscription-widget] select,
-  .shopify-subscription-widget select,
-  .moby-buy-box fieldset select {
-    width: 100% !important;
-    padding: 14px 40px 14px 16px !important;
-    font-family: 'N27', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    color: var(--moby-dark, #1C1A10) !important;
-    background: #ffffff url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231C1A10' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center !important;
-    border: 1px solid rgba(28, 26, 16, 0.15) !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    margin-top: 12px !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-  }
-
-  /* Footer text */
-  [data-shopify-subscription-widget] > p,
-  .shopify-subscription-widget > p,
-  .moby-buy-box fieldset + p {
-    font-family: 'N27', sans-serif !important;
-    font-size: 12px !important;
-    font-weight: 300 !important;
-    color: rgba(28, 26, 16, 0.5) !important;
-    margin: 8px 0 0 !important;
   }
 
   /* Add to Cart Button */
@@ -1084,10 +1119,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const basePrice = {{ current_variant.price }};
   const packSelector = section.querySelector('#pack-selector');
   const quantityInput = section.querySelector('#quantity-input');
+  const sellingPlanInput = section.querySelector('#selling-plan-input');
   const btnPrice = section.querySelector('#btn-price');
   const form = section.querySelector('#moby-buy-box-form');
+  const purchaseOptions = section.querySelector('#purchase-options');
+  const sellingPlanSelect = section.querySelector('#selling-plan-select');
 
   let currentQuantity = 1;
+  let isSubscription = false;
+  let subscriptionDiscount = {{ product.selling_plan_groups.first.selling_plans.first.price_adjustments.first.value | default: 10 }};
 
   function formatMoney(cents) {
     return (cents / 100).toLocaleString('{{ localization.language.iso_code | default: "en" }}', {
@@ -1104,9 +1144,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updateButton() {
     const packDiscount = getPackDiscount(currentQuantity);
-    const total = basePrice * currentQuantity * (1 - packDiscount);
+    let total = basePrice * currentQuantity * (1 - packDiscount);
+
+    // Apply subscription discount if selected
+    if (isSubscription) {
+      total = total * (1 - subscriptionDiscount / 100);
+    }
+
     if (btnPrice) btnPrice.textContent = formatMoney(total);
     if (quantityInput) quantityInput.value = currentQuantity;
+  }
+
+  // Purchase option selection (one-time vs subscribe)
+  if (purchaseOptions) {
+    const options = purchaseOptions.querySelectorAll('.moby-buy-box__option');
+
+    // Set initial state
+    options.forEach(opt => {
+      if (opt.querySelector('input:checked')) {
+        opt.classList.add('is-selected');
+      }
+    });
+
+    options.forEach(option => {
+      option.addEventListener('click', function() {
+        // Update visual selection
+        options.forEach(opt => opt.classList.remove('is-selected'));
+        this.classList.add('is-selected');
+        this.querySelector('input').checked = true;
+
+        // Check if subscription is selected
+        const optionType = this.dataset.option;
+        isSubscription = (optionType === 'subscribe');
+
+        // Update selling plan input
+        if (isSubscription && sellingPlanSelect) {
+          sellingPlanInput.value = sellingPlanSelect.value;
+          // Update discount from selected plan
+          const selectedOption = sellingPlanSelect.options[sellingPlanSelect.selectedIndex];
+          if (selectedOption && selectedOption.dataset.discount) {
+            subscriptionDiscount = parseInt(selectedOption.dataset.discount) || 10;
+          }
+        } else {
+          sellingPlanInput.value = '';
+        }
+
+        updateButton();
+      });
+    });
+  }
+
+  // Selling plan dropdown change
+  if (sellingPlanSelect) {
+    sellingPlanSelect.addEventListener('change', function() {
+      if (isSubscription) {
+        sellingPlanInput.value = this.value;
+        // Update discount
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption && selectedOption.dataset.discount) {
+          subscriptionDiscount = parseInt(selectedOption.dataset.discount) || 10;
+        }
+        updateButton();
+      }
+    });
   }
 
   // Pack selection
@@ -1155,7 +1255,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add selling plan if selected
         const sellingPlan = formData.get('selling_plan');
-        if (sellingPlan) {
+        if (sellingPlan && sellingPlan !== '') {
           data.selling_plan = sellingPlan;
         }
 
