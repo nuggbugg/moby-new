@@ -145,13 +145,16 @@
     {% render 'moby-animations' %}
 
     {%- comment -%} Global Cart Interceptor - Prevents redirects, opens drawer instead {%- endcomment -%}
-    {%- comment -%} Includes stock validation to prevent overselling {%- endcomment -%}
+    {%- comment -%} Includes real-time stock validation to prevent overselling {%- endcomment -%}
     <script>
     (function() {
       // Intercept ALL form submissions to /cart/add
       document.addEventListener('submit', async function(e) {
         const form = e.target;
         if (!form || form.action.indexOf('/cart/add') === -1) return;
+
+        // Skip if form has custom handler flag (buy-box handles its own submission)
+        if (form.dataset.customHandler === 'true') return;
 
         e.preventDefault();
 
@@ -175,37 +178,61 @@
           }
 
           // Ensure quantity is a number
-          if (data.quantity) data.quantity = parseInt(data.quantity) || 1;
+          if (!data.quantity) data.quantity = 1;
+          data.quantity = parseInt(data.quantity) || 1;
 
-          // Check stock if inventory data is available on the form
-          const inventoryQty = form.dataset.inventoryQuantity ? parseInt(form.dataset.inventoryQuantity) : null;
-          const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
-          const productId = form.dataset.productId;
+          // Get variant ID
+          const variantId = data.id;
 
-          if (inventoryQty !== null && inventoryPolicy === 'deny') {
-            // Fetch current cart to check existing quantity
-            const cartResponse = await fetch('/cart.js', {
-              headers: { 'Accept': 'application/json' }
-            });
-            const cart = await cartResponse.json();
+          // Fetch cart to find product info and validate stock
+          const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+          const cart = await cartResponse.json();
 
-            // Count how many of this variant/product are already in cart
-            let currentQtyInCart = 0;
-            cart.items.forEach(item => {
-              if (String(item.variant_id) === String(data.id) ||
-                  (productId && String(item.product_id) === String(productId))) {
-                currentQtyInCart += item.quantity;
-              }
-            });
+          // Try to get product handle from form data attributes or existing cart items
+          let productHandle = form.dataset.productHandle;
+          let productId = form.dataset.productId;
 
-            const totalAfterAdd = currentQtyInCart + data.quantity;
+          // If we don't have product info, try to find it from current cart or page context
+          if (!productHandle) {
+            // Check if there's a product on the page
+            const productMeta = document.querySelector('meta[property="og:url"]');
+            if (productMeta) {
+              const url = productMeta.content;
+              const match = url.match(/\/products\/([^\/\?]+)/);
+              if (match) productHandle = match[1];
+            }
+          }
 
-            if (totalAfterAdd > inventoryQty) {
-              const remaining = inventoryQty - currentQtyInCart;
-              if (remaining <= 0) {
-                throw new Error('No more stock available');
-              } else {
-                throw new Error(`Only ${remaining} more available`);
+          // Perform real-time stock validation if we can identify the product
+          if (productHandle) {
+            const productResponse = await fetch(`/products/${productHandle}.js`, { headers: { 'Accept': 'application/json' } });
+            if (productResponse.ok) {
+              const productData = await productResponse.json();
+              productId = productData.id;
+
+              const variant = productData.variants.find(v => String(v.id) === String(variantId));
+
+              if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+                const inventoryQty = variant.inventory_quantity || 0;
+
+                // Count ALL items of this product in cart
+                let currentQtyInCart = 0;
+                cart.items.forEach(item => {
+                  if (String(item.product_id) === String(productId)) {
+                    currentQtyInCart += item.quantity;
+                  }
+                });
+
+                const totalAfterAdd = currentQtyInCart + data.quantity;
+
+                if (totalAfterAdd > inventoryQty) {
+                  const remaining = inventoryQty - currentQtyInCart;
+                  if (remaining <= 0) {
+                    throw new Error('No more stock available');
+                  } else {
+                    throw new Error(`Only ${remaining} more available`);
+                  }
+                }
               }
             }
           }
