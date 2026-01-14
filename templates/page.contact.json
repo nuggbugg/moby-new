@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "contact": {
+      "type": "moby-contact",
+      "settings": {
+        "eyebrow": "Get in Touch",
+        "title": "We'd Love to Hear From You",
+        "description": "Have questions about our products, orders, or partnerships? We're here to help.",
+        "email": "hello@drinkmoby.com",
+        "response_time": "Within 24 hours",
+        "location": "Stockholm, Sweden",
+        "show_social": true,
+        "instagram_url": "",
+        "tiktok_url": "",
+        "linkedin_url": "",
+        "form_title": "Send us a Message",
+        "success_message": "Thanks for reaching out! We'll get back to you within 24 hours."
+      }
+    }
+  },
+  "order": ["contact"]
+}
