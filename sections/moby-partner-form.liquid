@@ -32,6 +32,13 @@
         </div>
       {%- endif -%}
 
+      <!-- Honeypot field for spam protection (required by Shopify) -->
+      <input type="hidden" name="contact[tags]" value="b2b-partner-inquiry">
+      <div class="moby-partner-form__honeypot" aria-hidden="true">
+        <label for="contact_honeypot">Don't fill this out</label>
+        <input type="text" id="contact_honeypot" name="contact[honeypot]" autocomplete="off" tabindex="-1">
+      </div>
+
       <!-- Partnership Type -->
       <div class="moby-partner-form__field">
         <label for="contact_partnership_type" class="moby-partner-form__label">
@@ -293,6 +300,17 @@
   .moby-partner-form__submit:hover {
     opacity: 0.9;
     transform: translateY(-2px);
+  }
+
+  /* Honeypot field - hidden from users but visible to bots */
+  .moby-partner-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
   }
 </style>
 
