@@ -1121,6 +1121,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const packSelector = section.querySelector('#pack-selector');
   const quantityInput = section.querySelector('#quantity-input');
   const btnPrice = section.querySelector('#btn-price');
+  const form = section.querySelector('#moby-buy-box-form');
 
   let currentQuantity = 1;
 
@@ -1168,6 +1169,75 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+  // AJAX Add to Cart - prevents redirect, opens drawer instead
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalContent = submitBtn.innerHTML;
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Adding...</span>';
+
+      try {
+        const formData = new FormData(form);
+        const data = {
+          id: formData.get('id'),
+          quantity: parseInt(formData.get('quantity')) || 1
+        };
+
+        // Add selling plan if selected
+        const sellingPlan = formData.get('selling_plan');
+        if (sellingPlan) {
+          data.selling_plan = sellingPlan;
+        }
+
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add to cart');
+        }
+
+        // Success - open cart drawer
+        submitBtn.innerHTML = '<span>Added!</span>';
+
+        // Open the cart drawer if available
+        if (typeof window.openCartDrawer === 'function') {
+          // Small delay to show "Added!" state
+          setTimeout(() => {
+            window.openCartDrawer();
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+          }, 300);
+        } else {
+          // Fallback: dispatch event for other cart drawers
+          document.dispatchEvent(new CustomEvent('cart:refresh'));
+          setTimeout(() => {
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+          }, 1000);
+        }
+
+      } catch (error) {
+        console.error('Add to cart error:', error);
+        submitBtn.innerHTML = '<span>Error - Try Again</span>';
+        setTimeout(() => {
+          submitBtn.innerHTML = originalContent;
+          submitBtn.disabled = false;
+        }, 2000);
+      }
+    });
+  }
 
   // Initial update
   updateButton();

@@ -456,8 +456,31 @@
     const drawer = document.getElementById('moby-cart-drawer');
     if (!drawer) return;
 
+    // Refresh cart drawer content via Section Rendering API
+    async function refreshCartDrawer() {
+      try {
+        const response = await fetch('/?section_id=moby-cart-drawer');
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newDrawer = doc.getElementById('moby-cart-drawer');
+          if (newDrawer) {
+            // Replace inner content but keep wrapper
+            drawer.innerHTML = newDrawer.innerHTML;
+            // Re-initialize event listeners
+            initCartDrawerEvents();
+          }
+        }
+      } catch (error) {
+        console.error('Error refreshing cart drawer:', error);
+      }
+    }
+
     // Open drawer function
-    function openCartDrawer() {
+    async function openCartDrawer() {
+      // Refresh content before opening
+      await refreshCartDrawer();
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
       document.body.classList.add('cart-drawer-open');
@@ -473,55 +496,9 @@
     // Expose globally
     window.openCartDrawer = openCartDrawer;
     window.closeCartDrawer = closeCartDrawer;
+    window.refreshCartDrawer = refreshCartDrawer;
 
-    // Close button handlers
-    drawer.querySelectorAll('[data-cart-drawer-close]').forEach(btn => {
-      btn.addEventListener('click', closeCartDrawer);
-    });
-
-    // Close on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
-        closeCartDrawer();
-      }
-    });
-
-    // Quantity update handlers
-    drawer.querySelectorAll('[data-quantity-minus]').forEach(btn => {
-      btn.addEventListener('click', async function() {
-        const line = this.dataset.line;
-        const item = this.closest('[data-cart-item]');
-        const qtyValue = item.querySelector('[data-quantity-value]');
-        const currentQty = parseInt(qtyValue.textContent);
-
-        if (currentQty > 1) {
-          await updateCartQuantity(line, currentQty - 1);
-        } else {
-          await updateCartQuantity(line, 0);
-        }
-      });
-    });
-
-    drawer.querySelectorAll('[data-quantity-plus]').forEach(btn => {
-      btn.addEventListener('click', async function() {
-        const line = this.dataset.line;
-        const item = this.closest('[data-cart-item]');
-        const qtyValue = item.querySelector('[data-quantity-value]');
-        const currentQty = parseInt(qtyValue.textContent);
-
-        await updateCartQuantity(line, currentQty + 1);
-      });
-    });
-
-    // Remove item handlers
-    drawer.querySelectorAll('[data-remove-item]').forEach(btn => {
-      btn.addEventListener('click', async function() {
-        const line = this.dataset.line;
-        await updateCartQuantity(line, 0);
-      });
-    });
-
-    // Update cart quantity
+    // Update cart quantity function
     async function updateCartQuantity(line, quantity) {
       try {
         const response = await fetch('/cart/change.js', {
@@ -536,12 +513,65 @@
         });
 
         if (response.ok) {
-          // Refresh the page to update cart drawer content
-          location.reload();
+          // Refresh drawer content without page reload
+          await refreshCartDrawer();
         }
       } catch (error) {
         console.error('Error updating cart:', error);
       }
     }
+
+    // Initialize all event listeners (called on load and after refresh)
+    function initCartDrawerEvents() {
+      // Close button handlers
+      drawer.querySelectorAll('[data-cart-drawer-close]').forEach(btn => {
+        btn.addEventListener('click', closeCartDrawer);
+      });
+
+      // Quantity update handlers
+      drawer.querySelectorAll('[data-quantity-minus]').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          const line = this.dataset.line;
+          const item = this.closest('[data-cart-item]');
+          const qtyValue = item.querySelector('[data-quantity-value]');
+          const currentQty = parseInt(qtyValue.textContent);
+
+          if (currentQty > 1) {
+            await updateCartQuantity(line, currentQty - 1);
+          } else {
+            await updateCartQuantity(line, 0);
+          }
+        });
+      });
+
+      drawer.querySelectorAll('[data-quantity-plus]').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          const line = this.dataset.line;
+          const item = this.closest('[data-cart-item]');
+          const qtyValue = item.querySelector('[data-quantity-value]');
+          const currentQty = parseInt(qtyValue.textContent);
+
+          await updateCartQuantity(line, currentQty + 1);
+        });
+      });
+
+      // Remove item handlers
+      drawer.querySelectorAll('[data-remove-item]').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          const line = this.dataset.line;
+          await updateCartQuantity(line, 0);
+        });
+      });
+    }
+
+    // Close on escape key (only add once)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeCartDrawer();
+      }
+    });
+
+    // Initialize on page load
+    initCartDrawerEvents();
   })();
 </script>

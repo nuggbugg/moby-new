@@ -1,0 +1,15 @@
+{% comment %}
+  MOBY Cart Drawer Section
+  - Wrapper section for cart drawer to enable Section Rendering API
+{% endcomment %}
+
+<div id="cart-drawer-section" data-section-id="{{ section.id }}">
+  {% render 'moby-cart-drawer' %}
+</div>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": []
+}
+{% endschema %}
