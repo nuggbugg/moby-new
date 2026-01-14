@@ -1,0 +1,180 @@
+{% comment %}
+  MOBY Sticky Cart Button
+  - Floating cart icon with count badge
+  - Visible on scroll on mobile devices
+  - Shows cart item count dynamically
+{% endcomment %}
+
+<div class="moby-sticky-cart" id="moby-sticky-cart">
+  <button type="button" class="moby-sticky-cart__btn" onclick="window.openCartDrawer()" aria-label="Open cart">
+    <svg class="moby-sticky-cart__icon" width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect x="4" y="7" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M8 7V6a4 4 0 118 0v1" stroke="currentColor" stroke-width="1.5"/>
+    </svg>
+    <span class="moby-sticky-cart__count" id="moby-sticky-cart-count">{{ cart.item_count }}</span>
+  </button>
+</div>
+
+<style>
+  .moby-sticky-cart {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 90;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.9);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .moby-sticky-cart--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .moby-sticky-cart__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--moby-dark, #1C1A10);
+    color: var(--moby-lime, #F9FDB5);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(28, 26, 16, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .moby-sticky-cart__btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 24px rgba(28, 26, 16, 0.35);
+  }
+
+  .moby-sticky-cart__btn:active {
+    transform: scale(0.98);
+  }
+
+  .moby-sticky-cart__icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .moby-sticky-cart__count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+  }
+
+  .moby-sticky-cart__count:empty,
+  .moby-sticky-cart__count[data-count="0"] {
+    display: none;
+  }
+
+  /* Pulse animation when cart updates */
+  .moby-sticky-cart__count--pulse {
+    animation: cartCountPulse 0.3s ease;
+  }
+
+  @keyframes cartCountPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* Hide on large screens - header cart is visible */
+  @media (min-width: 769px) {
+    .moby-sticky-cart {
+      display: none;
+    }
+  }
+
+  /* Adjust position on smaller screens */
+  @media (max-width: 480px) {
+    .moby-sticky-cart {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .moby-sticky-cart__btn {
+      width: 52px;
+      height: 52px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const stickyCart = document.getElementById('moby-sticky-cart');
+    const countBadge = document.getElementById('moby-sticky-cart-count');
+    let lastScrollY = 0;
+    let ticking = false;
+
+    // Show/hide sticky cart based on scroll position
+    function updateStickyCart() {
+      const scrollY = window.scrollY;
+      const headerHeight = parseInt(getComputedStyle(document.body).getPropertyValue('--header-height') || '80');
+
+      // Show after scrolling past header + some buffer
+      if (scrollY > headerHeight + 100) {
+        stickyCart.classList.add('moby-sticky-cart--visible');
+      } else {
+        stickyCart.classList.remove('moby-sticky-cart--visible');
+      }
+
+      lastScrollY = scrollY;
+      ticking = false;
+    }
+
+    // Throttled scroll handler
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(updateStickyCart);
+        ticking = true;
+      }
+    }
+
+    // Update cart count
+    function updateCartCount(count) {
+      if (countBadge) {
+        countBadge.textContent = count;
+        countBadge.setAttribute('data-count', count);
+
+        // Trigger pulse animation
+        countBadge.classList.remove('moby-sticky-cart__count--pulse');
+        void countBadge.offsetWidth; // Force reflow
+        countBadge.classList.add('moby-sticky-cart__count--pulse');
+      }
+    }
+
+    // Listen for cart updates
+    document.addEventListener('cart:update', function(e) {
+      if (e.detail && typeof e.detail.item_count !== 'undefined') {
+        updateCartCount(e.detail.item_count);
+      }
+    });
+
+    // Initialize
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateStickyCart();
+
+    // Expose update function globally
+    window.updateStickyCartCount = updateCartCount;
+  })();
+</script>

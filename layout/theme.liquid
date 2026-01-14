@@ -14,6 +14,10 @@
       >
     {%- endif -%}
 
+    {%- comment -%} Preconnect to external resources for faster loading {%- endcomment -%}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+
     {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
     {% if settings.transition_to_main_product or settings.page_transition_enabled %}
       <link
@@ -36,6 +40,29 @@
     {% endif %}
 
     {{ content_for_header }}
+
+    {%- comment -%} Organization Schema for Knowledge Graph {%- endcomment -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "{{ shop.name }}",
+        "url": "{{ shop.url }}",
+        {%- if settings.logo -%}
+        "logo": "{{ settings.logo | image_url: width: 500 }}",
+        {%- endif -%}
+        "description": "{{ shop.description | escape }}",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "SE"
+        },
+        "sameAs": [
+          {%- if settings.social_instagram_link != blank -%}"{{ settings.social_instagram_link }}"{%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}{%- if settings.social_instagram_link != blank -%},{%- endif -%}"{{ settings.social_facebook_link }}"{%- endif -%}
+          {%- if settings.social_twitter_link != blank -%}{%- if settings.social_facebook_link != blank or settings.social_instagram_link != blank -%},{%- endif -%}"{{ settings.social_twitter_link }}"{%- endif -%}
+        ]
+      }
+    </script>
   </head>
 
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
@@ -115,6 +142,7 @@
     {% endif %}
 
     {% render 'moby-cart-drawer' %}
+    {% render 'moby-sticky-cart' %}
     {% render 'moby-animations' %}
   </body>
 </html>

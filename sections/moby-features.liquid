@@ -122,20 +122,51 @@
     letter-spacing: 0.02em;
   }
 
-  /* Tablet Styles */
-  @media (max-width: 1024px) {
+  /* Large Tablet - reduce gap to fit 5 columns */
+  @media (max-width: 1100px) {
     .moby-features__grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px 24px;
+      gap: 20px;
     }
 
-    .moby-features__item:nth-child(4),
-    .moby-features__item:nth-child(5) {
-      grid-column: span 1;
+    .moby-features__item {
+      padding: 0 8px;
+    }
+
+    .moby-features__title {
+      font-size: 12px;
+    }
+
+    .moby-features__description {
+      font-size: 11px;
     }
   }
 
-  /* Mobile Styles */
+  /* Small Tablet - switch to 3 columns with centered last row */
+  @media (max-width: 900px) {
+    .moby-features__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 20px;
+      justify-items: center;
+    }
+
+    .moby-features__item {
+      padding: 0 12px;
+      max-width: 180px;
+    }
+
+    /* Center the last two items */
+    .moby-features__item:nth-child(4) {
+      grid-column: 1 / 2;
+      justify-self: end;
+    }
+
+    .moby-features__item:nth-child(5) {
+      grid-column: 3 / 4;
+      justify-self: start;
+    }
+  }
+
+  /* Mobile - 2 columns */
   @media (max-width: 640px) {
     .moby-features {
       padding: 40px 16px;
@@ -143,9 +174,22 @@
 
     .moby-features__grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 32px 16px;
+      gap: 28px 16px;
     }
 
+    .moby-features__item {
+      padding: 0;
+      max-width: none;
+    }
+
+    /* Reset positioning */
+    .moby-features__item:nth-child(4),
+    .moby-features__item:nth-child(5) {
+      grid-column: auto;
+      justify-self: center;
+    }
+
+    /* Center the 5th item if odd */
     .moby-features__item:last-child:nth-child(odd) {
       grid-column: span 2;
     }
@@ -156,11 +200,11 @@
     }
 
     .moby-features__title {
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .moby-features__description {
-      font-size: 11px;
+      font-size: 10px;
     }
   }
 </style>
