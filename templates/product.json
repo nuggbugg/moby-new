@@ -114,7 +114,8 @@
       "settings": {
         "badge": "The MOBY Difference",
         "heading": "Why Stick Packs?",
-        "subheading": "The smarter way to supplement"
+        "subheading": "The smarter way to supplement",
+        "stick_image": "shopify://shop_images/Produkt_Stick_Pack.png"
       }
     },
     "moby_product_tabs": {
