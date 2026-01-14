@@ -6,13 +6,11 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
-    {%- if settings.favicon != blank -%}
-      <link
-        rel="icon"
-        type="image/png"
-        href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
-      >
-    {%- endif -%}
+    {%- comment -%} MOBY Favicons {%- endcomment -%}
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ 'apple-touch-icon.png' | asset_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32x32.png' | asset_url }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ 'favicon-16x16.png' | asset_url }}">
+    <link rel="manifest" href="{{ 'site.webmanifest' | asset_url }}">
 
     {%- comment -%} Preconnect to external resources for faster loading {%- endcomment -%}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -217,6 +215,18 @@
         }
       });
     })();
+    </script>
+
+    {%- comment -%} Favicon refresh script - ensures favicon loads correctly {%- endcomment -%}
+    <script>
+      window.addEventListener('load', () => {
+        const icons = document.querySelectorAll('link[rel="icon"]');
+        icons.forEach(i => i.remove());
+        const icon = document.createElement('link');
+        icon.rel = 'icon';
+        icon.href = '{{ "favicon-32x32.png" | asset_url }}?v=3';
+        document.head.appendChild(icon);
+      });
     </script>
   </body>
 </html>
