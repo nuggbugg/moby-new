@@ -265,11 +265,24 @@
 
     if (!stickyBar || !mainAddToCart) return;
 
-    // Intersection Observer to show/hide sticky bar when add-to-cart button is out of view
+    // Intersection Observer to show/hide sticky bar
+    // Only show when scrolled DOWN past the button (not when button is below viewport)
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky bar when the add-to-cart button is NOT visible
-        stickyBar.setAttribute('data-hidden', entry.isIntersecting ? 'true' : 'false');
+        // Check if button is above the viewport (scrolled past it)
+        // boundingClientRect.bottom < rootBounds means element is above viewport
+        const isAboveViewport = entry.boundingClientRect.bottom < 80; // 80px for header
+
+        if (entry.isIntersecting) {
+          // Button is visible - hide sticky bar
+          stickyBar.setAttribute('data-hidden', 'true');
+        } else if (isAboveViewport) {
+          // Button is above viewport (scrolled past) - show sticky bar
+          stickyBar.setAttribute('data-hidden', 'false');
+        } else {
+          // Button is below viewport (not scrolled to yet) - hide sticky bar
+          stickyBar.setAttribute('data-hidden', 'true');
+        }
       },
       {
         threshold: 0,
@@ -279,96 +292,34 @@
 
     observer.observe(mainAddToCart);
 
-    // Handle add to cart click with real-time stock validation
+    // Handle add to cart click - trigger the main buy box form submission
     const addToCartBtn = stickyBar.querySelector('[data-sticky-add-to-cart]');
     if (addToCartBtn) {
-      addToCartBtn.addEventListener('click', async function() {
-        const variantId = this.dataset.variantId;
-        const productHandle = this.dataset.productHandle;
-        const productId = this.dataset.productId;
-        const btn = this;
-        const originalText = btn.innerHTML;
-
-        // Show loading state
-        btn.disabled = true;
-        btn.innerHTML = '<span>Adding...</span>';
-
-        try {
-          // Fetch real-time product data and cart in parallel
-          const [productResponse, cartResponse] = await Promise.all([
-            fetch(`/products/${productHandle}.js`, { headers: { 'Accept': 'application/json' } }),
-            fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
-          ]);
-
-          const productData = await productResponse.json();
-          const cart = await cartResponse.json();
-
-          // Find the variant to get real-time inventory
-          const variant = productData.variants.find(v => String(v.id) === String(variantId));
-
-          if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
-            const inventoryQty = variant.inventory_quantity || 0;
-
-            // Count ALL items of this product in cart (both regular and subscription)
-            let currentQtyInCart = 0;
-            cart.items.forEach(item => {
-              if (String(item.product_id) === String(productId)) {
-                currentQtyInCart += item.quantity;
-              }
-            });
-
-            const totalAfterAdd = currentQtyInCart + 1;
-
-            if (totalAfterAdd > inventoryQty) {
-              const remaining = inventoryQty - currentQtyInCart;
-              if (remaining <= 0) {
-                throw new Error('No more stock available');
-              } else {
-                throw new Error(`Only ${remaining} more available`);
-              }
-            }
+      addToCartBtn.addEventListener('click', function() {
+        // Find the main buy box add-to-cart button and click it
+        // This ensures we use whatever variant/subscription the user has selected
+        const mainBuyBoxBtn = document.querySelector('.moby-buy-box__add-btn');
+        if (mainBuyBoxBtn) {
+          // Scroll to buy box briefly to show feedback, then click
+          mainBuyBoxBtn.click();
+        } else {
+          // Fallback: try to submit any product form
+          const productForm = document.querySelector('#moby-buy-box-form, form[action*="/cart/add"]');
+          if (productForm) {
+            productForm.requestSubmit();
           }
+        }
+      });
+    }
 
-          // Stock check passed - add to cart
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              id: variantId,
-              quantity: 1
-            })
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.description || 'Failed to add to cart');
-          }
-
-          // Success - trigger cart update and open drawer
-          document.dispatchEvent(new CustomEvent('cart:updated'));
-
-          // Open cart drawer if it exists
-          const cartDrawer = document.querySelector('.moby-cart-drawer, [data-cart-drawer]');
-          if (cartDrawer) {
-            cartDrawer.classList.add('is-open');
-            document.body.classList.add('cart-drawer-open');
-          } else {
-            window.location.href = '/cart';
-          }
-
-          // Reset button
-          btn.disabled = false;
-          btn.innerHTML = originalText;
-
-        } catch (error) {
-          // Show error
-          btn.innerHTML = `<span style="color: #dc3545;">${error.message}</span>`;
-          setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-          }, 2500);
+    // Handle waitlist button click
+    const waitlistBtn = stickyBar.querySelector('[data-sticky-waitlist]');
+    if (waitlistBtn) {
+      waitlistBtn.addEventListener('click', function() {
+        // Find and click the main waitlist button
+        const mainWaitlistBtn = document.querySelector('.moby-buy-box__waitlist-btn, [data-waitlist-btn]');
+        if (mainWaitlistBtn) {
+          mainWaitlistBtn.click();
         }
       });
     }
