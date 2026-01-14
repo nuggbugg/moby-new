@@ -15,7 +15,7 @@
   assign featured_image = product.featured_image
 -%}
 
-<section class="moby-section moby-featured-product">
+<section class="moby-section moby-featured-product" id="moby-featured-product-{{ section.id }}">
   <div class="moby-container">
     <div class="moby-featured-product__grid">
       {%- if product != blank -%}
@@ -169,15 +169,23 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Thumbnail gallery
-    const thumbnails = document.querySelectorAll('.moby-featured-product__thumbnail');
-    const mainImage = document.querySelector('.moby-featured-product__main-image img');
-    
+    // Thumbnail gallery - scoped to this section instance
+    const section = document.getElementById('moby-featured-product-{{ section.id }}');
+    if (!section) return;
+
+    const thumbnails = section.querySelectorAll('.moby-featured-product__thumbnail');
+    const mainImage = section.querySelector('.moby-featured-product__main-image img');
+
     thumbnails.forEach(thumb => {
       thumb.addEventListener('click', function() {
         const imageUrl = this.dataset.imageUrl;
         if (mainImage && imageUrl) {
+          // Update src and remove srcset to force the new image
           mainImage.src = imageUrl;
+          mainImage.srcset = '';
+          mainImage.removeAttribute('srcset');
+
+          // Update active state
           thumbnails.forEach(t => t.classList.remove('moby-featured-product__thumbnail--active'));
           this.classList.add('moby-featured-product__thumbnail--active');
         }
@@ -185,7 +193,7 @@
     });
 
     // Add to cart - with real-time stock validation to prevent overselling
-    const addToCartBtn = document.querySelector('.moby-featured-product__add-to-cart');
+    const addToCartBtn = section.querySelector('.moby-featured-product__add-to-cart');
     if (addToCartBtn) {
       addToCartBtn.addEventListener('click', async function() {
         const variantId = this.dataset.variantId;
