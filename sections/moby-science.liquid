@@ -156,18 +156,21 @@
 
   .moby-science__feature {
     display: flex;
+    align-items: center;
     gap: 16px;
   }
 
   .moby-science__feature--left {
     flex-direction: row;
     text-align: left;
+    justify-content: space-between;
   }
 
   @media (min-width: 1024px) {
     .moby-science__feature--left {
       flex-direction: row-reverse;
       text-align: right;
+      justify-content: flex-start;
     }
   }
 
