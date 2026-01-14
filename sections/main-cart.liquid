@@ -34,6 +34,15 @@
 </cart-items-component>
 
 {% stylesheet %}
+  /* Override to match MOBY header width */
+  .cart-items-component .section--page-width {
+    width: 90%;
+    max-width: 1296px;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .cart-page {
     --cart-font-size--2xs: var(--font-size--2xs);
     --cart-font-size--xs: var(--font-size--xs);
