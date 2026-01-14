@@ -13,6 +13,7 @@
     "logo_inverse": "shopify://shop_images/Grupp_11.svg",
     "logo_height": 36,
     "logo_height_mobile": 28,
+    "favicon": "shopify://shop_images/favicon.png",
     "type_body_font": "liter_n4",
     "type_subheading_font": "liter_n4",
     "type_heading_font": "liter_n4",
@@ -59,6 +60,19 @@
     "card_corner_radius": 0,
     "variant_button_radius": 100,
     "variant_button_width": "default-width-buttons",
+    "sections": {
+      "moby-cart-drawer": {
+        "type": "moby-cart-drawer",
+        "settings": {
+          "free_shipping_sek": 500,
+          "free_shipping_eur": 43,
+          "free_shipping_usd": 50,
+          "free_shipping_gbp": 40,
+          "free_shipping_nok": 500,
+          "free_shipping_dkk": 350
+        }
+      }
+    },
     "content_for_index": [],
     "blocks": {
       "14060646107696862457": {
@@ -78,23 +92,23 @@
         "disabled": false,
         "settings": {}
       },
-      "1768834845299682660": {
-        "type": "shopify://apps/subscriptions/blocks/app-embed-block/a3bfe9ec-96f8-4508-a003-df608a36d2ad",
-        "disabled": false,
-        "settings": {
-          "color_text_title": "#6D7175",
-          "color_text_body": "#6D7175",
-          "dividers_color": "#8F8D8D",
-          "bacgkround_color": "#FFFFFF",
-          "border_thickness": 1,
-          "border_radius": 0,
-          "subscription_policy_url": ""
-        }
-      },
       "17676059084223943535": {
         "type": "shopify://apps/triplewhale/blocks/triple_pixel_snippet/483d496b-3f1a-4609-aea7-8eee3b6b7a2a",
         "disabled": false,
         "settings": {}
+      },
+      "1768834845299682660": {
+        "type": "shopify://apps/subscriptions/blocks/app-embed-block/a3bfe9ec-96f8-4508-a003-df608a36d2ad",
+        "disabled": true,
+        "settings": {
+          "color_text_title": "#6d7175",
+          "color_text_body": "#6d7175",
+          "dividers_color": "#8f8d8d",
+          "bacgkround_color": "#ffffff",
+          "border_thickness": 1,
+          "border_radius": 0,
+          "subscription_policy_url": ""
+        }
       }
     },
     "color_schemes": {
