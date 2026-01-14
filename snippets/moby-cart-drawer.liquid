@@ -734,7 +734,7 @@
           const newDrawer = doc.getElementById('moby-cart-drawer');
           if (newDrawer) {
             drawer.innerHTML = newDrawer.innerHTML;
-            initCartDrawerEvents();
+            // Event delegation means we don't need to re-attach handlers
           }
         }
 
@@ -811,18 +811,21 @@
       }
     }
 
-    // Initialize all event listeners
+    // Initialize event listeners using event delegation (works after innerHTML changes)
     function initCartDrawerEvents() {
-      // Close button handlers
-      drawer.querySelectorAll('[data-cart-drawer-close]').forEach(btn => {
-        btn.addEventListener('click', closeCartDrawer);
-      });
+      // Use event delegation on drawer - attach once, works for all dynamic content
+      drawer.addEventListener('click', async function(e) {
+        // Close button
+        if (e.target.closest('[data-cart-drawer-close]')) {
+          closeCartDrawer();
+          return;
+        }
 
-      // Quantity update handlers
-      drawer.querySelectorAll('[data-quantity-minus]').forEach(btn => {
-        btn.addEventListener('click', async function() {
-          const line = this.dataset.line;
-          const item = this.closest('[data-cart-item]');
+        // Quantity minus
+        const minusBtn = e.target.closest('[data-quantity-minus]');
+        if (minusBtn) {
+          const line = minusBtn.dataset.line;
+          const item = minusBtn.closest('[data-cart-item]');
           const qtyValue = item.querySelector('[data-quantity-value]');
           const currentQty = parseInt(qtyValue.textContent);
 
@@ -831,26 +834,28 @@
           } else {
             await updateCartQuantity(line, 0);
           }
-        });
-      });
+          return;
+        }
 
-      drawer.querySelectorAll('[data-quantity-plus]').forEach(btn => {
-        btn.addEventListener('click', async function() {
-          const line = this.dataset.line;
-          const item = this.closest('[data-cart-item]');
+        // Quantity plus
+        const plusBtn = e.target.closest('[data-quantity-plus]');
+        if (plusBtn) {
+          const line = plusBtn.dataset.line;
+          const item = plusBtn.closest('[data-cart-item]');
           const qtyValue = item.querySelector('[data-quantity-value]');
           const currentQty = parseInt(qtyValue.textContent);
 
           await updateCartQuantity(line, currentQty + 1);
-        });
-      });
+          return;
+        }
 
-      // Remove item handlers
-      drawer.querySelectorAll('[data-remove-item]').forEach(btn => {
-        btn.addEventListener('click', async function() {
-          const line = this.dataset.line;
+        // Remove item
+        const removeBtn = e.target.closest('[data-remove-item]');
+        if (removeBtn) {
+          const line = removeBtn.dataset.line;
           await updateCartQuantity(line, 0);
-        });
+          return;
+        }
       });
     }
 
