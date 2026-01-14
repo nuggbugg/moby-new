@@ -10,10 +10,10 @@
     <div class="moby-contact__layout">
       <!-- Contact Info -->
       <div class="moby-contact__info">
-        <span class="moby-contact__eyebrow">{{ section.settings.eyebrow | default: 'Get in Touch' }}</span>
-        <h1 class="moby-contact__title">{{ section.settings.title | default: 'We\'d Love to Hear From You' }}</h1>
+        <span class="moby-contact__eyebrow">{{ section.settings.eyebrow | default: "Get in Touch" }}</span>
+        <h1 class="moby-contact__title">{{ section.settings.title | default: "We'd Love to Hear From You" }}</h1>
         <p class="moby-contact__description">
-          {{ section.settings.description | default: 'Have questions about our products, orders, or partnerships? We\'re here to help.' }}
+          {{ section.settings.description | default: "Have questions about our products, orders, or partnerships? We're here to help." }}
         </p>
 
         <div class="moby-contact__details">
@@ -100,7 +100,7 @@
       <!-- Contact Form -->
       <div class="moby-contact__form-wrapper">
         <div class="moby-contact__form-card">
-          <h2 class="moby-contact__form-title">{{ section.settings.form_title | default: 'Send us a Message' }}</h2>
+          <h2 class="moby-contact__form-title">{{ section.settings.form_title | default: "Send us a Message" }}</h2>
 
           {%- form 'contact', class: 'moby-contact__form' -%}
             {%- if form.posted_successfully? -%}
@@ -109,7 +109,7 @@
                   <circle cx="12" cy="12" r="10"/>
                   <path d="M8 12l2 3 6-6"/>
                 </svg>
-                <p>{{ section.settings.success_message | default: 'Thanks for reaching out! We\'ll get back to you within 24 hours.' }}</p>
+                <p>{{ section.settings.success_message | default: "Thanks for reaching out! We'll get back to you within 24 hours." }}</p>
               </div>
             {%- else -%}
               {%- if form.errors -%}
