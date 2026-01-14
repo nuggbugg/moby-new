@@ -144,5 +144,79 @@
     {% section 'moby-cart-drawer' %}
     {% render 'moby-sticky-cart' %}
     {% render 'moby-animations' %}
+
+    {%- comment -%} Global Cart Interceptor - Prevents redirects, opens drawer instead {%- endcomment -%}
+    <script>
+    (function() {
+      // Intercept ALL form submissions to /cart/add
+      document.addEventListener('submit', async function(e) {
+        const form = e.target;
+        if (!form || form.action.indexOf('/cart/add') === -1) return;
+
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+        const originalContent = submitBtn ? submitBtn.innerHTML : '';
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>Adding...</span>';
+        }
+
+        try {
+          const formData = new FormData(form);
+          const data = {};
+
+          // Convert FormData to object
+          for (let [key, value] of formData.entries()) {
+            if (key === 'id' || key === 'quantity' || key === 'selling_plan') {
+              data[key] = value;
+            }
+          }
+
+          // Ensure quantity is a number
+          if (data.quantity) data.quantity = parseInt(data.quantity) || 1;
+
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.description || 'Failed to add to cart');
+          }
+
+          // Success
+          if (submitBtn) submitBtn.innerHTML = '<span>Added!</span>';
+
+          // Open cart drawer
+          setTimeout(() => {
+            if (typeof window.openCartDrawer === 'function') {
+              window.openCartDrawer();
+            }
+            if (submitBtn) {
+              submitBtn.innerHTML = originalContent;
+              submitBtn.disabled = false;
+            }
+          }, 300);
+
+        } catch (error) {
+          console.error('Add to cart error:', error);
+          if (submitBtn) {
+            submitBtn.innerHTML = '<span>Error</span>';
+            setTimeout(() => {
+              submitBtn.innerHTML = originalContent;
+              submitBtn.disabled = false;
+            }, 2000);
+          }
+        }
+      });
+    })();
+    </script>
   </body>
 </html>
