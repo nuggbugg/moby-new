@@ -58,18 +58,22 @@ html {
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
-  scroll-behavior: smooth;
   /* iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth scroll only on non-touch devices (desktop) - preserves native momentum on mobile */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Mobile scroll optimizations */
 @media (max-width: 749px) {
   html, body {
-    /* Smooth momentum scrolling on iOS */
+    /* Native momentum scrolling on iOS */
     -webkit-overflow-scrolling: touch;
-    /* Prevent overscroll bounce effect */
-    overscroll-behavior-y: contain;
     /* Faster touch response - disables double-tap zoom */
     touch-action: manipulation;
   }
@@ -4031,7 +4035,8 @@ text-component {
   background-color: rgb(var(--color-foreground-rgb) / var(--opacity-60));
 }
 
-@media (prefers-reduced-motion: no-preference) {
+/* Smooth scroll for anchor links - only on desktop with mouse (preserves mobile momentum) */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
   html {
     scroll-behavior: smooth;
   }
