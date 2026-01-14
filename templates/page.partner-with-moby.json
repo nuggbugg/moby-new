@@ -12,6 +12,7 @@
     "moby_partner_hero": {
       "type": "moby-partner-hero",
       "settings": {
+        "background_image": "shopify://shop_images/B2B_bakgrund_1344x768_4573ad00-fe89-4c80-bd6a-709081108a56.webp",
         "badge_text": "B2B Partnerships",
         "heading": "Partner with MOBY",
         "description": "Bring science-backed creatine to your customers"
@@ -19,10 +20,6 @@
     },
     "moby_partner_benefits": {
       "type": "moby-partner-benefits",
-      "settings": {
-        "heading": "Why Partner With Us",
-        "subheading": "Join a growing network of premium wellness retailers"
-      },
       "blocks": {
         "benefit_1": {
           "type": "benefit",
@@ -57,14 +54,19 @@
           }
         }
       },
-      "block_order": ["benefit_1", "benefit_2", "benefit_3", "benefit_4"]
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ],
+      "settings": {
+        "heading": "Why Partner With Us",
+        "subheading": "Join a growing network of premium wellness retailers"
+      }
     },
     "moby_partner_types": {
       "type": "moby-partner-types",
-      "settings": {
-        "heading": "Who We Work With",
-        "subheading": "Partnership opportunities for various retail channels"
-      },
       "blocks": {
         "type_1": {
           "type": "type",
@@ -91,14 +93,18 @@
           }
         }
       },
-      "block_order": ["type_1", "type_2", "type_3"]
+      "block_order": [
+        "type_1",
+        "type_2",
+        "type_3"
+      ],
+      "settings": {
+        "heading": "Who We Work With",
+        "subheading": "Partnership opportunities for various retail channels"
+      }
     },
     "moby_partner_why": {
       "type": "moby-partner-why",
-      "settings": {
-        "heading": "Why MOBY",
-        "quote": "\"A product built on complexity and science, yet effortless to use.\""
-      },
       "blocks": {
         "point_1": {
           "type": "point",
@@ -137,7 +143,19 @@
           }
         }
       },
-      "block_order": ["point_1", "point_2", "point_3", "point_4", "point_5", "point_6"]
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3",
+        "point_4",
+        "point_5",
+        "point_6"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/1.svg_fran_Squoosh.webp",
+        "heading": "Why MOBY",
+        "quote": "\"A product built on complexity and science, yet effortless to use.\""
+      }
     },
     "moby_partner_form": {
       "type": "moby-partner-form",
@@ -159,14 +177,6 @@
     },
     "moby_footer": {
       "type": "moby-footer",
-      "settings": {
-        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
-        "email": "hello@drinkmoby.com",
-        "newsletter_heading": "Join the Movement",
-        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
-        "newsletter_placeholder": "Your email",
-        "show_payment_icons": true
-      },
       "blocks": {
         "quick_1": {
           "type": "quick_link",
@@ -229,7 +239,24 @@
           }
         }
       },
-      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+      "block_order": [
+        "quick_1",
+        "quick_2",
+        "quick_3",
+        "quick_4",
+        "support_1",
+        "support_2",
+        "support_3",
+        "support_4"
+      ],
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "show_payment_icons": true
+      }
     }
   },
   "order": [
