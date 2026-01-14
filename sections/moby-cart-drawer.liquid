@@ -1,15 +1,80 @@
 {% comment %}
   MOBY Cart Drawer Section
   - Wrapper section for cart drawer to enable Section Rendering API
+  - Configurable free shipping thresholds per currency
 {% endcomment %}
 
-<div id="cart-drawer-section" data-section-id="{{ section.id }}">
+{%- comment -%} Build free shipping thresholds object for JavaScript {%- endcomment -%}
+{%- capture shipping_thresholds_json -%}
+{
+  "SEK": {{ section.settings.free_shipping_sek | default: 500 }},
+  "EUR": {{ section.settings.free_shipping_eur | default: 43 }},
+  "USD": {{ section.settings.free_shipping_usd | default: 50 }},
+  "GBP": {{ section.settings.free_shipping_gbp | default: 40 }},
+  "NOK": {{ section.settings.free_shipping_nok | default: 500 }},
+  "DKK": {{ section.settings.free_shipping_dkk | default: 350 }}
+}
+{%- endcapture -%}
+
+<div
+  id="cart-drawer-section"
+  data-section-id="{{ section.id }}"
+  data-shipping-thresholds='{{ shipping_thresholds_json | strip_newlines }}'
+  data-currency="{{ cart.currency.iso_code }}"
+  data-cart-total="{{ cart.total_price }}"
+  data-money-format="{{ shop.money_format | escape }}"
+>
   {% render 'moby-cart-drawer' %}
 </div>
 
 {% schema %}
 {
   "name": "Cart Drawer",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Free Shipping Thresholds"
+    },
+    {
+      "type": "paragraph",
+      "content": "Set the minimum order value for free shipping in each currency. Values are in the currency's base unit (e.g., 500 for 500 SEK)."
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_sek",
+      "label": "SEK Threshold",
+      "default": 500
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_eur",
+      "label": "EUR Threshold",
+      "default": 43
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_usd",
+      "label": "USD Threshold",
+      "default": 50
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_gbp",
+      "label": "GBP Threshold",
+      "default": 40
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_nok",
+      "label": "NOK Threshold",
+      "default": 500
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_dkk",
+      "label": "DKK Threshold",
+      "default": 350
+    }
+  ]
 }
 {% endschema %}

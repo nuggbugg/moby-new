@@ -1,18 +1,10 @@
 {% comment %}
   MOBY Cart Drawer
   - Slide-in drawer from right with smooth animation
-  - Free shipping progress bar
+  - Free shipping progress bar (dynamic, multi-currency)
   - Cart items with quantity controls and purchase type badges
   - Subtotal and checkout button
 {% endcomment %}
-
-{%- comment -%} Free shipping threshold in cents (43 EUR = 4300 cents) {%- endcomment -%}
-{%- assign free_shipping_threshold = 4300 -%}
-{%- assign shipping_remaining = free_shipping_threshold | minus: cart.total_price -%}
-{%- assign shipping_progress = cart.total_price | times: 100 | divided_by: free_shipping_threshold -%}
-{%- if shipping_progress > 100 -%}
-  {%- assign shipping_progress = 100 -%}
-{%- endif -%}
 
 <div id="moby-cart-drawer" class="moby-cart-drawer" aria-hidden="true">
   <div class="moby-cart-drawer__backdrop" data-cart-drawer-close></div>
@@ -29,38 +21,25 @@
           </svg>
         </button>
       </div>
-      <p class="moby-cart-drawer__count">{{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }} in your cart</p>
+      <p class="moby-cart-drawer__count" data-cart-count-text>{{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }} in your cart</p>
 
       <!-- Free Shipping Progress Bar -->
-      {% if cart.item_count > 0 %}
-        <div class="moby-cart-drawer__shipping-bar">
-          <div class="moby-cart-drawer__shipping-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="1" y="3" width="15" height="13" rx="2"/>
-              <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-          </div>
-          <div class="moby-cart-drawer__shipping-content">
-            <div class="moby-cart-drawer__shipping-track">
-              <div class="moby-cart-drawer__shipping-fill" style="width: {{ shipping_progress }}%;"></div>
-            </div>
-            {% if shipping_remaining > 0 %}
-              <p class="moby-cart-drawer__shipping-text">
-                Add <strong>{{ shipping_remaining | money }}</strong> more for free shipping
-              </p>
-            {% else %}
-              <p class="moby-cart-drawer__shipping-text moby-cart-drawer__shipping-text--success">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                You qualify for free shipping!
-              </p>
-            {% endif %}
-          </div>
+      <div class="moby-cart-drawer__shipping-bar" data-shipping-bar style="{% if cart.item_count == 0 %}display: none;{% endif %}">
+        <div class="moby-cart-drawer__shipping-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="3" width="15" height="13" rx="2"/>
+            <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
         </div>
-      {% endif %}
+        <div class="moby-cart-drawer__shipping-content">
+          <div class="moby-cart-drawer__shipping-track">
+            <div class="moby-cart-drawer__shipping-fill" data-shipping-fill style="width: 0%;"></div>
+          </div>
+          <p class="moby-cart-drawer__shipping-text" data-shipping-text></p>
+        </div>
+      </div>
     </div>
 
     <!-- Cart Content -->
@@ -647,31 +626,88 @@
   body.cart-drawer-open {
     overflow: hidden;
   }
-
-  /* Opening animation keyframes */
-  @keyframes cartDrawerSlideIn {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes cartDrawerFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 </style>
 
 <script>
   (function() {
     const drawer = document.getElementById('moby-cart-drawer');
     if (!drawer) return;
+
+    // Get thresholds from section wrapper
+    const sectionWrapper = document.getElementById('cart-drawer-section');
+    let shippingThresholds = { SEK: 500, EUR: 43, USD: 50, GBP: 40, NOK: 500, DKK: 350 };
+    let currentCurrency = '{{ cart.currency.iso_code | default: "SEK" }}';
+    let moneyFormat = '{{ shop.money_format | strip_html | escape }}';
+
+    if (sectionWrapper) {
+      try {
+        const thresholdsData = sectionWrapper.dataset.shippingThresholds;
+        if (thresholdsData) {
+          shippingThresholds = JSON.parse(thresholdsData);
+        }
+        if (sectionWrapper.dataset.currency) {
+          currentCurrency = sectionWrapper.dataset.currency;
+        }
+      } catch (e) {
+        console.error('Error parsing shipping thresholds:', e);
+      }
+    }
+
+    // Format money based on currency
+    function formatMoney(cents) {
+      const amount = cents / 100;
+
+      // Currency-specific formatting
+      const formatters = {
+        'SEK': (a) => Math.round(a) + ' kr',
+        'NOK': (a) => Math.round(a) + ' kr',
+        'DKK': (a) => Math.round(a) + ' kr',
+        'EUR': (a) => '€' + a.toFixed(2),
+        'USD': (a) => '$' + a.toFixed(2),
+        'GBP': (a) => '£' + a.toFixed(2)
+      };
+
+      if (formatters[currentCurrency]) {
+        return formatters[currentCurrency](amount);
+      }
+
+      // Fallback
+      return amount.toFixed(2) + ' ' + currentCurrency;
+    }
+
+    // Update shipping bar display
+    function updateShippingBar(cartTotal, itemCount) {
+      const shippingBar = drawer.querySelector('[data-shipping-bar]');
+      const shippingFill = drawer.querySelector('[data-shipping-fill]');
+      const shippingText = drawer.querySelector('[data-shipping-text]');
+
+      if (!shippingBar || !shippingFill || !shippingText) return;
+
+      // Show/hide based on item count
+      shippingBar.style.display = itemCount > 0 ? 'flex' : 'none';
+
+      if (itemCount === 0) return;
+
+      // Get threshold for current currency (in base currency units, not cents)
+      const threshold = shippingThresholds[currentCurrency] || 500;
+      const thresholdCents = threshold * 100;
+
+      // Calculate progress
+      const progress = Math.min((cartTotal / thresholdCents) * 100, 100);
+      const remaining = thresholdCents - cartTotal;
+
+      // Update fill bar
+      shippingFill.style.width = progress + '%';
+
+      // Update text
+      if (remaining > 0) {
+        shippingText.innerHTML = 'Add <strong>' + formatMoney(remaining) + '</strong> more for free shipping';
+        shippingText.classList.remove('moby-cart-drawer__shipping-text--success');
+      } else {
+        shippingText.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> You qualify for free shipping!';
+        shippingText.classList.add('moby-cart-drawer__shipping-text--success');
+      }
+    }
 
     // Refresh cart drawer content via Section Rendering API
     async function refreshCartDrawer() {
@@ -681,35 +717,53 @@
           const html = await response.text();
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
+          const newSection = doc.getElementById('cart-drawer-section');
+
+          if (newSection && sectionWrapper) {
+            // Update thresholds and currency from new data
+            if (newSection.dataset.shippingThresholds) {
+              try {
+                shippingThresholds = JSON.parse(newSection.dataset.shippingThresholds);
+              } catch (e) {}
+            }
+            if (newSection.dataset.currency) {
+              currentCurrency = newSection.dataset.currency;
+            }
+          }
+
           const newDrawer = doc.getElementById('moby-cart-drawer');
           if (newDrawer) {
-            // Replace inner content but keep wrapper
             drawer.innerHTML = newDrawer.innerHTML;
-            // Re-initialize event listeners
             initCartDrawerEvents();
           }
         }
-        // Update cart count in header
-        updateHeaderCartCount();
+
+        // Get fresh cart data and update shipping bar
+        const cartResponse = await fetch('/cart.js');
+        if (cartResponse.ok) {
+          const cart = await cartResponse.json();
+          currentCurrency = cart.currency;
+          updateShippingBar(cart.total_price, cart.item_count);
+          updateHeaderCartCount(cart.item_count);
+        }
       } catch (error) {
         console.error('Error refreshing cart drawer:', error);
       }
     }
 
     // Update cart count badge in header
-    async function updateHeaderCartCount() {
-      try {
-        const response = await fetch('/cart.js');
-        if (response.ok) {
-          const cart = await response.json();
-          const countBadges = document.querySelectorAll('[data-cart-count]');
-          countBadges.forEach(badge => {
-            badge.textContent = cart.item_count;
-            badge.style.display = cart.item_count > 0 ? 'flex' : 'none';
-          });
-        }
-      } catch (error) {
-        console.error('Error updating cart count:', error);
+    function updateHeaderCartCount(count) {
+      const countBadges = document.querySelectorAll('[data-cart-count]');
+      countBadges.forEach(badge => {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'flex' : 'none';
+      });
+
+      // Also update the count text in drawer
+      const countText = drawer.querySelector('[data-cart-count-text]');
+      if (countText) {
+        const itemWord = count === 1 ? 'item' : 'items';
+        countText.textContent = count + ' ' + itemWord + ' in your cart';
       }
     }
 
@@ -750,7 +804,6 @@
         });
 
         if (response.ok) {
-          // Refresh drawer content without page reload
           await refreshCartDrawer();
         }
       } catch (error) {
@@ -758,7 +811,7 @@
       }
     }
 
-    // Initialize all event listeners (called on load and after refresh)
+    // Initialize all event listeners
     function initCartDrawerEvents() {
       // Close button handlers
       drawer.querySelectorAll('[data-cart-drawer-close]').forEach(btn => {
@@ -801,7 +854,7 @@
       });
     }
 
-    // Close on escape key (only add once)
+    // Close on escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
         closeCartDrawer();
@@ -811,7 +864,16 @@
     // Initialize on page load
     initCartDrawerEvents();
 
-    // Initial cart count update
-    updateHeaderCartCount();
+    // Initial shipping bar update
+    (async function() {
+      try {
+        const response = await fetch('/cart.js');
+        if (response.ok) {
+          const cart = await response.json();
+          currentCurrency = cart.currency;
+          updateShippingBar(cart.total_price, cart.item_count);
+        }
+      } catch (e) {}
+    })();
   })();
 </script>

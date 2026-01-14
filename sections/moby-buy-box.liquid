@@ -271,7 +271,7 @@
                 <span class="moby-buy-box__option-title">One-time Purchase</span>
                 <span class="moby-buy-box__option-price" data-onetime-price>{{ current_variant.price | money }}</span>
               </div>
-              <p class="moby-buy-box__option-desc">Free shipping over €43, volume discount.</p>
+              <p class="moby-buy-box__option-desc">Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}, volume discount.</p>
             </div>
           </label>
 
@@ -285,12 +285,13 @@
                   <span class="moby-buy-box__option-radio"></span>
                   <span class="moby-buy-box__option-title">Subscribe & Save (-{{ subscription_discount }}%)</span>
                   <div class="moby-buy-box__option-prices">
-                    {%- assign discounted_price = current_variant.price | times: 100 | minus: current_variant.price | times: subscription_discount | divided_by: 100 -%}
+                    {%- assign discount_multiplier = 100 | minus: subscription_discount -%}
+                    {%- assign discounted_price = current_variant.price | times: discount_multiplier | divided_by: 100 -%}
                     <span class="moby-buy-box__option-price" data-subscribe-price>{{ discounted_price | money }}</span>
                     <span class="moby-buy-box__option-compare">{{ current_variant.price | money }}</span>
                   </div>
                 </div>
-                <p class="moby-buy-box__option-desc">Lowest price! Free shipping over €43. Cancel anytime.</p>
+                <p class="moby-buy-box__option-desc">Lowest price! Free shipping over {{ section.settings.free_shipping_threshold | default: '500 kr' }}. Cancel anytime.</p>
 
                 <!-- Delivery Frequency Dropdown -->
                 <div class="moby-buy-box__frequency">
@@ -974,10 +975,22 @@
     padding-left: 32px;
   }
 
-  /* Frequency dropdown */
+  /* Frequency dropdown - hidden by default, expands on selection */
   .moby-buy-box__frequency {
     padding-left: 32px;
-    padding-top: 8px;
+    padding-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding-top 0.3s ease;
+  }
+
+  .moby-buy-box__option--subscribe.is-selected .moby-buy-box__frequency {
+    max-height: 100px;
+    opacity: 1;
+    padding-top: 16px;
+    margin-top: 12px;
+    border-top: 1px solid rgba(28, 26, 16, 0.1);
   }
 
   .moby-buy-box__frequency-select {
@@ -1130,9 +1143,20 @@ document.addEventListener('DOMContentLoaded', function() {
   let subscriptionDiscount = {{ product.selling_plan_groups.first.selling_plans.first.price_adjustments.first.value | default: 10 }};
 
   function formatMoney(cents) {
-    return (cents / 100).toLocaleString('{{ localization.language.iso_code | default: "en" }}', {
+    const currency = '{{ cart.currency.iso_code | default: "SEK" }}';
+    const amount = cents / 100;
+
+    // No decimals for kr currencies
+    if (['SEK', 'NOK', 'DKK'].includes(currency)) {
+      return Math.round(amount) + ' kr';
+    }
+
+    // Standard formatting for other currencies
+    return amount.toLocaleString('{{ localization.language.iso_code | default: "en" }}', {
       style: 'currency',
-      currency: '{{ cart.currency.iso_code | default: "SEK" }}'
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     });
   }
 
@@ -1153,6 +1177,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (btnPrice) btnPrice.textContent = formatMoney(total);
     if (quantityInput) quantityInput.value = currentQuantity;
+
+    // Update button text based on purchase type
+    const btnText = section.querySelector('#btn-text');
+    if (btnText) {
+      btnText.textContent = isSubscription ? 'Subscribe' : 'Add to Cart';
+    }
   }
 
   // Purchase option selection (one-time vs subscribe)
