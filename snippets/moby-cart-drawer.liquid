@@ -152,9 +152,9 @@
           <span>Total</span>
           <span data-cart-subtotal>{{ cart.total_price | money }}</span>
         </div>
-        <button type="button" class="moby-cart-drawer__checkout" onclick="window.location.href='{{ routes.checkout_url }}'">
+        <a href="/checkout" class="moby-cart-drawer__checkout">
           Checkout
-        </button>
+        </a>
         <div class="moby-cart-drawer__trust-badges">
           <span class="moby-cart-drawer__trust-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -583,6 +583,7 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     text-align: center;
+    text-decoration: none;
     color: #ffffff;
     background: var(--moby-olive, #4F4A32);
     border: none;
