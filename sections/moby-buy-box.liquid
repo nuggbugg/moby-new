@@ -1253,15 +1253,20 @@ document.addEventListener('DOMContentLoaded', function() {
         isSubscription = (optionType === 'subscribe');
 
         // Update selling plan input
-        if (isSubscription && sellingPlanSelect) {
-          sellingPlanInput.value = sellingPlanSelect.value;
+        if (isSubscription && sellingPlanSelect && sellingPlanSelect.value) {
+          const planId = sellingPlanSelect.value;
+          if (sellingPlanInput) {
+            sellingPlanInput.value = planId;
+          }
           // Update discount from selected plan
           const selectedOption = sellingPlanSelect.options[sellingPlanSelect.selectedIndex];
           if (selectedOption && selectedOption.dataset.discount) {
             subscriptionDiscount = parseInt(selectedOption.dataset.discount) || 10;
           }
         } else {
-          sellingPlanInput.value = '';
+          if (sellingPlanInput) {
+            sellingPlanInput.value = '';
+          }
         }
 
         updateButton();
@@ -1272,7 +1277,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Selling plan dropdown change
   if (sellingPlanSelect) {
     sellingPlanSelect.addEventListener('change', function() {
-      if (isSubscription) {
+      if (isSubscription && sellingPlanInput) {
         sellingPlanInput.value = this.value;
         // Update discount
         const selectedOption = this.options[this.selectedIndex];
@@ -1339,8 +1344,12 @@ document.addEventListener('DOMContentLoaded', function() {
           quantity: parseInt(formData.get('quantity')) || 1
         };
 
-        // Add selling plan if selected
-        const sellingPlan = formData.get('selling_plan');
+        // Add selling plan if subscription is selected
+        // First check the hidden input, then fall back to the dropdown directly
+        let sellingPlan = formData.get('selling_plan');
+        if ((!sellingPlan || sellingPlan === '') && isSubscription && sellingPlanSelect) {
+          sellingPlan = sellingPlanSelect.value;
+        }
         if (sellingPlan && sellingPlan !== '') {
           data.selling_plan = sellingPlan;
         }
@@ -1355,7 +1364,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to add to cart');
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.description || errorData.message || 'Could not add to cart';
+          throw new Error(errorMessage);
         }
 
         // Success - open cart drawer
@@ -1380,7 +1391,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
       } catch (error) {
         console.error('Add to cart error:', error);
-        submitBtn.innerHTML = '<span>Error - Try Again</span>';
+        // Show error message (e.g., "Not enough items in stock")
+        const errorText = error.message.length < 50 ? error.message : 'Error - Try Again';
+        submitBtn.innerHTML = `<span>${errorText}</span>`;
         setTimeout(() => {
           submitBtn.innerHTML = originalContent;
           submitBtn.disabled = false;

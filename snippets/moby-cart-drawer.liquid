@@ -47,7 +47,13 @@
       {% if cart.item_count > 0 %}
         <div class="moby-cart-drawer__items">
           {% for item in cart.items %}
-            <div class="moby-cart-drawer__item" data-cart-item data-line-id="{{ item.key }}">
+            {%- assign variant_inventory = item.variant.inventory_quantity | default: 999 -%}
+            {%- assign inventory_policy = item.variant.inventory_policy -%}
+            {%- assign at_max_quantity = false -%}
+            {%- if inventory_policy == 'deny' and item.quantity >= variant_inventory -%}
+              {%- assign at_max_quantity = true -%}
+            {%- endif -%}
+            <div class="moby-cart-drawer__item" data-cart-item data-line-id="{{ item.key }}" data-variant-id="{{ item.variant.id }}" data-max-quantity="{{ variant_inventory }}">
               <div class="moby-cart-drawer__item-image">
                 {% if item.image %}
                   <img
@@ -99,10 +105,11 @@
                   <span class="moby-cart-drawer__qty-value" data-quantity-value>{{ item.quantity }}</span>
                   <button
                     type="button"
-                    class="moby-cart-drawer__qty-btn"
+                    class="moby-cart-drawer__qty-btn{% if at_max_quantity %} is-disabled{% endif %}"
                     data-quantity-plus
                     data-line="{{ forloop.index }}"
                     aria-label="Increase quantity"
+                    {% if at_max_quantity %}disabled{% endif %}
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -110,6 +117,13 @@
                     </svg>
                   </button>
                 </div>
+
+                <!-- Low Stock Warning -->
+                {% if variant_inventory <= 3 and variant_inventory > 0 and inventory_policy == 'deny' %}
+                  <span class="moby-cart-drawer__stock-warning">
+                    Only {{ variant_inventory }} left in stock
+                  </span>
+                {% endif %}
 
                 <!-- Purchase Type Badge -->
                 {% if item.selling_plan_allocation %}
@@ -447,6 +461,22 @@
 
   .moby-cart-drawer__qty-btn:hover {
     background: rgba(245, 245, 240, 0.8);
+  }
+
+  .moby-cart-drawer__qty-btn.is-disabled,
+  .moby-cart-drawer__qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .moby-cart-drawer__stock-warning {
+    display: block;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #c45500;
+    margin-top: 4px;
   }
 
   .moby-cart-drawer__qty-btn:first-child {
