@@ -188,7 +188,10 @@
         "form": "Powder (stick packs)",
         "flavor": "Unflavored",
         "produced_in": "Sweden",
-        "ingredient_description": "The most researched and proven form of creatine. Clinically shown to enhance ATP production, support muscle energy, improve cognitive function, and accelerate recovery. Our pharmaceutical-grade creatine monohydrate is micronized for superior absorption and mixability."
+        "ingredient_description": "The most researched and proven form of creatine. Clinically shown to enhance ATP production, support muscle energy, improve cognitive function, and accelerate recovery. Our pharmaceutical-grade creatine monohydrate is micronized for superior absorption and mixability.",
+        "step_1_image": "shopify://shop_images/Stick_White.webp",
+        "step_2_image": "shopify://shop_images/Admachine_AI_Ad_Creation.webp",
+        "step_3_image": "shopify://shop_images/Hur_man_dricker.webp"
       }
     },
     "moby_why_moby": {
