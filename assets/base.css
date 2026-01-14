@@ -58,6 +58,8 @@ html {
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgb(var(--color-foreground-rgb) / var(--opacity-40)) var(--color-background);
+  /* Default to auto scroll - critical for native momentum scrolling on touch devices */
+  scroll-behavior: auto;
 }
 
 /*
