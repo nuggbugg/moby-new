@@ -100,6 +100,7 @@
         </div>
 
         <!-- Trust Badges Below Image (Desktop) -->
+        {%- if section.settings.show_trust_icons_desktop -%}
         <div class="moby-buy-box__trust-icons">
           <div class="moby-buy-box__trust-icon">
             <div class="moby-buy-box__trust-circle">
@@ -127,6 +128,7 @@
             <p>Lab Tested<br>Quality</p>
           </div>
         </div>
+        {%- endif -%}
       </div>
 
       <!-- Product Info -->
@@ -161,19 +163,24 @@
         </div>
 
         <!-- Klarna -->
+        {%- if section.settings.show_klarna_badge -%}
         <div class="moby-buy-box__klarna">
           <span class="moby-buy-box__klarna-badge">
             {{ 'klarna' | payment_type_svg_tag }}
           </span>
           <span>Pay securely with Klarna</span>
         </div>
+        {%- endif -%}
 
         <!-- Short Description -->
+        {%- if section.settings.show_description -%}
         <p class="moby-buy-box__description">
           {{ section.settings.short_description | default: 'Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.' }}
         </p>
+        {%- endif -%}
 
         <!-- Key Benefits Card -->
+        {%- if section.settings.show_benefits -%}
         <div class="moby-buy-box__benefits">
           <div class="moby-buy-box__benefit">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -204,8 +211,10 @@
             <span>Accelerates recovery</span>
           </div>
         </div>
+        {%- endif -%}
 
         <!-- Volume Selector Cards -->
+        {%- if section.settings.show_volume_selector -%}
         <div class="moby-buy-box__packs" id="pack-selector">
           <label class="moby-buy-box__pack active" data-quantity="1">
             <input type="radio" name="pack_quantity" value="1" checked>
@@ -254,8 +263,10 @@
             <span class="moby-buy-box__pack-serving">{{ price_3 | divided_by: 30 | money }}/serving</span>
           </label>
         </div>
+        {%- endif -%}
 
         <!-- Custom Subscription Widget using Shopify Selling Plans -->
+        {%- if section.settings.show_purchase_options -%}
         <div class="moby-buy-box__purchase-options" id="purchase-options">
           {%- assign has_selling_plans = false -%}
           {%- assign first_selling_plan = nil -%}
@@ -322,6 +333,7 @@
             </label>
           {%- endif -%}
         </div>
+        {%- endif -%}
 
         <!-- Add to Cart Form -->
         {%- assign variant_inventory = current_variant.inventory_quantity | default: 999 -%}
@@ -344,6 +356,7 @@
         </form>
 
         <!-- Payment Icons -->
+        {%- if section.settings.show_payment_icons -%}
         <div class="moby-buy-box__payments">
           <p class="moby-buy-box__payments-label">Pay securely with</p>
           <div class="moby-buy-box__payment-row">
@@ -375,8 +388,10 @@
             </div>
           </div>
         </div>
+        {%- endif -%}
 
         <!-- Trust Footer -->
+        {%- if section.settings.show_trust_footer -%}
         <div class="moby-buy-box__trust-footer">
           <div class="moby-buy-box__trust-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -401,6 +416,7 @@
             <p>Delivery Within<br>1-3 Days</p>
           </div>
         </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -1431,6 +1447,10 @@ document.addEventListener('DOMContentLoaded', function() {
   "class": "moby-buy-box-wrapper",
   "settings": [
     {
+      "type": "header",
+      "content": "Content"
+    },
+    {
       "type": "text",
       "id": "short_description",
       "label": "Short description",
@@ -1441,6 +1461,58 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "free_shipping_threshold",
       "label": "Free shipping threshold",
       "default": "500 kr"
+    },
+    {
+      "type": "header",
+      "content": "Component visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_klarna_badge",
+      "label": "Show Klarna badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_benefits",
+      "label": "Show benefits grid",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_volume_selector",
+      "label": "Show volume selector (1/2/3 months)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_purchase_options",
+      "label": "Show purchase options (One-time/Subscribe)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_footer",
+      "label": "Show trust footer",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_icons_desktop",
+      "label": "Show trust icons below image (desktop)",
+      "default": true
     }
   ],
   "presets": [
