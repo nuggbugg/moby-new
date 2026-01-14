@@ -920,16 +920,17 @@
     background: rgba(249, 253, 181, 0.4);
   }
 
-  /* Subscribe option - always lime background with light border */
+  /* Subscribe option - light border when not selected */
   .moby-buy-box__option--subscribe {
-    background: rgba(249, 253, 181, 0.4);
+    background: transparent;
     border-color: rgba(201, 200, 182, 0.5);
     margin-top: 4px;
     padding-top: 28px;
   }
 
+  /* Subscribe option - yellow background only when selected */
   .moby-buy-box__option--subscribe.is-selected {
-    background: rgba(249, 253, 181, 0.5);
+    background: rgba(249, 253, 181, 0.4);
     border-color: var(--moby-olive, #4F4A32);
   }
 
