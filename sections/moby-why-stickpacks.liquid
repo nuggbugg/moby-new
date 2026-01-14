@@ -22,7 +22,7 @@
             <th class="moby-stickpacks__col--stick">
               <div class="moby-stickpacks__product-icon">
                 {%- if section.settings.stick_image != blank -%}
-                  {{ section.settings.stick_image | image_url: width: 64 | image_tag: loading: 'lazy', alt: 'MOBY Stick Pack' }}
+                  {{ section.settings.stick_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: 'MOBY Stick Pack' }}
                 {%- else -%}
                   <div class="moby-stickpacks__placeholder-icon"></div>
                 {%- endif -%}
@@ -32,7 +32,7 @@
             <th class="moby-stickpacks__col--other">
               <div class="moby-stickpacks__product-icon moby-stickpacks__product-icon--muted">
                 {%- if section.settings.tub_image != blank -%}
-                  {{ section.settings.tub_image | image_url: width: 64 | image_tag: loading: 'lazy', alt: 'Creatine Tub' }}
+                  {{ section.settings.tub_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: 'Creatine Tub' }}
                 {%- else -%}
                   <div class="moby-stickpacks__placeholder-icon"></div>
                 {%- endif -%}
@@ -42,7 +42,7 @@
             <th class="moby-stickpacks__col--other">
               <div class="moby-stickpacks__product-icon moby-stickpacks__product-icon--muted">
                 {%- if section.settings.gummy_image != blank -%}
-                  {{ section.settings.gummy_image | image_url: width: 64 | image_tag: loading: 'lazy', alt: 'Creatine Gummies' }}
+                  {{ section.settings.gummy_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: 'Creatine Gummies' }}
                 {%- else -%}
                   <div class="moby-stickpacks__placeholder-icon"></div>
                 {%- endif -%}
@@ -56,7 +56,7 @@
             <td>Precise 5g dose every time</td>
             <td class="moby-stickpacks__col--stick"><span class="moby-stickpacks__check">✓</span></td>
             <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
-            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
+            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__check">✓</span></td>
           </tr>
           <tr>
             <td>No measuring required</td>
@@ -68,7 +68,7 @@
             <td>Travel-friendly</td>
             <td class="moby-stickpacks__col--stick"><span class="moby-stickpacks__check">✓</span></td>
             <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
-            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__check">✓</span></td>
+            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
           </tr>
           <tr>
             <td>No mess or spills</td>
@@ -92,7 +92,7 @@
             <td>Fits in pocket</td>
             <td class="moby-stickpacks__col--stick"><span class="moby-stickpacks__check">✓</span></td>
             <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
-            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__check">✓</span></td>
+            <td class="moby-stickpacks__col--other"><span class="moby-stickpacks__x">✕</span></td>
           </tr>
         </tbody>
       </table>
