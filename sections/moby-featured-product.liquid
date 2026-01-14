@@ -117,11 +117,16 @@
           </div>
 
           <!-- Buttons -->
+          {%- assign variant_inventory = current_variant.inventory_quantity | default: 999 -%}
+          {%- assign inventory_policy = current_variant.inventory_policy | default: 'deny' -%}
           <div class="moby-featured-product__buttons">
-            <button 
+            <button
               type="button"
               class="moby-featured-product__add-to-cart"
               data-variant-id="{{ current_variant.id }}"
+              data-product-id="{{ product.id }}"
+              data-inventory-quantity="{{ variant_inventory }}"
+              data-inventory-policy="{{ inventory_policy }}"
               {% unless current_variant.available %}disabled{% endunless %}
             >
               {%- if current_variant.available -%}
@@ -182,51 +187,85 @@
       });
     });
 
-    // Add to cart
+    // Add to cart - with stock validation to prevent overselling
     const addToCartBtn = document.querySelector('.moby-featured-product__add-to-cart');
     if (addToCartBtn) {
       addToCartBtn.addEventListener('click', async function() {
         const variantId = this.dataset.variantId;
+        const productId = this.dataset.productId;
+        const inventoryQty = parseInt(this.dataset.inventoryQuantity) || 999;
+        const inventoryPolicy = this.dataset.inventoryPolicy || 'deny';
+
         if (!variantId) return;
 
         this.disabled = true;
         this.textContent = 'Adding...';
 
         try {
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: variantId, quantity: 1 })
-          });
+          // Check stock before adding (only if inventory policy is 'deny')
+          if (inventoryPolicy === 'deny') {
+            const cartResponse = await fetch('/cart.js', {
+              headers: { 'Accept': 'application/json' }
+            });
+            const cart = await cartResponse.json();
 
-          if (response.ok) {
-            this.textContent = 'Added!';
-
-            // Update cart counter in navbar
-            const cartResponse = await fetch('/cart.js');
-            const cartData = await cartResponse.json();
-            const cartCountElements = document.querySelectorAll('.moby-header__cart-count, [data-cart-count]');
-            cartCountElements.forEach(el => {
-              el.textContent = cartData.item_count;
-              if (cartData.item_count > 0) {
-                el.style.display = 'flex';
+            // Count how many of this product are already in cart
+            let currentQtyInCart = 0;
+            cart.items.forEach(item => {
+              if (String(item.variant_id) === String(variantId) ||
+                  String(item.product_id) === String(productId)) {
+                currentQtyInCart += item.quantity;
               }
             });
 
-            // Open cart drawer
-            setTimeout(() => {
-              if (typeof window.openCartDrawer === 'function') {
-                window.openCartDrawer();
-              }
-              this.textContent = 'ADD TO CART';
-              this.disabled = false;
-            }, 300);
-          } else {
-            throw new Error('Failed to add to cart');
+            if (currentQtyInCart >= inventoryQty) {
+              throw new Error('No more stock available');
+            }
           }
+
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ id: variantId, quantity: 1 })
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.description || errorData.message || 'Failed to add to cart');
+          }
+
+          this.textContent = 'Added!';
+
+          // Update cart counter in navbar
+          const cartRefreshResponse = await fetch('/cart.js');
+          const cartData = await cartRefreshResponse.json();
+          const cartCountElements = document.querySelectorAll('.moby-header__cart-count, [data-cart-count]');
+          cartCountElements.forEach(el => {
+            el.textContent = cartData.item_count;
+            if (cartData.item_count > 0) {
+              el.style.display = 'flex';
+            }
+          });
+
+          // Open cart drawer
+          setTimeout(() => {
+            if (typeof window.openCartDrawer === 'function') {
+              window.openCartDrawer();
+            }
+            this.textContent = 'ADD TO CART';
+            this.disabled = false;
+          }, 300);
         } catch (error) {
-          this.textContent = 'Error - Try Again';
-          this.disabled = false;
+          console.error('Add to cart error:', error);
+          const errorText = error.message && error.message.length < 30 ? error.message : 'Error - Try Again';
+          this.textContent = errorText;
+          setTimeout(() => {
+            this.textContent = 'Add to Cart';
+            this.disabled = false;
+          }, 2000);
         }
       });
     }

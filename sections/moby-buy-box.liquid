@@ -310,7 +310,12 @@
         </div>
 
         <!-- Add to Cart Form -->
-        <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form">
+        {%- assign variant_inventory = current_variant.inventory_quantity | default: 999 -%}
+        {%- assign inventory_policy = current_variant.inventory_policy | default: 'deny' -%}
+        <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form"
+          data-variant-id="{{ current_variant.id }}"
+          data-inventory-quantity="{{ variant_inventory }}"
+          data-inventory-policy="{{ inventory_policy }}">
           <input type="hidden" name="id" value="{{ current_variant.id }}">
           <input type="hidden" name="quantity" value="1" id="quantity-input">
           <input type="hidden" name="selling_plan" value="" id="selling-plan-input">
@@ -323,6 +328,18 @@
             {%- endif -%}
           </button>
         </form>
+
+        {%- comment -%} Low stock warning {%- endcomment -%}
+        {%- if inventory_policy == 'deny' and variant_inventory > 0 and variant_inventory <= 5 -%}
+          <p class="moby-buy-box__low-stock">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Only {{ variant_inventory }} left in stock
+          </p>
+        {%- endif -%}
 
         <!-- Payment Icons -->
         <div class="moby-buy-box__payments">
@@ -1048,6 +1065,26 @@
     cursor: not-allowed;
   }
 
+  /* Low stock warning */
+  .moby-buy-box__low-stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #B85C00;
+    margin: 12px 0 0 0;
+    padding: 10px 14px;
+    background: rgba(184, 92, 0, 0.08);
+    border-radius: 6px;
+  }
+
+  .moby-buy-box__low-stock svg {
+    flex-shrink: 0;
+    color: #B85C00;
+  }
+
   /* Payment Icons */
   .moby-buy-box__payments {
     display: flex;
@@ -1273,6 +1310,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // AJAX Add to Cart - prevents redirect, opens drawer instead
+  // Includes stock validation to prevent overselling
   if (form) {
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -1287,9 +1325,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
       try {
         const formData = new FormData(form);
+        const variantId = formData.get('id');
+        const requestedQty = parseInt(formData.get('quantity')) || 1;
+
+        // Get inventory data from form attributes
+        const inventoryQty = parseInt(form.dataset.inventoryQuantity) || 999;
+        const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
+
+        // Check stock before adding (only if inventory policy is 'deny')
+        if (inventoryPolicy === 'deny') {
+          // Fetch current cart to check existing quantity
+          const cartResponse = await fetch('/cart.js', {
+            headers: { 'Accept': 'application/json' }
+          });
+          const cart = await cartResponse.json();
+
+          // Count how many of this variant are already in cart (including subscription variants)
+          let currentQtyInCart = 0;
+          cart.items.forEach(item => {
+            // Check both variant_id and product_id to catch subscriptions
+            if (String(item.variant_id) === String(variantId) || String(item.product_id) === String({{ product.id }})) {
+              currentQtyInCart += item.quantity;
+            }
+          });
+
+          const totalAfterAdd = currentQtyInCart + requestedQty;
+
+          if (totalAfterAdd > inventoryQty) {
+            const remaining = inventoryQty - currentQtyInCart;
+            if (remaining <= 0) {
+              throw new Error('No more stock available');
+            } else {
+              throw new Error(`Only ${remaining} more available`);
+            }
+          }
+        }
+
         const data = {
-          id: formData.get('id'),
-          quantity: parseInt(formData.get('quantity')) || 1
+          id: variantId,
+          quantity: requestedQty
         };
 
         // Add selling plan if subscription is selected
