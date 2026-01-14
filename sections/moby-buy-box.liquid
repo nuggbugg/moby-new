@@ -97,6 +97,20 @@
               }}
             {%- endif -%}
           </div>
+
+          {%- if product.images.size > 1 -%}
+            <!-- Mobile swipe dots indicator -->
+            <div class="moby-buy-box__dots">
+              {%- for image in product.images -%}
+                <button
+                  class="moby-buy-box__dot {% if forloop.first %}active{% endif %}"
+                  type="button"
+                  data-dot-index="{{ forloop.index0 }}"
+                  aria-label="Go to image {{ forloop.index }}"
+                ></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         </div>
 
         <!-- Trust Badges Below Image (Desktop) -->
@@ -531,6 +545,36 @@
 
   .moby-buy-box__thumbnail.active {
     border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Mobile dots indicator */
+  .moby-buy-box__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 0 4px;
+  }
+
+  @media (min-width: 1024px) {
+    .moby-buy-box__dots {
+      display: none;
+    }
+  }
+
+  .moby-buy-box__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(201, 200, 182, 0.5);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .moby-buy-box__dot.active {
+    background: var(--moby-olive, #4F4A32);
+    transform: scale(1.2);
   }
 
   /* Trust Icons (below gallery on desktop) */
@@ -1296,24 +1340,76 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Thumbnail gallery
-  section.querySelectorAll('.moby-buy-box__thumbnail').forEach(thumb => {
+  const thumbnails = section.querySelectorAll('.moby-buy-box__thumbnail');
+  const dots = section.querySelectorAll('.moby-buy-box__dot');
+  const mainImageContainer = section.querySelector('.moby-buy-box__main-image');
+  const mainImage = section.querySelector('.moby-buy-box__image');
+
+  function switchToImage(index) {
+    if (index < 0 || index >= thumbnails.length) return;
+    // Update thumbnails
+    thumbnails.forEach(t => t.classList.remove('active'));
+    thumbnails[index].classList.add('active');
+    // Update dots
+    dots.forEach(d => d.classList.remove('active'));
+    if (dots[index]) dots[index].classList.add('active');
+    // Update main image
+    const newImageUrl = thumbnails[index].dataset.imageUrl;
+    if (mainImage && newImageUrl) {
+      mainImage.src = newImageUrl;
+      mainImage.srcset = '';
+      const baseUrl = newImageUrl.split('?')[0];
+      const srcset = [400, 600, 800].map(w => `${baseUrl}?width=${w} ${w}w`).join(', ');
+      mainImage.srcset = srcset;
+    }
+  }
+
+  function getCurrentIndex() {
+    return Array.from(thumbnails).findIndex(t => t.classList.contains('active'));
+  }
+
+  thumbnails.forEach((thumb, index) => {
     thumb.addEventListener('click', function() {
-      section.querySelectorAll('.moby-buy-box__thumbnail').forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-      const mainImage = section.querySelector('.moby-buy-box__image');
-      if (mainImage && this.dataset.imageUrl) {
-        const newImageUrl = this.dataset.imageUrl;
-        // Update src
-        mainImage.src = newImageUrl;
-        // Clear srcset so browser uses src instead
-        mainImage.srcset = '';
-        // Generate new srcset with different widths for the new image
-        const baseUrl = newImageUrl.split('?')[0];
-        const srcset = [400, 600, 800].map(w => {
-          return `${baseUrl}?width=${w} ${w}w`;
-        }).join(', ');
-        mainImage.srcset = srcset;
+      switchToImage(index);
+    });
+  });
+
+  // Touch swipe support for mobile
+  if (mainImageContainer && thumbnails.length > 1) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+
+    mainImageContainer.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    mainImageContainer.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchStartX - touchEndX;
+      const diffY = Math.abs(touchStartY - touchEndY);
+
+      // Only trigger if horizontal swipe is greater than vertical (not a scroll)
+      // and swipe distance is significant (> 50px)
+      if (Math.abs(diffX) > 50 && Math.abs(diffX) > diffY) {
+        const currentIndex = getCurrentIndex();
+        if (diffX > 0) {
+          // Swipe left - next image
+          switchToImage(currentIndex + 1 < thumbnails.length ? currentIndex + 1 : 0);
+        } else {
+          // Swipe right - previous image
+          switchToImage(currentIndex - 1 >= 0 ? currentIndex - 1 : thumbnails.length - 1);
+        }
       }
+    }, { passive: true });
+  }
+
+  // Dot click handlers
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', function() {
+      switchToImage(index);
     });
   });
 
