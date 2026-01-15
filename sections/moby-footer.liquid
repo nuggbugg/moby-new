@@ -135,6 +135,79 @@
       </div>
     {%- endif -%}
 
+    <!-- Localization Selectors -->
+    {%- if section.settings.show_country_selector or section.settings.show_language_selector -%}
+      <div class="moby-footer__localization">
+        {%- form 'localization', id: 'moby-footer-localization', class: 'moby-footer__localization-form' -%}
+          {%- if section.settings.show_country_selector and localization.available_countries.size > 1 -%}
+            <div class="moby-footer__selector">
+              <label for="moby-country-select" class="moby-footer__selector-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>{{ 'localization.country_label' | t | default: 'Country/Region' }}</span>
+              </label>
+              <div class="moby-footer__select-wrapper">
+                <select
+                  id="moby-country-select"
+                  name="country_code"
+                  class="moby-footer__select"
+                  onchange="this.form.submit()"
+                >
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+                    >
+                      {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <svg class="moby-footer__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_language_selector and localization.available_languages.size > 1 -%}
+            <div class="moby-footer__selector">
+              <label for="moby-language-select" class="moby-footer__selector-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"></path>
+                  <path d="M22 22l-5-10-5 10M14 18h6"></path>
+                </svg>
+                <span>{{ 'localization.language_label' | t | default: 'Language' }}</span>
+              </label>
+              <div class="moby-footer__select-wrapper">
+                <select
+                  id="moby-language-select"
+                  name="locale_code"
+                  class="moby-footer__select"
+                  onchange="this.form.submit()"
+                >
+                  {%- for language in localization.available_languages -%}
+                    <option
+                      value="{{ language.iso_code }}"
+                      lang="{{ language.iso_code }}"
+                      {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+                    >
+                      {{ language.endonym_name | capitalize }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+                <svg class="moby-footer__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+
     <!-- Copyright -->
     <div class="moby-footer__copyright">
       <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
@@ -366,6 +439,97 @@
     width: auto;
   }
 
+  /* Localization Selectors */
+  .moby-footer__localization {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(28, 26, 16, 0.1);
+  }
+
+  @media (min-width: 640px) {
+    .moby-footer__localization {
+      flex-direction: row;
+      justify-content: center;
+      gap: 32px;
+    }
+  }
+
+  .moby-footer__localization-form {
+    display: contents;
+  }
+
+  .moby-footer__selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .moby-footer__selector {
+      flex-direction: row;
+      gap: 12px;
+    }
+  }
+
+  .moby-footer__selector-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(28, 26, 16, 0.7);
+  }
+
+  .moby-footer__selector-label svg {
+    flex-shrink: 0;
+  }
+
+  .moby-footer__select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .moby-footer__select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(28, 26, 16, 0.2);
+    border-radius: 4px;
+    padding: 10px 32px 10px 12px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    color: var(--moby-dark, #1C1A10);
+    cursor: pointer;
+    min-width: 160px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .moby-footer__select:hover {
+    border-color: rgba(28, 26, 16, 0.4);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .moby-footer__select:focus {
+    outline: none;
+    border-color: var(--moby-olive, #4F4A32);
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .moby-footer__select-arrow {
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    color: rgba(28, 26, 16, 0.5);
+  }
+
   /* Copyright */
   .moby-footer__copyright {
     text-align: center;
@@ -489,6 +653,24 @@
       "id": "show_payment_icons",
       "label": "Show payment icons",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Localization"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_selector",
+      "label": "Show country/currency selector",
+      "default": true,
+      "info": "Allows customers to choose their country and see local currency. Requires Shopify Markets to be configured."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_language_selector",
+      "label": "Show language selector",
+      "default": true,
+      "info": "Allows customers to choose their preferred language. Requires multiple languages to be enabled in Shopify."
     }
   ],
   "blocks": [
