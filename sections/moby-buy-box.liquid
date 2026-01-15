@@ -308,7 +308,8 @@
                 <span class="moby-buy-box__option-price" data-onetime-price>{{ current_variant.price | money }}</span>
               </div>
 {%- capture threshold_html %}{% render 'moby-free-shipping-threshold' %}{% endcapture -%}
-              <p class="moby-buy-box__option-desc">{{ section.settings.onetime_subheading | default: 'Free shipping over {threshold}, volume discount.' | replace: '{threshold}', threshold_html }}</p>
+{%- assign onetime_text = section.settings.onetime_subheading | default: "Free shipping over {threshold}, volume discount." -%}
+              <p class="moby-buy-box__option-desc">{{ onetime_text | replace: '{threshold}', threshold_html }}</p>
             </div>
           </label>
 
@@ -328,7 +329,8 @@
                     <span class="moby-buy-box__option-compare">{{ current_variant.price | money }}</span>
                   </div>
                 </div>
-                <p class="moby-buy-box__option-desc">{{ section.settings.subscribe_subheading | default: 'Lowest price! Free shipping over {threshold}. Cancel anytime.' | replace: '{threshold}', threshold_html }}</p>
+{%- assign subscribe_text = section.settings.subscribe_subheading | default: "Lowest price! Free shipping over {threshold}. Cancel anytime." -%}
+                <p class="moby-buy-box__option-desc">{{ subscribe_text | replace: '{threshold}', threshold_html }}</p>
 
                 <!-- Delivery Frequency Dropdown -->
                 <div class="moby-buy-box__frequency">
