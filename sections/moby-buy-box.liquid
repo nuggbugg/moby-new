@@ -1426,6 +1426,73 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // Check stock availability and update button state
+  // This runs on page load and when returning to page
+  async function checkStockAndUpdateButton() {
+    if (!form) return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn || submitBtn.disabled) return;
+
+    const variantId = form.querySelector('input[name="id"]')?.value;
+    const productId = {{ product.id }};
+
+    try {
+      // Fetch real-time product data and cart in parallel
+      const [productResponse, cartResponse] = await Promise.all([
+        fetch('/products/{{ product.handle }}.js', { headers: { 'Accept': 'application/json' } }),
+        fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+      ]);
+
+      const productData = await productResponse.json();
+      const cart = await cartResponse.json();
+
+      // Find the variant to get real-time inventory
+      const variant = productData.variants.find(v => String(v.id) === String(variantId));
+
+      if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+        const inventoryQty = variant.inventory_quantity || 0;
+
+        // Count ALL items of this product in cart
+        let currentQtyInCart = 0;
+        cart.items.forEach(item => {
+          if (String(item.product_id) === String(productId)) {
+            currentQtyInCart += item.quantity;
+          }
+        });
+
+        // Check if stock is already exhausted
+        if (currentQtyInCart >= inventoryQty) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>No more stock available</span>';
+        }
+      }
+    } catch (error) {
+      console.error('Stock check error:', error);
+    }
+  }
+
+  // Run stock check on page load
+  checkStockAndUpdateButton();
+
+  // Also run when page becomes visible again (returning from another tab/page)
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+      checkStockAndUpdateButton();
+    }
+  });
+
+  // Handle browser back/forward navigation (bfcache)
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      // Page was restored from bfcache
+      checkStockAndUpdateButton();
+    }
+  });
+
+  // Listen for cart updates (e.g., from cart drawer)
+  document.addEventListener('cart:refresh', checkStockAndUpdateButton);
+
   // AJAX Add to Cart - prevents redirect, opens drawer instead
   // Includes real-time stock validation to prevent overselling
   if (form) {
@@ -1521,6 +1588,8 @@ document.addEventListener('DOMContentLoaded', function() {
             window.openCartDrawer();
             submitBtn.innerHTML = originalContent;
             submitBtn.disabled = false;
+            // Re-check stock after adding to cart
+            checkStockAndUpdateButton();
           }, 300);
         } else {
           // Fallback: dispatch event for other cart drawers
@@ -1528,6 +1597,8 @@ document.addEventListener('DOMContentLoaded', function() {
           setTimeout(() => {
             submitBtn.innerHTML = originalContent;
             submitBtn.disabled = false;
+            // Re-check stock after adding to cart
+            checkStockAndUpdateButton();
           }, 1000);
         }
 
