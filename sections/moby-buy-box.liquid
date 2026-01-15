@@ -352,22 +352,35 @@
         <!-- Add to Cart Form -->
         {%- assign variant_inventory = current_variant.inventory_quantity | default: 999 -%}
         {%- assign inventory_policy = current_variant.inventory_policy | default: 'deny' -%}
-        <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form"
-          data-variant-id="{{ current_variant.id }}"
-          data-inventory-quantity="{{ variant_inventory }}"
-          data-inventory-policy="{{ inventory_policy }}">
-          <input type="hidden" name="id" value="{{ current_variant.id }}">
-          <input type="hidden" name="quantity" value="1" id="quantity-input">
-          <input type="hidden" name="selling_plan" value="" id="selling-plan-input">
+        {%- comment -%} Check if product is sold out (inventory managed & out of stock) {%- endcomment -%}
+        {%- assign is_sold_out = false -%}
+        {%- if current_variant.available == false and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny' -%}
+          {%- assign is_sold_out = true -%}
+        {%- endif -%}
 
-          <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
-            {%- if current_variant.available -%}
-              <span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>
-            {%- else -%}
-              Sold Out
-            {%- endif -%}
-          </button>
-        </form>
+        {%- if is_sold_out and section.settings.show_back_in_stock -%}
+          {%- comment -%} Show Notify Me button for sold out products {%- endcomment -%}
+          <div class="moby-buy-box__notify-wrapper">
+            {% render 'back-in-stock-notification', product: product, variant: current_variant, class: 'moby-buy-box__add-btn' %}
+          </div>
+        {%- else -%}
+          <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form"
+            data-variant-id="{{ current_variant.id }}"
+            data-inventory-quantity="{{ variant_inventory }}"
+            data-inventory-policy="{{ inventory_policy }}">
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <input type="hidden" name="quantity" value="1" id="quantity-input">
+            <input type="hidden" name="selling_plan" value="" id="selling-plan-input">
+
+            <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
+              {%- if current_variant.available -%}
+                <span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+          </form>
+        {%- endif -%}
 
         <!-- Payment Icons -->
         {%- if section.settings.show_payment_icons -%}
@@ -1608,6 +1621,13 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "checkbox",
       "id": "show_trust_icons_desktop",
       "label": "Show trust icons below image (desktop)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_in_stock",
+      "label": "Show 'Notify Me' for sold out products",
+      "info": "Displays an email signup form instead of disabled button when product is sold out",
       "default": true
     }
   ],
