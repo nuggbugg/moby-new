@@ -141,10 +141,20 @@
       const showOnce = this.dataset.showOnce === 'true';
       const delay = parseInt(this.dataset.delay, 10) || 3000;
 
-      if (!enabled) return;
+      // Allow forcing popup via URL parameter (for testing)
+      const urlParams = new URLSearchParams(window.location.search);
+      const forceShow = urlParams.get('show_newsletter') === 'true';
 
-      // Check if already dismissed/submitted
-      if (showOnce && localStorage.getItem(this.storageKey)) {
+      // Clear localStorage if force reset is requested
+      if (urlParams.get('reset_newsletter') === 'true') {
+        localStorage.removeItem(this.storageKey);
+        console.log('Newsletter popup: localStorage cleared');
+      }
+
+      if (!enabled && !forceShow) return;
+
+      // Check if already dismissed/submitted (skip if force showing)
+      if (showOnce && localStorage.getItem(this.storageKey) && !forceShow) {
         return;
       }
 
