@@ -71,6 +71,22 @@
           "free_shipping_nok": 500,
           "free_shipping_dkk": 350
         }
+      },
+      "moby-newsletter-popup": {
+        "type": "moby-newsletter-popup",
+        "settings": {
+          "enabled": true,
+          "show_once": true,
+          "delay": 5000,
+          "image": "shopify://shop_images/Creatinestick.webp",
+          "badge": "Exclusive Offer",
+          "heading": "Join the MOBY Family",
+          "description": "Get 10% off your first order plus exclusive access to new products, wellness tips, and members-only offers.",
+          "placeholder": "Enter your email",
+          "button_text": "Get My 10% Off",
+          "success_message": "You're in! Check your email for your discount code.",
+          "privacy_text": "No spam, ever. Unsubscribe anytime."
+        }
       }
     },
     "content_for_index": [],
