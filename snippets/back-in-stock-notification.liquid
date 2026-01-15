@@ -83,7 +83,7 @@
       </p>
 
       <!-- Form -->
-      {%- form 'customer', class: 'back-in-stock__form', id: 'back-in-stock-form-' | append: variant_id -%}
+      {%- form 'contact', class: 'back-in-stock__form', id: 'back-in-stock-form-' | append: variant_id -%}
         <input type="hidden" name="contact[tags]" value="back-in-stock,product:{{ product_handle }},variant:{{ variant_id }}">
         <input type="hidden" name="contact[note]" value="Waiting for: {{ product.title }} {% if variant_title != 'Default Title' %}- {{ variant_title }}{% endif %} (Variant ID: {{ variant_id }})">
 
@@ -210,7 +210,7 @@
   .back-in-stock__dialog {
     position: fixed;
     border: none;
-    border-radius: 12px;
+    border-radius: 6px;
     padding: 0;
     max-width: 400px;
     width: calc(100% - 32px);
