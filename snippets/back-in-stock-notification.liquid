@@ -85,8 +85,7 @@
 
       <!-- Form -->
       {%- form 'contact', class: 'back-in-stock__form', id: form_id -%}
-        <input type="hidden" name="contact[tags]" value="back-in-stock,product:{{ product_handle }},variant:{{ variant_id }}">
-        <input type="hidden" name="contact[note]" value="Waiting for: {{ product.title }} {% if variant_title != 'Default Title' %}- {{ variant_title }}{% endif %} (Variant ID: {{ variant_id }})">
+        <input type="hidden" name="contact[body]" value="Back in Stock Request: {{ product.title }}{% if variant_title != 'Default Title' %} - {{ variant_title }}{% endif %} (Variant ID: {{ variant_id }}, Product: {{ product_handle }})">
 
         <div class="back-in-stock__form-group">
           <input
