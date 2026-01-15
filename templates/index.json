@@ -153,7 +153,7 @@
         "benefit_4"
       ],
       "settings": {
-        "product": "",
+        "product": "creatine",
         "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
         "show_klarna_badge": true,
         "subscription_link": ""
@@ -394,6 +394,7 @@
         "newsletter_heading": "Join the Movement",
         "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
         "newsletter_placeholder": "Your email",
+        "success_message": "You're in! Welcome to the MOBY community.",
         "show_payment_icons": true
       }
     }
