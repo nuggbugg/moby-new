@@ -269,62 +269,116 @@
 
     if (!stickyBar || !mainAddToCart) return;
 
+    const addToCartBtn = stickyBar.querySelector('[data-sticky-add-to-cart]');
+    const notifyBtn = stickyBar.querySelector('[data-sticky-notify]');
+
+    // Function to check stock and update button state
+    async function checkStockAndUpdateButton() {
+      if (!addToCartBtn) return;
+
+      const productId = addToCartBtn.dataset.productId;
+      const inventoryQty = parseInt(addToCartBtn.dataset.inventoryQuantity) || 0;
+      const inventoryPolicy = addToCartBtn.dataset.inventoryPolicy || 'deny';
+
+      if (inventoryPolicy !== 'deny') return;
+
+      try {
+        const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+        const cart = await cartResponse.json();
+
+        let currentQtyInCart = 0;
+        cart.items.forEach(item => {
+          if (String(item.product_id) === String(productId)) {
+            currentQtyInCart += item.quantity;
+          }
+        });
+
+        if (currentQtyInCart >= inventoryQty) {
+          // Stock exhausted - convert to Notify Me button
+          addToCartBtn.classList.add('moby-sticky-bar__button--notify');
+          addToCartBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="moby-sticky-bar__button-full">Notify Me</span>
+            <span class="moby-sticky-bar__button-short">Notify</span>
+          `;
+          addToCartBtn.dataset.stockExhausted = 'true';
+        } else {
+          // Stock available - show Add to Cart
+          addToCartBtn.classList.remove('moby-sticky-bar__button--notify');
+          addToCartBtn.innerHTML = `
+            <span class="moby-sticky-bar__button-full">Add to Cart</span>
+            <span class="moby-sticky-bar__button-short">Add</span>
+          `;
+          addToCartBtn.dataset.stockExhausted = 'false';
+        }
+      } catch (error) {
+        console.error('Stock check error:', error);
+      }
+    }
+
+    // Check stock on page load
+    checkStockAndUpdateButton();
+
+    // Listen for cart updates
+    document.addEventListener('cart:refresh', checkStockAndUpdateButton);
+
     // Intersection Observer to show/hide sticky bar
-    // Only show when scrolled DOWN past the button (not when button is below viewport)
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Check if button is above the viewport (scrolled past it)
-        // boundingClientRect.bottom < rootBounds means element is above viewport
-        const isAboveViewport = entry.boundingClientRect.bottom < 80; // 80px for header
+        const isAboveViewport = entry.boundingClientRect.bottom < 80;
 
         if (entry.isIntersecting) {
-          // Button is visible - hide sticky bar
           stickyBar.setAttribute('data-hidden', 'true');
         } else if (isAboveViewport) {
-          // Button is above viewport (scrolled past) - show sticky bar
           stickyBar.setAttribute('data-hidden', 'false');
         } else {
-          // Button is below viewport (not scrolled to yet) - hide sticky bar
           stickyBar.setAttribute('data-hidden', 'true');
         }
       },
       {
         threshold: 0,
-        rootMargin: '-80px 0px 0px 0px' // Account for sticky header
+        rootMargin: '-80px 0px 0px 0px'
       }
     );
 
     observer.observe(mainAddToCart);
 
-    // Handle add to cart click - with inventory validation
-    const addToCartBtn = stickyBar.querySelector('[data-sticky-add-to-cart]');
+    // Handle add to cart / notify me click
     if (addToCartBtn) {
       addToCartBtn.addEventListener('click', async function() {
+        // If stock is exhausted, open notify modal
+        if (addToCartBtn.dataset.stockExhausted === 'true') {
+          const backInStockComponent = document.querySelector('back-in-stock-component');
+          if (backInStockComponent && typeof backInStockComponent.openModal === 'function') {
+            backInStockComponent.openModal();
+          }
+          return;
+        }
+
         // Find the main buy box add-to-cart button
         const mainBuyBoxBtn = document.querySelector('.moby-buy-box__add-btn');
 
-        // If main button is disabled (out of stock), don't proceed
         if (mainBuyBoxBtn && mainBuyBoxBtn.disabled) {
           return;
         }
 
-        // Get inventory data from Liquid-provided data attributes
+        // Get inventory data
         const productId = addToCartBtn.dataset.productId;
         const inventoryQty = parseInt(addToCartBtn.dataset.inventoryQuantity) || 0;
         const inventoryPolicy = addToCartBtn.dataset.inventoryPolicy || 'deny';
 
         if (productId && inventoryPolicy === 'deny') {
           try {
-            // Show loading state
             const originalText = addToCartBtn.innerHTML;
             addToCartBtn.disabled = true;
             addToCartBtn.innerHTML = '<span>Adding...</span>';
 
-            // Fetch cart to check current quantity
             const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
             const cart = await cartResponse.json();
 
-            // Count all items of this product in cart
             let currentQtyInCart = 0;
             cart.items.forEach(item => {
               if (String(item.product_id) === String(productId)) {
@@ -332,26 +386,20 @@
               }
             });
 
-            console.log('Sticky bar stock check:', { inventoryPolicy, inventoryQty, currentQtyInCart });
-
             if (currentQtyInCart >= inventoryQty) {
-              // No more stock - show error and exit
-              addToCartBtn.innerHTML = '<span>No Stock</span>';
-              setTimeout(() => {
-                addToCartBtn.innerHTML = originalText;
-                addToCartBtn.disabled = false;
-              }, 2000);
+              addToCartBtn.innerHTML = originalText;
+              addToCartBtn.disabled = false;
+              // Update to notify state
+              await checkStockAndUpdateButton();
               return;
             }
 
-            // Stock available - proceed with click
             addToCartBtn.innerHTML = originalText;
             addToCartBtn.disabled = false;
 
             if (mainBuyBoxBtn && !mainBuyBoxBtn.disabled) {
               mainBuyBoxBtn.click();
             } else {
-              // Fallback: try to submit any product form
               const productForm = document.querySelector('#moby-buy-box-form, form[action*="/cart/add"]');
               if (productForm) {
                 productForm.requestSubmit();
@@ -362,22 +410,18 @@
             addToCartBtn.disabled = false;
           }
         } else if (mainBuyBoxBtn && !mainBuyBoxBtn.disabled) {
-          // No inventory restriction or continue policy - just click main button
           mainBuyBoxBtn.click();
         }
       });
     }
 
-    // Handle notify me button click - trigger back-in-stock popup
-    const notifyBtn = stickyBar.querySelector('[data-sticky-notify]');
+    // Handle dedicated notify me button click
     if (notifyBtn) {
       notifyBtn.addEventListener('click', function() {
-        // Find the back-in-stock component and open its modal
         const backInStockComponent = document.querySelector('back-in-stock-component');
         if (backInStockComponent && typeof backInStockComponent.openModal === 'function') {
           backInStockComponent.openModal();
         } else {
-          // Fallback: try to find and click the notify button in the buy box
           const notifyButton = document.querySelector('.back-in-stock__button, [ref="notifyButton"]');
           if (notifyButton) {
             notifyButton.click();

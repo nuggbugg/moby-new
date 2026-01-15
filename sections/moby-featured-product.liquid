@@ -10,9 +10,11 @@
   if product == blank
     assign product = collections['all'].products.first
   endif
-  
+
   assign current_variant = product.selected_or_first_available_variant
   assign featured_image = product.featured_image
+  assign variant_inventory = current_variant.inventory_quantity | default: 0
+  assign inventory_policy = current_variant.inventory_policy | default: 'deny'
 -%}
 
 <section class="moby-section moby-featured-product" id="moby-featured-product-{{ section.id }}">
@@ -124,6 +126,8 @@
               data-variant-id="{{ current_variant.id }}"
               data-product-id="{{ product.id }}"
               data-product-handle="{{ product.handle }}"
+              data-inventory-quantity="{{ variant_inventory }}"
+              data-inventory-policy="{{ inventory_policy }}"
               {% unless current_variant.available %}disabled{% endunless %}
             >
               {%- if current_variant.available -%}
@@ -192,13 +196,66 @@
       });
     });
 
-    // Add to cart - with real-time stock validation to prevent overselling
+    // Add to cart - with inventory validation using Liquid-provided data
     const addToCartBtn = section.querySelector('.moby-featured-product__add-to-cart');
     if (addToCartBtn) {
+      const variantId = addToCartBtn.dataset.variantId;
+      const productId = addToCartBtn.dataset.productId;
+      const inventoryQty = parseInt(addToCartBtn.dataset.inventoryQuantity) || 0;
+      const inventoryPolicy = addToCartBtn.dataset.inventoryPolicy || 'deny';
+
+      // Function to check stock and update button
+      async function checkStockAndUpdateButton() {
+        if (inventoryPolicy !== 'deny') return;
+
+        try {
+          const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
+          const cart = await cartResponse.json();
+
+          let currentQtyInCart = 0;
+          cart.items.forEach(item => {
+            if (String(item.product_id) === String(productId)) {
+              currentQtyInCart += item.quantity;
+            }
+          });
+
+          if (currentQtyInCart >= inventoryQty) {
+            // Stock exhausted - show Notify Me
+            addToCartBtn.classList.add('moby-featured-product__add-to-cart--notify');
+            addToCartBtn.innerHTML = `
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              Notify Me
+            `;
+            addToCartBtn.dataset.stockExhausted = 'true';
+          } else {
+            // Stock available - show Add to Cart
+            addToCartBtn.classList.remove('moby-featured-product__add-to-cart--notify');
+            addToCartBtn.textContent = 'Add to Cart';
+            addToCartBtn.dataset.stockExhausted = 'false';
+          }
+        } catch (error) {
+          console.error('Stock check error:', error);
+        }
+      }
+
+      // Check stock on page load
+      checkStockAndUpdateButton();
+
+      // Listen for cart updates
+      document.addEventListener('cart:refresh', checkStockAndUpdateButton);
+
       addToCartBtn.addEventListener('click', async function() {
-        const variantId = this.dataset.variantId;
-        const productId = this.dataset.productId;
-        const productHandle = this.dataset.productHandle;
+        // If stock exhausted, open notify modal
+        if (this.dataset.stockExhausted === 'true') {
+          const backInStockComponent = document.querySelector('back-in-stock-component');
+          if (backInStockComponent && typeof backInStockComponent.openModal === 'function') {
+            backInStockComponent.openModal();
+          }
+          return;
+        }
 
         if (!variantId) return;
 
@@ -206,22 +263,11 @@
         this.textContent = 'Adding...';
 
         try {
-          // Fetch real-time product data and cart in parallel
-          const [productResponse, cartResponse] = await Promise.all([
-            fetch(`/products/${productHandle}.js`, { headers: { 'Accept': 'application/json' } }),
-            fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
-          ]);
-
-          const productData = await productResponse.json();
+          // Fetch cart to validate stock
+          const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
           const cart = await cartResponse.json();
 
-          // Find the variant to get real-time inventory
-          const variant = productData.variants.find(v => String(v.id) === String(variantId));
-
-          if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
-            const inventoryQty = variant.inventory_quantity || 0;
-
-            // Count ALL items of this product in cart
+          if (inventoryPolicy === 'deny') {
             let currentQtyInCart = 0;
             cart.items.forEach(item => {
               if (String(item.product_id) === String(productId)) {
@@ -230,7 +276,9 @@
             });
 
             if (currentQtyInCart >= inventoryQty) {
-              throw new Error('No more stock available');
+              this.disabled = false;
+              await checkStockAndUpdateButton();
+              return;
             }
           }
 
@@ -261,20 +309,20 @@
             }
           });
 
-          // Open cart drawer
-          setTimeout(() => {
+          // Open cart drawer and check stock after
+          setTimeout(async () => {
             if (typeof window.openCartDrawer === 'function') {
               window.openCartDrawer();
             }
-            this.textContent = 'ADD TO CART';
+            await checkStockAndUpdateButton();
             this.disabled = false;
           }, 300);
         } catch (error) {
           console.error('Add to cart error:', error);
           const errorText = error.message && error.message.length < 30 ? error.message : 'Error - Try Again';
           this.textContent = errorText;
-          setTimeout(() => {
-            this.textContent = 'Add to Cart';
+          setTimeout(async () => {
+            await checkStockAndUpdateButton();
             this.disabled = false;
           }, 2000);
         }
@@ -504,6 +552,12 @@
   .moby-featured-product__add-to-cart:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  .moby-featured-product__add-to-cart--notify {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .moby-featured-product__view-details {
