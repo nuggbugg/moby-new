@@ -27,6 +27,17 @@
   else
     assign min_quantity = variant.quantity_rule.min | default: 1
   endif
+
+  # Calculate max quantity based on inventory (for products with inventory tracking and deny policy)
+  assign max_quantity = variant.quantity_rule.max
+  if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny'
+    assign inventory_max = variant.inventory_quantity | default: 0
+    if max_quantity == blank or max_quantity == null
+      assign max_quantity = inventory_max
+    elsif inventory_max < max_quantity
+      assign max_quantity = inventory_max
+    endif
+  endif
 %}
 
 <div
@@ -72,8 +83,8 @@
       {% if line_index %}
         data-cart-line="{{ line_index | plus: 1 }}"
       {% endif %}
-      {% if variant.quantity_rule.max %}
-        max="{{ variant.quantity_rule.max }}"
+      {% if max_quantity != blank and max_quantity != null %}
+        max="{{ max_quantity }}"
       {% endif %}
       step="{{ variant.quantity_rule.increment | default: 1 }}"
       {% if can_update_quantity == false or variant.available == false %}

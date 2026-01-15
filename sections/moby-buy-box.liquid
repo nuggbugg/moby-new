@@ -370,6 +370,7 @@
           </div>
         {%- else -%}
           <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form"
+            data-custom-handler="true"
             data-variant-id="{{ current_variant.id }}"
             data-inventory-quantity="{{ variant_inventory }}"
             data-inventory-policy="{{ inventory_policy }}">
