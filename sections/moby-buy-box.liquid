@@ -1530,39 +1530,35 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
       ]);
 
-      const productData = await productResponse.json();
       const cart = await cartResponse.json();
 
-      // Find the variant to get real-time inventory
-      const variant = productData.variants.find(v => String(v.id) === String(variantId));
+      // Get inventory info from form data attributes (Liquid provides this, API doesn't)
+      const inventoryQty = parseInt(form.dataset.inventoryQuantity) || 0;
+      const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
 
-      if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
-        const inventoryQty = variant.inventory_quantity || 0;
-
-        // Count ALL items of this product in cart
-        let currentQtyInCart = 0;
-        cart.items.forEach(item => {
-          if (String(item.product_id) === String(productId)) {
-            currentQtyInCart += item.quantity;
-          }
-        });
-
-        // Check if stock is already exhausted
-        if (currentQtyInCart >= inventoryQty) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span>No more stock available</span>';
-          return; // Exit early - no more stock
+      // Count ALL items of this product in cart
+      let currentQtyInCart = 0;
+      cart.items.forEach(item => {
+        if (String(item.product_id) === String(productId)) {
+          currentQtyInCart += item.quantity;
         }
+      });
+
+      console.log('Stock check:', { inventoryPolicy, inventoryQty, currentQtyInCart });
+
+      // Check if stock is already exhausted (for deny policy)
+      if (inventoryPolicy === 'deny' && currentQtyInCart >= inventoryQty) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>No more stock available</span>';
+        return; // Exit early - no more stock
       }
 
       // If we get here, stock is available - enable button
-      if (variant && variant.available) {
-        submitBtn.disabled = false;
-        // Only restore original content if it's showing a stock message
-        if (submitBtn.textContent.includes('No more stock') || submitBtn.textContent.includes('Added')) {
-          submitBtn.innerHTML = originalContent;
-          updateButton(); // Update price display
-        }
+      submitBtn.disabled = false;
+      // Only restore original content if it's showing a stock message
+      if (submitBtn.textContent.includes('No more stock') || submitBtn.textContent.includes('Added')) {
+        submitBtn.innerHTML = originalContent;
+        updateButton(); // Update price display
       }
     } catch (error) {
       console.error('Stock check error:', error);
@@ -1622,6 +1618,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Find the variant to get real-time inventory
         const variant = productData.variants.find(v => String(v.id) === String(variantId));
 
+        // Get inventory info from form data attributes (Liquid provides this, API doesn't)
+        const inventoryQty = parseInt(form.dataset.inventoryQuantity) || 0;
+        const inventoryPolicy = form.dataset.inventoryPolicy || 'deny';
+
         // Always count items in cart for this product
         let currentQtyInCart = 0;
         cart.items.forEach(item => {
@@ -1630,37 +1630,27 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         });
 
-        // Debug logging (remove in production)
+        // Debug logging
         console.log('Inventory check:', {
           variantId,
           productId,
-          inventory_management: variant?.inventory_management,
-          inventory_policy: variant?.inventory_policy,
-          inventory_quantity: variant?.inventory_quantity,
+          inventoryPolicy,
+          inventoryQty,
           currentQtyInCart,
           requestedQty
         });
 
-        // Check inventory for tracked products
-        if (variant) {
-          const inventoryQty = variant.inventory_quantity || 0;
+        // Check inventory for products with deny policy
+        if (inventoryPolicy === 'deny') {
+          const totalAfterAdd = currentQtyInCart + requestedQty;
 
-          // For Shopify-tracked inventory with deny policy, strictly enforce
-          if (variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
-            const totalAfterAdd = currentQtyInCart + requestedQty;
-
-            if (totalAfterAdd > inventoryQty) {
-              const remaining = inventoryQty - currentQtyInCart;
-              if (remaining <= 0) {
-                throw new Error('No more stock available');
-              } else {
-                throw new Error(`Only ${remaining} more available`);
-              }
+          if (totalAfterAdd > inventoryQty) {
+            const remaining = inventoryQty - currentQtyInCart;
+            if (remaining <= 0) {
+              throw new Error('No more stock available');
+            } else {
+              throw new Error(`Only ${remaining} more available`);
             }
-          }
-          // Even for continue policy, warn if adding more than inventory (but allow it)
-          else if (variant.inventory_management === 'shopify' && currentQtyInCart + requestedQty > inventoryQty) {
-            console.warn('Adding more than available inventory (policy allows overselling)');
           }
         }
 
