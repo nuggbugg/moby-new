@@ -948,9 +948,11 @@
     window.refreshCartDrawer = refreshCartDrawer;
     window.updateHeaderCartCount = updateHeaderCartCount;
 
-    // Update cart quantity function
+    // Update cart quantity function with inventory validation
     async function updateCartQuantity(line, quantity) {
       try {
+        showSkeleton();
+
         const response = await fetch('/cart/change.js', {
           method: 'POST',
           headers: {
@@ -962,11 +964,21 @@
           })
         });
 
-        if (response.ok) {
-          await refreshCartDrawer();
+        const data = await response.json();
+
+        if (!response.ok) {
+          // Handle inventory errors from Shopify
+          const errorMessage = data.description || data.message || 'Could not update quantity';
+          console.error('Cart update error:', errorMessage);
+          // Show error briefly then refresh to show actual state
+          alert(errorMessage);
         }
+
+        // Always refresh to show current cart state
+        await refreshCartDrawer(false); // false = don't show skeleton again
       } catch (error) {
         console.error('Error updating cart:', error);
+        await refreshCartDrawer(false);
       }
     }
 
@@ -1013,12 +1025,28 @@
         const plusBtn = e.target.closest('[data-quantity-plus]');
         if (plusBtn) {
           e.preventDefault();
+
+          // Check if button is disabled (at max quantity)
+          if (plusBtn.disabled || plusBtn.classList.contains('is-disabled')) {
+            return;
+          }
+
           const line = plusBtn.dataset.line;
           const item = plusBtn.closest('[data-cart-item]');
           if (!item) return;
           const qtyValue = item.querySelector('[data-quantity-value]');
           if (!qtyValue) return;
           const currentQty = parseInt(qtyValue.textContent) || 1;
+
+          // Check max quantity from data attribute
+          const maxQty = parseInt(item.dataset.maxQuantity) || 999;
+
+          // Don't allow increasing beyond stock
+          if (currentQty >= maxQty) {
+            // Show feedback that max is reached
+            plusBtn.classList.add('is-disabled');
+            return;
+          }
 
           isProcessing = true;
           try {
