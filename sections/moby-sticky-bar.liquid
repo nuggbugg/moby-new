@@ -59,15 +59,15 @@
       {%- else -%}
         <button
           type="button"
-          class="moby-sticky-bar__button moby-sticky-bar__button--waitlist"
-          data-sticky-waitlist
+          class="moby-sticky-bar__button moby-sticky-bar__button--notify"
+          data-sticky-notify
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
           </svg>
-          <span class="moby-sticky-bar__button-full">Join the Movement</span>
-          <span class="moby-sticky-bar__button-short">Join</span>
+          <span class="moby-sticky-bar__button-full">Notify Me</span>
+          <span class="moby-sticky-bar__button-short">Notify</span>
         </button>
       {%- endif -%}
     </div>
@@ -227,7 +227,7 @@
     background: var(--moby-dark, #1C1A10);
   }
 
-  .moby-sticky-bar__button--waitlist {
+  .moby-sticky-bar__button--notify {
     background: var(--moby-olive, #4F4A32);
   }
 
@@ -312,14 +312,20 @@
       });
     }
 
-    // Handle waitlist button click
-    const waitlistBtn = stickyBar.querySelector('[data-sticky-waitlist]');
-    if (waitlistBtn) {
-      waitlistBtn.addEventListener('click', function() {
-        // Find and click the main waitlist button
-        const mainWaitlistBtn = document.querySelector('.moby-buy-box__waitlist-btn, [data-waitlist-btn]');
-        if (mainWaitlistBtn) {
-          mainWaitlistBtn.click();
+    // Handle notify me button click - trigger back-in-stock popup
+    const notifyBtn = stickyBar.querySelector('[data-sticky-notify]');
+    if (notifyBtn) {
+      notifyBtn.addEventListener('click', function() {
+        // Find the back-in-stock component and open its modal
+        const backInStockComponent = document.querySelector('back-in-stock-component');
+        if (backInStockComponent && typeof backInStockComponent.openModal === 'function') {
+          backInStockComponent.openModal();
+        } else {
+          // Fallback: try to find and click the notify button in the buy box
+          const notifyButton = document.querySelector('.back-in-stock__button, [ref="notifyButton"]');
+          if (notifyButton) {
+            notifyButton.click();
+          }
         }
       });
     }
