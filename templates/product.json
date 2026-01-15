@@ -21,7 +21,8 @@
         "show_purchase_options": true,
         "show_payment_icons": true,
         "show_trust_footer": true,
-        "show_trust_icons_desktop": true
+        "show_trust_icons_desktop": true,
+        "show_back_in_stock": false
       }
     },
     "moby_features": {
