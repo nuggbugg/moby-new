@@ -1815,7 +1815,8 @@ zoom-dialog dialog {
     opacity: 1;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
+  /* Smooth scroll ONLY on desktop - touch devices need native momentum scrolling */
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
     scroll-behavior: smooth;
   }
 
@@ -3341,12 +3342,18 @@ slideshow-slides {
   display: flex;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
+  /* Default to auto for touch devices - smooth scroll interferes with native momentum scrolling */
+  scroll-behavior: auto;
   scrollbar-color: transparent transparent;
   scrollbar-width: none;
   gap: var(--slideshow-gap, 0);
   cursor: var(--cursor);
   min-height: var(--slide-min-height);
+
+  /* Smooth scroll ONLY on desktop with mouse - never on touch devices */
+  @media screen and (hover: hover) and (pointer: fine) {
+    scroll-behavior: smooth;
+  }
 
   @media (prefers-reduced-motion) {
     scroll-behavior: auto;
