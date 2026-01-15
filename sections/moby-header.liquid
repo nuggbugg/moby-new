@@ -149,6 +149,63 @@
           <polyline points="12 5 19 12 12 19"/>
         </svg>
       </a>
+
+      <!-- Mobile Localization -->
+      {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+        <div class="moby-header__mobile-divider"></div>
+        <div class="moby-header__mobile-localization">
+          {%- form 'localization', id: 'moby-mobile-localization', class: 'moby-header__mobile-localization-form' -%}
+            {%- if localization.available_countries.size > 1 -%}
+              <div class="moby-header__mobile-selector">
+                <label for="moby-mobile-country" class="moby-header__mobile-selector-label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                  Country
+                </label>
+                <div class="moby-header__mobile-select-wrap">
+                  <select id="moby-mobile-country" name="country_code" class="moby-header__mobile-select" onchange="this.form.submit()">
+                    {%- for country in localization.available_countries -%}
+                      <option value="{{ country.iso_code }}" {% if country.iso_code == localization.country.iso_code %}selected{% endif %}>
+                        {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                  <svg class="moby-header__mobile-select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if localization.available_languages.size > 1 -%}
+              <div class="moby-header__mobile-selector">
+                <label for="moby-mobile-language" class="moby-header__mobile-selector-label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1"></path>
+                    <path d="M22 22l-5-10-5 10M14 18h6"></path>
+                  </svg>
+                  Language
+                </label>
+                <div class="moby-header__mobile-select-wrap">
+                  <select id="moby-mobile-language" name="locale_code" class="moby-header__mobile-select" onchange="this.form.submit()">
+                    {%- for language in localization.available_languages -%}
+                      <option value="{{ language.iso_code }}" lang="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}selected{% endif %}>
+                        {{ language.endonym_name | capitalize }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                  <svg class="moby-header__mobile-select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
     </div>
   </div>
 </moby-header>
@@ -649,6 +706,74 @@
   .moby-header__mobile-cta svg {
     width: 16px;
     height: 16px;
+  }
+
+  /* Mobile Localization */
+  .moby-header__mobile-localization {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 4px;
+  }
+
+  .moby-header__mobile-localization-form {
+    display: contents;
+  }
+
+  .moby-header__mobile-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .moby-header__mobile-selector-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    color: var(--moby-dark, #1C1A10);
+    opacity: 0.7;
+  }
+
+  .moby-header__mobile-selector-label svg {
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .moby-header__mobile-select-wrap {
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .moby-header__mobile-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    border-radius: 4px;
+    padding: 10px 32px 10px 12px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    color: var(--moby-dark, #1C1A10);
+    cursor: pointer;
+  }
+
+  .moby-header__mobile-select:focus {
+    outline: none;
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-header__mobile-select-arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(28, 26, 16, 0.4);
   }
 
   /* Spacer for fixed header - only on non-index pages */
