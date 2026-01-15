@@ -44,6 +44,28 @@
 
     <!-- Cart Content -->
     <div class="moby-cart-drawer__content" data-cart-drawer-content>
+      <!-- Skeleton Loading State -->
+      <div class="moby-cart-drawer__skeleton" data-cart-skeleton style="display: none;">
+        <div class="moby-cart-drawer__skeleton-item">
+          <div class="moby-cart-drawer__skeleton-image"></div>
+          <div class="moby-cart-drawer__skeleton-details">
+            <div class="moby-cart-drawer__skeleton-title"></div>
+            <div class="moby-cart-drawer__skeleton-subtitle"></div>
+            <div class="moby-cart-drawer__skeleton-price"></div>
+          </div>
+        </div>
+        <div class="moby-cart-drawer__skeleton-item">
+          <div class="moby-cart-drawer__skeleton-image"></div>
+          <div class="moby-cart-drawer__skeleton-details">
+            <div class="moby-cart-drawer__skeleton-title"></div>
+            <div class="moby-cart-drawer__skeleton-subtitle"></div>
+            <div class="moby-cart-drawer__skeleton-price"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actual Cart Items -->
+      <div class="moby-cart-drawer__items-wrapper" data-cart-items-wrapper>
       {% if cart.item_count > 0 %}
         <div class="moby-cart-drawer__items">
           {% for item in cart.items %}
@@ -157,6 +179,7 @@
           <a href="/collections/all" class="moby-cart-drawer__continue" data-cart-drawer-close>Continue Shopping</a>
         </div>
       {% endif %}
+      </div>
     </div>
 
     <!-- Footer -->
@@ -657,6 +680,81 @@
   body.cart-drawer-open {
     overflow: hidden;
   }
+
+  /* Skeleton Loading Styles */
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .moby-cart-drawer__skeleton {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .moby-cart-drawer__skeleton-item {
+    display: flex;
+    gap: 16px;
+  }
+
+  .moby-cart-drawer__skeleton-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #f0f0eb 0px, #e8e8e3 40px, #f0f0eb 80px);
+    background-size: 200px 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  }
+
+  .moby-cart-drawer__skeleton-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+  }
+
+  .moby-cart-drawer__skeleton-title {
+    height: 16px;
+    width: 80%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0eb 0px, #e8e8e3 40px, #f0f0eb 80px);
+    background-size: 200px 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  }
+
+  .moby-cart-drawer__skeleton-subtitle {
+    height: 12px;
+    width: 50%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0eb 0px, #e8e8e3 40px, #f0f0eb 80px);
+    background-size: 200px 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    animation-delay: 0.1s;
+  }
+
+  .moby-cart-drawer__skeleton-price {
+    height: 18px;
+    width: 60px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0eb 0px, #e8e8e3 40px, #f0f0eb 80px);
+    background-size: 200px 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    animation-delay: 0.2s;
+    margin-top: auto;
+  }
+
+  /* Loading state for cart content */
+  .moby-cart-drawer__content.is-loading [data-cart-items-wrapper] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 </style>
 
 <script>
@@ -740,9 +838,36 @@
       }
     }
 
+    // Show skeleton loading state
+    function showSkeleton() {
+      const skeleton = drawer.querySelector('[data-cart-skeleton]');
+      const itemsWrapper = drawer.querySelector('[data-cart-items-wrapper]');
+      const content = drawer.querySelector('[data-cart-drawer-content]');
+
+      if (skeleton) skeleton.style.display = 'flex';
+      if (itemsWrapper) itemsWrapper.style.display = 'none';
+      if (content) content.classList.add('is-loading');
+    }
+
+    // Hide skeleton loading state
+    function hideSkeleton() {
+      const skeleton = drawer.querySelector('[data-cart-skeleton]');
+      const itemsWrapper = drawer.querySelector('[data-cart-items-wrapper]');
+      const content = drawer.querySelector('[data-cart-drawer-content]');
+
+      if (skeleton) skeleton.style.display = 'none';
+      if (itemsWrapper) itemsWrapper.style.display = 'block';
+      if (content) content.classList.remove('is-loading');
+    }
+
     // Refresh cart drawer content via Section Rendering API
-    async function refreshCartDrawer() {
+    async function refreshCartDrawer(showLoading = true) {
       try {
+        // Show skeleton while loading
+        if (showLoading) {
+          showSkeleton();
+        }
+
         const response = await fetch('/?section_id=moby-cart-drawer');
         if (response.ok) {
           const html = await response.text();
@@ -779,6 +904,9 @@
         }
       } catch (error) {
         console.error('Error refreshing cart drawer:', error);
+      } finally {
+        // Always hide skeleton when done
+        hideSkeleton();
       }
     }
 
