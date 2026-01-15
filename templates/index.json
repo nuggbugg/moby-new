@@ -13,7 +13,7 @@
       "type": "moby-hero",
       "settings": {
         "image": "shopify://shop_images/Hero_Mountain_1920x1071_237d2301-276a-4398-ae4a-e183c758eb23.webp",
-        "heading": "SCIENCE-BACKED CLARITY AND STRENGTH",
+        "heading": "Creatine Sticks for Daily Performance",
         "subheading": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE",
         "button_text": "SHOP NOW",
         "button_link": "shopify://products/creatine",
@@ -395,7 +395,9 @@
         "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
         "newsletter_placeholder": "Your email",
         "success_message": "You're in! Welcome to the MOBY community.",
-        "show_payment_icons": true
+        "show_payment_icons": true,
+        "show_country_selector": true,
+        "show_language_selector": true
       }
     }
   },
