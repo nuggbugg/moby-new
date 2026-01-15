@@ -41,31 +41,10 @@
      SECTION TRANSITION BASE STATES
      ======================================== */
 
-  /* Section headers */
-  .moby-research__header,
-  .moby-stickpacks__header,
-  .moby-why-moby__header,
-  .moby-product-tabs__header,
-  .moby-features__header,
-  .moby-about-hero__content,
-  .moby-partner-hero__content {
-    will-change: transform, opacity;
-  }
-
-  /* Cards and grid items */
-  .moby-why-moby__card,
-  .moby-stickpacks__benefit,
-  .moby-research__study,
-  .moby-features__item,
-  .moby-partner-benefit {
-    will-change: transform, opacity;
-  }
-
-  /* Buy box elements */
-  .moby-buy-box__gallery,
-  .moby-buy-box__info {
-    will-change: transform, opacity;
-  }
+  /*
+   * REMOVED will-change properties - they cause scroll jank on mobile
+   * GSAP handles GPU acceleration automatically when needed
+   */
 
   /* ========================================
      HOVER MICRO-INTERACTIONS
@@ -118,8 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check if this is a touch device (no mouse hover)
   const isTouchDevice = window.matchMedia('(hover: none)').matches;
 
-  if (prefersReducedMotion) {
-    // Show all elements without animation
+  // Disable ALL scroll-triggered animations on touch devices and reduced motion
+  // This is critical for smooth scrolling on mobile
+  if (prefersReducedMotion || isTouchDevice) {
+    // Show all elements immediately without animation
     gsap.set('[data-gsap], [data-gsap-fade], [data-gsap-slide], [data-gsap-scale], [data-gsap-stagger] > *', {
       visibility: 'visible',
       opacity: 1,
@@ -127,18 +108,42 @@ document.addEventListener('DOMContentLoaded', function() {
       x: 0,
       scale: 1
     });
+
+    // Also show section-specific elements
+    gsap.set(`
+      .moby-buy-box__gallery,
+      .moby-buy-box__info,
+      .moby-buy-box__trust-item,
+      .moby-buy-box__trust-icon,
+      .moby-features__item,
+      .moby-stickpacks__benefit,
+      .moby-stickpacks__comparison,
+      .moby-why-moby__card,
+      .moby-research__study,
+      .moby-product-tabs__tab,
+      .moby-about-hero__content,
+      .moby-about-hero__image,
+      .moby-about-mission__card,
+      .moby-about-values__card,
+      .moby-partner-hero__content,
+      .moby-partner-benefit,
+      .moby-partner-form__form,
+      .moby-featured-product__image,
+      .moby-featured-product__content
+    `, {
+      visibility: 'visible',
+      opacity: 1,
+      y: 0,
+      x: 0,
+      scale: 1
+    });
+
+    // Exit early - no scroll animations on touch devices
     return;
   }
 
-  // Register ScrollTrigger
+  // Register ScrollTrigger only on desktop devices
   gsap.registerPlugin(ScrollTrigger);
-
-  // Configure ScrollTrigger for better touch device performance
-  if (isTouchDevice) {
-    ScrollTrigger.config({
-      ignoreMobileResize: true
-    });
-  }
 
   // Default easing - smooth and professional
   const defaultEase = 'power3.out';
@@ -657,23 +662,12 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ========================================
-  // PARALLAX EFFECTS
+  // PARALLAX EFFECTS - DISABLED
   // ========================================
-
-  document.querySelectorAll('[data-gsap-parallax]').forEach(el => {
-    const speed = parseFloat(el.dataset.gsapParallax) || 0.3;
-
-    gsap.to(el, {
-      y: () => window.innerHeight * speed * -1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: el,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true
-      }
-    });
-  });
+  // Parallax with scrub: true causes severe scroll jank
+  // as it forces animation sync on every scroll frame.
+  // If parallax is needed in the future, use scrub: 1
+  // (smooth 1-second lag) instead of scrub: true.
 
   // ========================================
   // REFRESH ON RESIZE
