@@ -386,6 +386,13 @@
               {%- endif -%}
             </button>
           </form>
+
+          {%- comment -%} Hidden back-in-stock component for dynamic stock exhaustion (triggered by JS when cart qty >= inventory) {%- endcomment -%}
+          {%- if inventory_policy == 'deny' -%}
+            <div class="moby-buy-box__notify-hidden" style="display: none;">
+              {% render 'back-in-stock-notification', product: product, variant: current_variant %}
+            </div>
+          {%- endif -%}
         {%- endif -%}
 
         <!-- Payment Icons -->
