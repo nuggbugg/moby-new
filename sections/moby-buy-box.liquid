@@ -1202,11 +1202,11 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease;
   }
 
   .moby-buy-box__add-btn:hover:not(:disabled) {
-    background: var(--moby-dark, #1C1A10);
+    background-color: var(--moby-dark, #1C1A10);
   }
 
   .moby-buy-box__add-btn:disabled {
@@ -1516,10 +1516,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!form) return;
 
     const submitBtn = form.querySelector('button[type="submit"]');
-    if (!submitBtn || submitBtn.disabled) return;
+    if (!submitBtn) return;
 
     const variantId = form.querySelector('input[name="id"]')?.value;
     const productId = {{ product.id }};
+    const originalContent = '<span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>';
 
     try {
       // Fetch real-time product data and cart in parallel
@@ -1549,6 +1550,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentQtyInCart >= inventoryQty) {
           submitBtn.disabled = true;
           submitBtn.innerHTML = '<span>No more stock available</span>';
+          return; // Exit early - no more stock
+        }
+      }
+
+      // If we get here, stock is available - enable button
+      if (variant && variant.available) {
+        submitBtn.disabled = false;
+        // Only restore original content if it's showing a stock message
+        if (submitBtn.textContent.includes('No more stock') || submitBtn.textContent.includes('Added')) {
+          submitBtn.innerHTML = originalContent;
+          updateButton(); // Update price display
         }
       }
     } catch (error) {
@@ -1668,21 +1680,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Open the cart drawer if available
         if (typeof window.openCartDrawer === 'function') {
           // Small delay to show "Added!" state
-          setTimeout(() => {
+          setTimeout(async () => {
             window.openCartDrawer();
-            submitBtn.innerHTML = originalContent;
-            submitBtn.disabled = false;
-            // Re-check stock after adding to cart
-            checkStockAndUpdateButton();
+            // Check stock BEFORE re-enabling - this determines if button should be enabled
+            await checkStockAndUpdateButton();
           }, 300);
         } else {
           // Fallback: dispatch event for other cart drawers
           document.dispatchEvent(new CustomEvent('cart:refresh'));
-          setTimeout(() => {
-            submitBtn.innerHTML = originalContent;
-            submitBtn.disabled = false;
-            // Re-check stock after adding to cart
-            checkStockAndUpdateButton();
+          setTimeout(async () => {
+            // Check stock BEFORE re-enabling - this determines if button should be enabled
+            await checkStockAndUpdateButton();
           }, 1000);
         }
 
@@ -1691,9 +1699,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show error message (e.g., "Not enough items in stock")
         const errorText = error.message.length < 50 ? error.message : 'Error - Try Again';
         submitBtn.innerHTML = `<span>${errorText}</span>`;
-        setTimeout(() => {
-          submitBtn.innerHTML = originalContent;
-          submitBtn.disabled = false;
+        setTimeout(async () => {
+          // Check stock to determine if button should be re-enabled
+          await checkStockAndUpdateButton();
         }, 2000);
       }
     });
