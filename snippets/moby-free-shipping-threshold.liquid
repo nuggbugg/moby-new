@@ -7,7 +7,7 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign currency = cart.currency.iso_code | default: 'EUR'
+  assign currency = localization.country.currency.iso_code | default: cart.currency.iso_code | default: 'EUR'
   assign prefix = prefix | default: ''
 
   case currency

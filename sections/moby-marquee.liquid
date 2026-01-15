@@ -41,6 +41,8 @@
             <span class="moby-marquee__text">
               {%- if block.settings.text contains 'FREE SHIPPING' -%}
                 {% render 'moby-free-shipping-threshold', prefix: 'FREE SHIPPING OVER ' %}
+              {%- elsif block.settings.text contains 'FRI FRAKT' -%}
+                {% render 'moby-free-shipping-threshold', prefix: 'FRI FRAKT ÖVER ' %}
               {%- else -%}
                 {{ block.settings.text }}
               {%- endif -%}
