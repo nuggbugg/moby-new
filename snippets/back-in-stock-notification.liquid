@@ -12,6 +12,7 @@
   assign variant_title = current_variant.title | default: product.title
   assign product_handle = product.handle
   assign variant_id = current_variant.id
+  assign form_id = 'back-in-stock-form-' | append: variant_id
 -%}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
@@ -83,7 +84,7 @@
       </p>
 
       <!-- Form -->
-      {%- form 'contact', class: 'back-in-stock__form', id: 'back-in-stock-form-' | append: variant_id -%}
+      {%- form 'contact', class: 'back-in-stock__form', id: form_id -%}
         <input type="hidden" name="contact[tags]" value="back-in-stock,product:{{ product_handle }},variant:{{ variant_id }}">
         <input type="hidden" name="contact[note]" value="Waiting for: {{ product.title }} {% if variant_title != 'Default Title' %}- {{ variant_title }}{% endif %} (Variant ID: {{ variant_id }})">
 
