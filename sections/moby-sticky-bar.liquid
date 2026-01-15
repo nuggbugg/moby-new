@@ -292,22 +292,85 @@
 
     observer.observe(mainAddToCart);
 
-    // Handle add to cart click - trigger the main buy box form submission
+    // Handle add to cart click - with inventory validation
     const addToCartBtn = stickyBar.querySelector('[data-sticky-add-to-cart]');
     if (addToCartBtn) {
-      addToCartBtn.addEventListener('click', function() {
-        // Find the main buy box add-to-cart button and click it
-        // This ensures we use whatever variant/subscription the user has selected
+      addToCartBtn.addEventListener('click', async function() {
+        // Find the main buy box add-to-cart button
         const mainBuyBoxBtn = document.querySelector('.moby-buy-box__add-btn');
-        if (mainBuyBoxBtn) {
-          // Scroll to buy box briefly to show feedback, then click
-          mainBuyBoxBtn.click();
-        } else {
-          // Fallback: try to submit any product form
-          const productForm = document.querySelector('#moby-buy-box-form, form[action*="/cart/add"]');
-          if (productForm) {
-            productForm.requestSubmit();
+
+        // If main button is disabled (out of stock), don't proceed
+        if (mainBuyBoxBtn && mainBuyBoxBtn.disabled) {
+          return;
+        }
+
+        // Perform our own inventory validation before clicking
+        const variantId = addToCartBtn.dataset.variantId;
+        const productId = addToCartBtn.dataset.productId;
+        const productHandle = addToCartBtn.dataset.productHandle;
+
+        if (productHandle && productId) {
+          try {
+            // Show loading state
+            const originalText = addToCartBtn.innerHTML;
+            addToCartBtn.disabled = true;
+            addToCartBtn.innerHTML = '<span>Adding...</span>';
+
+            // Fetch real-time product and cart data (with cache busting)
+            const cacheBuster = Date.now();
+            const [productResponse, cartResponse] = await Promise.all([
+              fetch(`/products/${productHandle}.js?v=${cacheBuster}`, { headers: { 'Accept': 'application/json' } }),
+              fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+            ]);
+
+            const productData = await productResponse.json();
+            const cart = await cartResponse.json();
+
+            // Find variant and check inventory
+            const variant = productData.variants.find(v => String(v.id) === String(variantId));
+
+            if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+              const inventoryQty = variant.inventory_quantity || 0;
+
+              // Count all items of this product in cart
+              let currentQtyInCart = 0;
+              cart.items.forEach(item => {
+                if (String(item.product_id) === String(productId)) {
+                  currentQtyInCart += item.quantity;
+                }
+              });
+
+              if (currentQtyInCart >= inventoryQty) {
+                // No more stock - show error and exit
+                addToCartBtn.innerHTML = '<span>No Stock</span>';
+                setTimeout(() => {
+                  addToCartBtn.innerHTML = originalText;
+                  addToCartBtn.disabled = false;
+                }, 2000);
+                return;
+              }
+            }
+
+            // Stock available - proceed with click
+            addToCartBtn.innerHTML = originalText;
+            addToCartBtn.disabled = false;
+
+            if (mainBuyBoxBtn && !mainBuyBoxBtn.disabled) {
+              mainBuyBoxBtn.click();
+            } else {
+              // Fallback: try to submit any product form
+              const productForm = document.querySelector('#moby-buy-box-form, form[action*="/cart/add"]');
+              if (productForm) {
+                productForm.requestSubmit();
+              }
+            }
+          } catch (error) {
+            console.error('Sticky bar add to cart error:', error);
+            addToCartBtn.disabled = false;
           }
+        } else if (mainBuyBoxBtn && !mainBuyBoxBtn.disabled) {
+          // No product data on button, just click main button if enabled
+          mainBuyBoxBtn.click();
         }
       });
     }

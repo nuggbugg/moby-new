@@ -1523,9 +1523,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const originalContent = '<span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>';
 
     try {
-      // Fetch real-time product data and cart in parallel
+      // Fetch real-time product data and cart in parallel (with cache busting)
+      const cacheBuster = Date.now();
       const [productResponse, cartResponse] = await Promise.all([
-        fetch('/products/{{ product.handle }}.js', { headers: { 'Accept': 'application/json' } }),
+        fetch(`/products/{{ product.handle }}.js?v=${cacheBuster}`, { headers: { 'Accept': 'application/json' } }),
         fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
       ]);
 
@@ -1621,26 +1622,45 @@ document.addEventListener('DOMContentLoaded', function() {
         // Find the variant to get real-time inventory
         const variant = productData.variants.find(v => String(v.id) === String(variantId));
 
-        if (variant && variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+        // Always count items in cart for this product
+        let currentQtyInCart = 0;
+        cart.items.forEach(item => {
+          if (String(item.product_id) === String(productId)) {
+            currentQtyInCart += item.quantity;
+          }
+        });
+
+        // Debug logging (remove in production)
+        console.log('Inventory check:', {
+          variantId,
+          productId,
+          inventory_management: variant?.inventory_management,
+          inventory_policy: variant?.inventory_policy,
+          inventory_quantity: variant?.inventory_quantity,
+          currentQtyInCart,
+          requestedQty
+        });
+
+        // Check inventory for tracked products
+        if (variant) {
           const inventoryQty = variant.inventory_quantity || 0;
 
-          // Count ALL items of this product in cart (both regular and subscription)
-          let currentQtyInCart = 0;
-          cart.items.forEach(item => {
-            if (String(item.product_id) === String(productId)) {
-              currentQtyInCart += item.quantity;
-            }
-          });
+          // For Shopify-tracked inventory with deny policy, strictly enforce
+          if (variant.inventory_management === 'shopify' && variant.inventory_policy === 'deny') {
+            const totalAfterAdd = currentQtyInCart + requestedQty;
 
-          const totalAfterAdd = currentQtyInCart + requestedQty;
-
-          if (totalAfterAdd > inventoryQty) {
-            const remaining = inventoryQty - currentQtyInCart;
-            if (remaining <= 0) {
-              throw new Error('No more stock available');
-            } else {
-              throw new Error(`Only ${remaining} more available`);
+            if (totalAfterAdd > inventoryQty) {
+              const remaining = inventoryQty - currentQtyInCart;
+              if (remaining <= 0) {
+                throw new Error('No more stock available');
+              } else {
+                throw new Error(`Only ${remaining} more available`);
+              }
             }
+          }
+          // Even for continue policy, warn if adding more than inventory (but allow it)
+          else if (variant.inventory_management === 'shopify' && currentQtyInCart + requestedQty > inventoryQty) {
+            console.warn('Adding more than available inventory (policy allows overselling)');
           }
         }
 
