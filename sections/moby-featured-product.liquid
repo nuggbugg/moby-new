@@ -81,6 +81,7 @@
 
           {%- if is_preorder -%}
             <span class="moby-featured-product__preorder-badge">
+              <span class="moby-featured-product__preorder-dot"></span>
               {{ section.settings.preorder_badge_text | default: 'Pre-order' }}
             </span>
           {%- endif -%}
@@ -671,7 +672,9 @@
 
   /* Pre-order styles */
   .moby-featured-product__preorder-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'N27', sans-serif;
     font-size: 11px;
     font-weight: 500;
@@ -682,6 +685,40 @@
     padding: 6px 12px;
     border-radius: 4px;
     margin-bottom: 16px;
+  }
+
+  .moby-featured-product__preorder-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+  }
+
+  .moby-featured-product__preorder-dot::before,
+  .moby-featured-product__preorder-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-featured-product__preorder-dot::before {
+    width: 8px;
+    height: 8px;
+    opacity: 0.3;
+    animation: preorderPulse 2s ease-in-out infinite;
+  }
+
+  .moby-featured-product__preorder-dot::after {
+    width: 6px;
+    height: 6px;
+  }
+
+  @keyframes preorderPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
   }
 
   .moby-featured-product__add-to-cart--preorder {
