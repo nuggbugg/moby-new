@@ -14,7 +14,7 @@
     "moby_announcement": {
       "type": "moby-announcement-bar",
       "settings": {
-        "show_bar": false,
+        "show_bar": true,
         "text": "PRE-ORDER IS LIVE – 20% OFF • LAUNCH DISCOUNT",
         "link": "shopify://products/creatine"
       }
