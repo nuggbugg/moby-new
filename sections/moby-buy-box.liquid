@@ -247,17 +247,6 @@
         <div class="moby-buy-box__preorder-qty-wrapper">
           <p class="moby-qty-label">Quantity</p>
           {% render 'moby-preorder-quantity', value: 1, min: 1, max: 10, input_id: 'preorder-qty-input' %}
-          {%- if section.settings.preorder_shipping_text != blank -%}
-            <p class="moby-buy-box__preorder-shipping">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="1" y="3" width="15" height="13" rx="2"/>
-                <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-              {{ section.settings.preorder_shipping_text }}
-            </p>
-          {%- endif -%}
         </div>
         {%- endif -%}
 
@@ -420,6 +409,18 @@
                 Sold Out
               {%- endif -%}
             </button>
+
+            {%- if is_preorder and section.settings.preorder_shipping_text != blank -%}
+              <p class="moby-buy-box__preorder-shipping">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="1" y="3" width="15" height="13" rx="2"/>
+                  <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+                {{ section.settings.preorder_shipping_text }}
+              </p>
+            {%- endif -%}
           </form>
 
           {%- comment -%} Hidden back-in-stock component for dynamic stock exhaustion (triggered by JS when cart qty >= inventory) {%- endcomment -%}
@@ -848,21 +849,20 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding: 20px;
-    background: rgba(245, 245, 240, 0.5);
-    border-radius: 6px;
+    gap: 8px;
   }
 
   .moby-buy-box__preorder-shipping {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    width: 100%;
     font-family: 'N27', sans-serif;
     font-size: 13px;
     font-weight: 400;
     color: var(--moby-olive, #4F4A32);
-    margin: 0;
+    margin: 12px 0 0;
   }
 
   .moby-buy-box__preorder-shipping svg {
