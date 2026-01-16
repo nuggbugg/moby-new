@@ -14,7 +14,14 @@
     <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
   {%- endif -%}
 </div>
-<style>:root { --moby-announcement-height: 38px; } @media (min-width: 768px) { :root { --moby-announcement-height: 42px; } }</style>
+<style>
+  :root { --moby-announcement-height: 38px; }
+  .moby-announcement-bar-wrapper { height: 38px; }
+  @media (min-width: 768px) {
+    :root { --moby-announcement-height: 42px; }
+    .moby-announcement-bar-wrapper { height: 42px; }
+  }
+</style>
 {%- endif -%}
 
 <style>
@@ -32,12 +39,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  /* Spacer to push content below fixed bar */
-  .moby-announcement-bar-wrapper {
-    display: block;
-    height: 38px;
   }
 
   .moby-announcement-bar__link {
@@ -62,10 +63,6 @@
   @media (min-width: 768px) {
     .moby-announcement-bar {
       padding: 12px 24px;
-      height: 42px;
-    }
-
-    .moby-announcement-bar-wrapper {
       height: 42px;
     }
 

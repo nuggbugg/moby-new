@@ -286,7 +286,7 @@
     font-size: 22px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     margin: 0;
   }
 
@@ -295,7 +295,7 @@
     border: none;
     padding: 8px;
     cursor: pointer;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     transition: opacity 0.2s ease;
     border-radius: 4px;
   }
@@ -352,7 +352,7 @@
     font-family: 'N27', sans-serif;
     font-size: 12px;
     font-weight: 300;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     margin: 0;
   }
 
@@ -435,7 +435,7 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     text-decoration: none;
     transition: opacity 0.2s ease;
     flex: 1;
@@ -456,7 +456,7 @@
   }
 
   .moby-cart-drawer__remove-btn:hover {
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
   }
 
   /* Quantity Controls */
@@ -472,10 +472,10 @@
   .moby-cart-drawer__qty-btn {
     background: none;
     border: none;
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -514,7 +514,7 @@
     font-family: 'N27', sans-serif;
     font-size: 14px;
     font-weight: 500;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     min-width: 32px;
     text-align: center;
     border-left: 1px solid rgba(201, 200, 182, 0.4);
@@ -551,7 +551,7 @@
     font-family: 'N27', sans-serif;
     font-size: 16px;
     font-weight: 600;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     margin: 0;
   }
 
@@ -585,16 +585,16 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     text-decoration: none;
     padding: 12px 24px;
-    border: 1px solid var(--moby-dark, #1C1A10);
+    border: 1px solid var(--moby-dark, #1B1A0F);
     border-radius: 6px;
     transition: all 0.2s ease;
   }
 
   .moby-cart-drawer__continue:hover {
-    background: var(--moby-dark, #1C1A10);
+    background: var(--moby-dark, #1B1A0F);
     color: #ffffff;
   }
 
@@ -618,7 +618,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
   }
 
   .moby-cart-drawer__subtotal span:last-child {
@@ -646,7 +646,7 @@
   }
 
   .moby-cart-drawer__checkout:hover {
-    background: var(--moby-dark, #1C1A10);
+    background: var(--moby-dark, #1B1A0F);
     transform: translateY(-1px);
   }
 
@@ -970,8 +970,7 @@
           // Handle inventory errors from Shopify
           const errorMessage = data.description || data.message || 'Could not update quantity';
           console.error('Cart update error:', errorMessage);
-          // Show error briefly then refresh to show actual state
-          alert(errorMessage);
+          // Cart will refresh below to show actual state
         }
 
         // Always refresh to show current cart state
