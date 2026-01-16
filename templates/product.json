@@ -78,6 +78,40 @@
       ],
       "settings": {}
     },
+    "moby_daily_support": {
+      "type": "moby-daily-support",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "title": "5g per serving. The effective dose.",
+            "description": "Each stick contains the clinically studied dose of creatine monohydrate for maximum benefits."
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "title": "Pure creatine monohydrate.",
+            "description": "The most researched and proven form. No fillers, no additives, just pure performance."
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "title": "Easy to take, every day.",
+            "description": "Tear, pour, mix. Build a daily habit that supports your strength and power goals."
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ],
+      "settings": {
+        "badge": "Daily Strength & Power Support"
+      }
+    },
     "moby_why_stickpacks": {
       "type": "moby-why-stickpacks",
       "blocks": {
@@ -367,6 +401,7 @@
   "order": [
     "moby_buy_box",
     "moby_features",
+    "moby_daily_support",
     "moby_why_stickpacks",
     "moby_product_tabs",
     "moby_why_moby",

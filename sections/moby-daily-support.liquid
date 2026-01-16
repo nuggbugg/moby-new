@@ -1,0 +1,291 @@
+{% comment %}
+  MOBY Daily Support Section
+  - Badge + 3 benefit points with vertical line styling
+  - Split layout: text left, image right
+{% endcomment %}
+
+<section class="moby-section moby-daily-support">
+  <div class="moby-container">
+    <div class="moby-daily-support__grid">
+      <!-- Text Content -->
+      <div class="moby-daily-support__content">
+        <span class="moby-daily-support__badge">{{ section.settings.badge | default: "Daily Strength & Power Support" }}</span>
+
+        <div class="moby-daily-support__points">
+          {%- for block in section.blocks -%}
+            <div class="moby-daily-support__point" {{ block.shopify_attributes }}>
+              <div class="moby-daily-support__point-line"></div>
+              <div class="moby-daily-support__point-content">
+                <h3 class="moby-daily-support__point-title">{{ block.settings.title }}</h3>
+                <p class="moby-daily-support__point-description">{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="moby-daily-support__image-wrapper">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 800 | image_tag:
+            loading: 'lazy',
+            alt: section.settings.image_alt | default: 'MOBY Creatine',
+            class: 'moby-daily-support__image'
+          }}
+        {%- else -%}
+          <div class="moby-daily-support__image-placeholder"></div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-daily-support {
+    background: #ffffff;
+  }
+
+  .moby-daily-support__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .moby-daily-support__grid {
+      gap: 80px;
+    }
+  }
+
+  .moby-daily-support__content {
+    order: 2;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__content {
+      order: 1;
+    }
+  }
+
+  .moby-daily-support__badge {
+    display: inline-block;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--moby-dark, #1B1A0F);
+    background: var(--moby-lime, #F9FDB5);
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-bottom: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__badge {
+      font-size: 12px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .moby-daily-support__points {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .moby-daily-support__point {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__point {
+      gap: 28px;
+    }
+  }
+
+  .moby-daily-support__point-line {
+    position: relative;
+    width: 2px;
+    background: var(--moby-sage, #C9C8B6);
+    flex-shrink: 0;
+  }
+
+  .moby-daily-support__point:first-child .moby-daily-support__point-line {
+    background: linear-gradient(to bottom, transparent 0%, var(--moby-sage, #C9C8B6) 20%);
+  }
+
+  .moby-daily-support__point:last-child .moby-daily-support__point-line {
+    background: linear-gradient(to bottom, var(--moby-sage, #C9C8B6) 80%, transparent 100%);
+  }
+
+  .moby-daily-support__point-line::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--moby-lime, #F9FDB5);
+    border: 2px solid var(--moby-dark, #1B1A0F);
+  }
+
+  .moby-daily-support__point-content {
+    padding: 0 0 32px;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__point-content {
+      padding: 0 0 40px;
+    }
+  }
+
+  .moby-daily-support__point:last-child .moby-daily-support__point-content {
+    padding-bottom: 0;
+  }
+
+  .moby-daily-support__point-title {
+    font-family: 'Memoir', serif;
+    font-size: 18px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0 0 8px;
+    color: var(--moby-dark, #1B1A0F);
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__point-title {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .moby-daily-support__point-description {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(27, 26, 15, 0.7);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__point-description {
+      font-size: 15px;
+    }
+  }
+
+  /* Image */
+  .moby-daily-support__image-wrapper {
+    order: 1;
+  }
+
+  @media (min-width: 768px) {
+    .moby-daily-support__image-wrapper {
+      order: 2;
+    }
+  }
+
+  .moby-daily-support__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    filter: grayscale(100%);
+  }
+
+  .moby-daily-support__image-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: var(--moby-sage, #C9C8B6);
+    border-radius: 6px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Daily Support",
+  "tag": "section",
+  "class": "moby-daily-support-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge text",
+      "default": "Daily Strength & Power Support"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "MOBY Creatine"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Benefit Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "5g per serving. The effective dose."
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Each stick contains the clinically studied dose of creatine monohydrate for maximum benefits."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Daily Support",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "title": "5g per serving. The effective dose.",
+            "description": "Each stick contains the clinically studied dose of creatine monohydrate for maximum benefits."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Pure creatine monohydrate.",
+            "description": "The most researched and proven form. No fillers, no additives, just pure performance."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Easy to take, every day.",
+            "description": "Tear, pour, mix. Build a daily habit that supports your strength and power goals."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
