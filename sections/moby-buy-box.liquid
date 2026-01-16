@@ -10,6 +10,14 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 {%- assign base_price = current_variant.price | divided_by: 100.0 -%}
 
+{%- comment -%} Pre-order Detection Logic {%- endcomment -%}
+{%- assign is_preorder = false -%}
+{%- if section.settings.enable_preorder -%}
+  {%- if current_variant.inventory_quantity <= 0 and current_variant.inventory_policy == 'continue' -%}
+    {%- assign is_preorder = true -%}
+  {%- endif -%}
+{%- endif -%}
+
 {%- comment -%} Product Structured Data for SEO {%- endcomment -%}
 <script type="application/ld+json">
 {
@@ -28,7 +36,7 @@
     "url": "{{ shop.url }}{{ product.url }}",
     "priceCurrency": "{{ cart.currency.iso_code }}",
     "price": "{{ current_variant.price | money_without_currency | remove: ',' }}",
-    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "availability": "{% if is_preorder %}https://schema.org/PreOrder{% elsif current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
     "seller": {
       "@type": "Organization",
       "name": {{ shop.name | json }}
@@ -171,7 +179,12 @@
             {%- assign show_low_stock = true -%}
           {%- endif -%}
 
-          {%- if current_variant.available -%}
+          {%- if is_preorder -%}
+            <span class="moby-buy-box__stock moby-buy-box__stock--preorder">
+              <span class="moby-buy-box__stock-dot"></span>
+              {{ section.settings.preorder_badge_text | default: 'Pre-order' }}
+            </span>
+          {%- elsif current_variant.available -%}
             {%- if show_low_stock -%}
               <span class="moby-buy-box__stock moby-buy-box__stock--low">
                 <span class="moby-buy-box__stock-dot"></span>
@@ -229,8 +242,27 @@
         </div>
         {%- endif -%}
 
-        <!-- Volume Selector Cards -->
-        {%- if section.settings.show_volume_selector -%}
+        <!-- Pre-order Quantity Picker (shown when pre-order is active) -->
+        {%- if is_preorder -%}
+        <div class="moby-buy-box__preorder-qty-wrapper">
+          <p class="moby-qty-label">Quantity</p>
+          {% render 'moby-preorder-quantity', value: 1, min: 1, max: section.settings.preorder_max_qty | default: 10, input_id: 'preorder-qty-input' %}
+          {%- if section.settings.preorder_shipping_text != blank -%}
+            <p class="moby-buy-box__preorder-shipping">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="1" y="3" width="15" height="13" rx="2"/>
+                <path d="M16 8h4l3 3v5a2 2 0 01-2 2h-5"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+              {{ section.settings.preorder_shipping_text }}
+            </p>
+          {%- endif -%}
+        </div>
+        {%- endif -%}
+
+        <!-- Volume Selector Cards (hidden during pre-order) -->
+        {%- if section.settings.show_volume_selector and is_preorder == false -%}
         <div class="moby-buy-box__packs" id="pack-selector">
           <label class="moby-buy-box__pack active" data-quantity="1">
             <input type="radio" name="pack_quantity" value="1" checked>
@@ -281,8 +313,8 @@
         </div>
         {%- endif -%}
 
-        <!-- Custom Subscription Widget using Shopify Selling Plans -->
-        {%- if section.settings.show_purchase_options -%}
+        <!-- Custom Subscription Widget using Shopify Selling Plans (hidden during pre-order) -->
+        {%- if section.settings.show_purchase_options and is_preorder == false -%}
         <div class="moby-buy-box__purchase-options" id="purchase-options">
           {%- assign has_selling_plans = false -%}
           {%- assign first_selling_plan = nil -%}
@@ -369,17 +401,20 @@
             {% render 'back-in-stock-notification', product: product, variant: current_variant, class: 'moby-buy-box__add-btn' %}
           </div>
         {%- else -%}
-          <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form"
+          <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form{% if is_preorder %} moby-buy-box__form--preorder{% endif %}"
             data-custom-handler="true"
             data-variant-id="{{ current_variant.id }}"
             data-inventory-quantity="{{ variant_inventory }}"
-            data-inventory-policy="{{ inventory_policy }}">
+            data-inventory-policy="{{ inventory_policy }}"
+            data-is-preorder="{{ is_preorder }}">
             <input type="hidden" name="id" value="{{ current_variant.id }}">
             <input type="hidden" name="quantity" value="1" id="quantity-input">
             <input type="hidden" name="selling_plan" value="" id="selling-plan-input">
 
-            <button type="submit" class="moby-buy-box__add-btn" {% unless current_variant.available %}disabled{% endunless %}>
-              {%- if current_variant.available -%}
+            <button type="submit" class="moby-buy-box__add-btn{% if is_preorder %} moby-buy-box__add-btn--preorder{% endif %}" {% unless current_variant.available %}disabled{% endunless %}>
+              {%- if is_preorder -%}
+                <span id="btn-text">{{ section.settings.preorder_button_text | default: 'Pre-order Now' }}</span> – <span id="btn-price">{{ current_variant.price | money }}</span>
+              {%- elsif current_variant.available -%}
                 <span id="btn-text">Add to Cart</span> – <span id="btn-price">{{ current_variant.price | money }}</span>
               {%- else -%}
                 Sold Out
@@ -795,6 +830,53 @@
   .moby-buy-box__stock--low .moby-buy-box__stock-dot::before,
   .moby-buy-box__stock--low .moby-buy-box__stock-dot::after {
     background: #B85C00;
+  }
+
+  /* Pre-order Stock Badge */
+  .moby-buy-box__stock--preorder {
+    background: rgba(79, 74, 50, 0.12);
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-buy-box__stock--preorder .moby-buy-box__stock-dot::before,
+  .moby-buy-box__stock--preorder .moby-buy-box__stock-dot::after {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  /* Pre-order Quantity Wrapper */
+  .moby-buy-box__preorder-qty-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    background: rgba(245, 245, 240, 0.5);
+    border-radius: 6px;
+  }
+
+  .moby-buy-box__preorder-shipping {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--moby-olive, #4F4A32);
+    margin: 0;
+  }
+
+  .moby-buy-box__preorder-shipping svg {
+    flex-shrink: 0;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Pre-order Button */
+  .moby-buy-box__add-btn--preorder {
+    background: var(--moby-olive, #4F4A32);
+    position: relative;
+  }
+
+  .moby-buy-box__add-btn--preorder:hover:not(:disabled) {
+    background: var(--moby-dark, #1C1A10);
   }
 
   /* Klarna */
@@ -1302,6 +1384,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = section.querySelector('#moby-buy-box-form');
   const purchaseOptions = section.querySelector('#purchase-options');
   const sellingPlanSelect = section.querySelector('#selling-plan-select');
+  const preorderQtyInput = section.querySelector('#preorder-qty-input');
+  const isPreorderMode = form && form.dataset.isPreorder === 'true';
 
   let currentQuantity = 1;
   let isSubscription = false;
@@ -1332,12 +1416,20 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateButton() {
-    const packDiscount = getPackDiscount(currentQuantity);
-    let total = basePrice * currentQuantity * (1 - packDiscount);
+    let total;
 
-    // Apply subscription discount if selected
-    if (isSubscription) {
-      total = total * (1 - subscriptionDiscount / 100);
+    if (isPreorderMode) {
+      // Pre-order mode: simple quantity * price, no discounts
+      total = basePrice * currentQuantity;
+    } else {
+      // Normal mode: apply pack discounts
+      const packDiscount = getPackDiscount(currentQuantity);
+      total = basePrice * currentQuantity * (1 - packDiscount);
+
+      // Apply subscription discount if selected
+      if (isSubscription) {
+        total = total * (1 - subscriptionDiscount / 100);
+      }
     }
 
     if (btnPrice) btnPrice.textContent = formatMoney(total);
@@ -1345,7 +1437,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update button text based on purchase type
     const btnText = section.querySelector('#btn-text');
-    if (btnText) {
+    if (btnText && !isPreorderMode) {
       btnText.textContent = isSubscription ? 'Subscribe' : 'Add to Cart';
     }
   }
@@ -1409,7 +1501,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Pack selection
+  // Pack selection (normal mode)
   if (packSelector) {
     packSelector.querySelectorAll('.moby-buy-box__pack').forEach(pack => {
       pack.addEventListener('click', function() {
@@ -1419,6 +1511,14 @@ document.addEventListener('DOMContentLoaded', function() {
         currentQuantity = parseInt(this.dataset.quantity);
         updateButton();
       });
+    });
+  }
+
+  // Pre-order quantity picker
+  if (preorderQtyInput) {
+    preorderQtyInput.addEventListener('change', function() {
+      currentQuantity = parseInt(this.value) || 1;
+      updateButton();
     });
   }
 
@@ -1822,6 +1922,45 @@ document.addEventListener('DOMContentLoaded', function() {
       "label": "Show 'Notify Me' for sold out products",
       "info": "Displays an email signup form instead of disabled button when product is sold out",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Pre-order settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_preorder",
+      "label": "Enable pre-order mode",
+      "info": "Activates when inventory is 0 and 'Continue selling when out of stock' is enabled",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "preorder_button_text",
+      "label": "Pre-order button text",
+      "default": "Pre-order Now"
+    },
+    {
+      "type": "text",
+      "id": "preorder_badge_text",
+      "label": "Pre-order badge text",
+      "default": "Pre-order"
+    },
+    {
+      "type": "text",
+      "id": "preorder_shipping_text",
+      "label": "Expected shipping text",
+      "default": "Expected to ship in February 2025",
+      "info": "Displayed below quantity picker during pre-order"
+    },
+    {
+      "type": "range",
+      "id": "preorder_max_qty",
+      "label": "Maximum pre-order quantity",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 10
     }
   ],
   "presets": [
