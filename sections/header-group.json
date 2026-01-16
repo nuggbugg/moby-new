@@ -14,19 +14,21 @@
     "moby_announcement": {
       "type": "moby-announcement-bar",
       "settings": {
-        "show_bar": true,
-        "text": "🎉 PRE-ORDER NOW – 20% OFF LAUNCH DISCOUNT",
-        "link": "/products/creatine-monohydrate"
+        "show_bar": false,
+        "text": "PRE-ORDER NOW – 20% OFF LAUNCH DISCOUNT",
+        "link": "shopify://products/creatine"
       }
     },
     "moby_header": {
       "type": "moby-header",
       "settings": {
         "menu": "main-menu",
-        "show_currency": true,
         "enable_transparent": true
       }
     }
   },
-  "order": ["moby_announcement", "moby_header"]
+  "order": [
+    "moby_announcement",
+    "moby_header"
+  ]
 }
