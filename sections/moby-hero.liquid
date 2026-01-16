@@ -41,6 +41,11 @@
 
   <div class="moby-hero__container">
     <div class="moby-hero__content">
+      <!-- Badge/Tagline -->
+      {%- if section.settings.badge != blank -%}
+        <span class="moby-hero__badge-text">{{ section.settings.badge }}</span>
+      {%- endif -%}
+
       <!-- Main Heading -->
       <h1 class="moby-hero__heading">
         {{ section.settings.heading | default: "SCIENCE-BACKED CLARITY AND STRENGTH" }}
@@ -126,6 +131,29 @@
 
   .moby-hero__content {
     max-width: 672px;
+  }
+
+  .moby-hero__badge-text {
+    display: inline-block;
+    font-family: 'N27', var(--font-body--family, system-ui, sans-serif);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--moby-lime, #F9FDB5);
+    background: rgba(28, 26, 16, 0.5);
+    padding: 8px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  @media (min-width: 768px) {
+    .moby-hero__badge-text {
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
   }
 
   .moby-hero__heading {
@@ -281,6 +309,13 @@
         { "value": "bottom right", "label": "Bottom right" }
       ],
       "default": "center center"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge text (above heading)",
+      "default": "Produced in Sweden",
+      "info": "Small text displayed above the main heading"
     },
     {
       "type": "text",
