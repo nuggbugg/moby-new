@@ -291,6 +291,7 @@
         "benefit_1": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/MOBY_Storefront_Build.webp",
             "title": "Strength and Power",
             "description": "Enhances force production, making it essential for strength, sprinting, and explosive movements."
           }
@@ -298,6 +299,7 @@
         "benefit_2": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/MOBY_Storefront_Build_1.webp",
             "title": "ATP Production",
             "description": "Increases intramuscular phosphocreatine stores by 20-40%, supporting high-intensity efforts and repeated power output."
           }
@@ -305,6 +307,7 @@
         "benefit_3": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/MOBY_Storefront_Build_2.webp",
             "title": "Cognitive Function",
             "description": "Supports brain energy metabolism, improving working memory, mental clarity, and focus during demanding tasks."
           }
@@ -312,6 +315,7 @@
         "benefit_4": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/MOBY_Storefront_Hydration.webp",
             "title": "Hydration",
             "description": "Supports cellular hydration by drawing water into muscle cells, optimizing function and performance."
           }
@@ -319,6 +323,7 @@
         "benefit_5": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/benefit-recovery-BA-bojS.jpg",
             "title": "Recovery",
             "description": "Helps mitigate muscle damage and accelerates repair for faster bounce-back between sessions."
           }
@@ -326,6 +331,7 @@
         "benefit_6": {
           "type": "benefit",
           "settings": {
+            "image": "shopify://shop_images/MOBY_Storefront_Build_3.webp",
             "title": "Fatigue Resistance",
             "description": "Improves anaerobic threshold, ventilatory efficiency, and metabolic function, delaying fatigue."
           }
