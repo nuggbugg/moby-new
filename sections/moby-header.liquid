@@ -223,7 +223,7 @@
 
   .moby-header {
     position: fixed;
-    top: 0;
+    top: var(--moby-announcement-height, 0px);
     left: 0;
     right: 0;
     z-index: 100;
@@ -231,7 +231,7 @@
     flex-direction: column;
     align-items: center;
     padding: 18px 0 0 0;
-    transition: padding 300ms ease-in-out;
+    transition: padding 300ms ease-in-out, top 300ms ease-in-out;
   }
 
   .moby-header__container {
