@@ -1,0 +1,190 @@
+{% comment %}
+  MOBY Pre-order Quantity Picker
+  Simple +/- quantity selector for pre-order mode
+
+  @param {number} [value] - Initial quantity value (default: 1)
+  @param {number} [min] - Minimum quantity (default: 1)
+  @param {number} [max] - Maximum quantity (default: 10)
+  @param {string} [input_id] - ID for the quantity input
+{% endcomment %}
+
+{%- assign qty_value = value | default: 1 -%}
+{%- assign qty_min = min | default: 1 -%}
+{%- assign qty_max = max | default: 10 -%}
+{%- assign qty_input_id = input_id | default: 'preorder-quantity' -%}
+
+<div class="moby-qty" data-moby-quantity>
+  <button
+    type="button"
+    class="moby-qty__btn moby-qty__btn--minus"
+    aria-label="Decrease quantity"
+    data-qty-minus
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
+
+  <input
+    type="number"
+    id="{{ qty_input_id }}"
+    name="quantity"
+    value="{{ qty_value }}"
+    min="{{ qty_min }}"
+    max="{{ qty_max }}"
+    class="moby-qty__input"
+    aria-label="Quantity"
+    data-qty-input
+  >
+
+  <button
+    type="button"
+    class="moby-qty__btn moby-qty__btn--plus"
+    aria-label="Increase quantity"
+    data-qty-plus
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .moby-qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(28, 26, 16, 0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .moby-qty__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--moby-dark, #1C1A10);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .moby-qty__btn:hover:not(:disabled) {
+    background: rgba(249, 253, 181, 0.5);
+  }
+
+  .moby-qty__btn:active:not(:disabled) {
+    background: var(--moby-lime, #F9FDB5);
+  }
+
+  .moby-qty__btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .moby-qty__btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .moby-qty__input {
+    width: 48px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-left: 1px solid rgba(28, 26, 16, 0.1);
+    border-right: 1px solid rgba(28, 26, 16, 0.1);
+    background: transparent;
+    font-family: 'N27', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--moby-dark, #1C1A10);
+    -moz-appearance: textfield;
+  }
+
+  .moby-qty__input::-webkit-outer-spin-button,
+  .moby-qty__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .moby-qty__input:focus {
+    outline: none;
+    background: rgba(249, 253, 181, 0.3);
+  }
+
+  /* Label above quantity picker */
+  .moby-qty-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .moby-qty-label {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(28, 26, 16, 0.7);
+    margin: 0;
+  }
+</style>
+
+<script>
+  (function() {
+    // Initialize all quantity pickers on the page
+    document.querySelectorAll('[data-moby-quantity]').forEach(function(wrapper) {
+      const input = wrapper.querySelector('[data-qty-input]');
+      const minusBtn = wrapper.querySelector('[data-qty-minus]');
+      const plusBtn = wrapper.querySelector('[data-qty-plus]');
+
+      if (!input || !minusBtn || !plusBtn) return;
+
+      const min = parseInt(input.min) || 1;
+      const max = parseInt(input.max) || 10;
+
+      function updateButtons() {
+        const value = parseInt(input.value) || min;
+        minusBtn.disabled = value <= min;
+        plusBtn.disabled = value >= max;
+      }
+
+      function setValue(newValue) {
+        const clamped = Math.max(min, Math.min(max, newValue));
+        input.value = clamped;
+        updateButtons();
+
+        // Dispatch change event for form handling
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      minusBtn.addEventListener('click', function() {
+        setValue(parseInt(input.value) - 1);
+      });
+
+      plusBtn.addEventListener('click', function() {
+        setValue(parseInt(input.value) + 1);
+      });
+
+      input.addEventListener('change', function() {
+        setValue(parseInt(input.value) || min);
+      });
+
+      input.addEventListener('blur', function() {
+        if (input.value === '' || isNaN(parseInt(input.value))) {
+          setValue(min);
+        }
+      });
+
+      // Initialize button states
+      updateButtons();
+    });
+  })();
+</script>

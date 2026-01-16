@@ -10,7 +10,15 @@
 {%- assign variant_inventory = current_variant.inventory_quantity | default: 0 -%}
 {%- assign inventory_policy = current_variant.inventory_policy | default: 'deny' -%}
 
-<div class="moby-sticky-bar" id="moby-sticky-bar" data-hidden="true">
+{%- comment -%} Pre-order Detection Logic {%- endcomment -%}
+{%- assign is_preorder = false -%}
+{%- if section.settings.enable_preorder -%}
+  {%- if current_variant.inventory_quantity <= 0 and current_variant.inventory_policy == 'continue' -%}
+    {%- assign is_preorder = true -%}
+  {%- endif -%}
+{%- endif -%}
+
+<div class="moby-sticky-bar" id="moby-sticky-bar" data-hidden="true" data-is-preorder="{{ is_preorder }}">
   <div class="moby-sticky-bar__container">
     <div class="moby-sticky-bar__content">
       <!-- Product Image -->
@@ -31,7 +39,11 @@
         <p class="moby-sticky-bar__title">{{ product.title }}</p>
         <div class="moby-sticky-bar__price-wrap">
           <p class="moby-sticky-bar__price">{{ current_variant.price | money }}</p>
-          {%- if current_variant.compare_at_price > current_variant.price -%}
+          {%- if is_preorder -%}
+            <span class="moby-sticky-bar__badge moby-sticky-bar__badge--preorder">
+              {{ section.settings.preorder_badge_text | default: 'Pre-order' }}
+            </span>
+          {%- elsif current_variant.compare_at_price > current_variant.price -%}
             {%- assign savings_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
             <span class="moby-sticky-bar__badge">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -45,20 +57,26 @@
         </div>
       </div>
 
-      <!-- Add to Cart Button -->
+      <!-- Add to Cart / Pre-order Button -->
       {%- if current_variant.available -%}
         <button
           type="button"
-          class="moby-sticky-bar__button"
+          class="moby-sticky-bar__button{% if is_preorder %} moby-sticky-bar__button--preorder{% endif %}"
           data-sticky-add-to-cart
           data-variant-id="{{ current_variant.id }}"
           data-product-handle="{{ product.handle }}"
           data-product-id="{{ product.id }}"
           data-inventory-quantity="{{ variant_inventory }}"
           data-inventory-policy="{{ inventory_policy }}"
+          data-is-preorder="{{ is_preorder }}"
         >
-          <span class="moby-sticky-bar__button-full">Add to Cart</span>
-          <span class="moby-sticky-bar__button-short">Add</span>
+          {%- if is_preorder -%}
+            <span class="moby-sticky-bar__button-full">{{ section.settings.preorder_button_text | default: 'Pre-order Now' }}</span>
+            <span class="moby-sticky-bar__button-short">Pre-order</span>
+          {%- else -%}
+            <span class="moby-sticky-bar__button-full">Add to Cart</span>
+            <span class="moby-sticky-bar__button-short">Add</span>
+          {%- endif -%}
         </button>
       {%- else -%}
         <button
@@ -198,6 +216,11 @@
     height: 12px;
   }
 
+  .moby-sticky-bar__badge--preorder {
+    background: rgba(79, 74, 50, 0.15);
+    color: var(--moby-olive, #4F4A32);
+  }
+
   /* Button */
   .moby-sticky-bar__button {
     display: flex;
@@ -232,6 +255,10 @@
   }
 
   .moby-sticky-bar__button--notify {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-sticky-bar__button--preorder {
     background: var(--moby-olive, #4F4A32);
   }
 
@@ -437,7 +464,31 @@
   "name": "MOBY Sticky Bar",
   "tag": "div",
   "class": "moby-sticky-bar-wrapper",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Pre-order settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_preorder",
+      "label": "Enable pre-order mode",
+      "info": "Activates when inventory is 0 and 'Continue selling when out of stock' is enabled",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "preorder_button_text",
+      "label": "Pre-order button text",
+      "default": "Pre-order Now"
+    },
+    {
+      "type": "text",
+      "id": "preorder_badge_text",
+      "label": "Pre-order badge text",
+      "default": "Pre-order"
+    }
+  ],
   "presets": [
     {
       "name": "MOBY Sticky Bar"
