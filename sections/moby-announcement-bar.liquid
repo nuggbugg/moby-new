@@ -14,6 +14,7 @@
     <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
   {%- endif -%}
 </div>
+<style>:root { --moby-announcement-height: 38px; } @media (min-width: 768px) { :root { --moby-announcement-height: 42px; } }</style>
 {%- endif -%}
 
 <style>
@@ -22,6 +23,10 @@
     padding: 10px 20px;
     text-align: center;
     width: 100%;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .moby-announcement-bar__link {
@@ -46,6 +51,7 @@
   @media (min-width: 768px) {
     .moby-announcement-bar {
       padding: 12px 24px;
+      height: 42px;
     }
 
     .moby-announcement-bar__text {
