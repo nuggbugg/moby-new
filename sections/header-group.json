@@ -11,6 +11,14 @@
   "type": "header",
   "name": "Header",
   "sections": {
+    "moby_announcement": {
+      "type": "moby-announcement-bar",
+      "settings": {
+        "show_bar": true,
+        "text": "🎉 PRE-ORDER NOW – 20% OFF LAUNCH DISCOUNT",
+        "link": "/products/creatine-monohydrate"
+      }
+    },
     "moby_header": {
       "type": "moby-header",
       "settings": {
@@ -20,5 +28,5 @@
       }
     }
   },
-  "order": ["moby_header"]
+  "order": ["moby_announcement", "moby_header"]
 }
