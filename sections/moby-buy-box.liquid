@@ -638,6 +638,7 @@
     overflow-y: hidden;
     padding-bottom: 4px;
     order: 1;
+    width: 100%;
     max-width: 100%;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -774,6 +775,8 @@
     flex-direction: column;
     gap: 16px;
     min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
@@ -782,6 +785,8 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .moby-buy-box__title {
@@ -987,6 +992,8 @@
     line-height: 1.6;
     color: var(--moby-dark, #1C1A10);
     margin: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Benefits */
@@ -1022,8 +1029,8 @@
     letter-spacing: 0.02em;
     line-height: 1.3;
     color: var(--moby-dark, #1C1A10);
-    overflow: hidden;
-    text-overflow: ellipsis;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   @media (min-width: 400px) {
