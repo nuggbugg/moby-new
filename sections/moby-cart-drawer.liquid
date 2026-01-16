@@ -23,6 +23,7 @@
   data-currency="{{ cart.currency.iso_code }}"
   data-cart-total="{{ cart.total_price }}"
   data-money-format="{{ shop.money_format | escape }}"
+  data-free-shipping-promo="{{ section.settings.free_shipping_promo }}"
 >
   {% render 'moby-cart-drawer' %}
 </div>
@@ -31,6 +32,13 @@
 {
   "name": "Cart Drawer",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "free_shipping_promo",
+      "label": "Free shipping promo active",
+      "info": "Enable to show free shipping for ALL orders (use during launch promo)",
+      "default": false
+    },
     {
       "type": "header",
       "content": "Free Shipping Thresholds"

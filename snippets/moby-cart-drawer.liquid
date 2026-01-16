@@ -767,6 +767,7 @@
     let shippingThresholds = { SEK: 500, EUR: 43, USD: 50, GBP: 40, NOK: 500, DKK: 350 };
     let currentCurrency = '{{ cart.currency.iso_code | default: "SEK" }}';
     let moneyFormat = '{{ shop.money_format | strip_html | escape }}';
+    let freeShippingPromo = false;
 
     if (sectionWrapper) {
       try {
@@ -777,6 +778,8 @@
         if (sectionWrapper.dataset.currency) {
           currentCurrency = sectionWrapper.dataset.currency;
         }
+        // Check if free shipping promo is active
+        freeShippingPromo = sectionWrapper.dataset.freeShippingPromo === 'true';
       } catch (e) {
         console.error('Error parsing shipping thresholds:', e);
       }
@@ -816,6 +819,14 @@
       shippingBar.style.display = itemCount > 0 ? 'flex' : 'none';
 
       if (itemCount === 0) return;
+
+      // If free shipping promo is active, always show free shipping
+      if (freeShippingPromo) {
+        shippingFill.style.width = '100%';
+        shippingText.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Free shipping on all orders!';
+        shippingText.classList.add('moby-cart-drawer__shipping-text--success');
+        return;
+      }
 
       // Get threshold for current currency (in base currency units, not cents)
       const threshold = shippingThresholds[currentCurrency] || 500;
