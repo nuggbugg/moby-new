@@ -511,6 +511,7 @@
   .moby-buy-box {
     padding: 40px 0 60px;
     background: var(--color-background, #ffffff);
+    overflow-x: hidden;
   }
 
   .moby-buy-box__layout {
@@ -754,6 +755,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .moby-buy-box__header {
@@ -770,6 +774,7 @@
     letter-spacing: 0.01em;
     color: var(--moby-dark, #1C1A10);
     margin: 0;
+    word-break: break-word;
   }
 
   @media (min-width: 768px) {
@@ -858,13 +863,13 @@
   .moby-buy-box__price-display {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px 12px;
     flex-wrap: wrap;
   }
 
   .moby-buy-box__price-sale {
     font-family: 'Memoir', serif;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--moby-dark, #1C1A10);
   }
