@@ -1,17 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "Footer",
   "sections": {
     "moby_footer": {
       "type": "moby-footer",
-      "settings": {
-        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
-        "email": "hello@drinkmoby.com",
-        "newsletter_heading": "Join the Movement",
-        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
-        "newsletter_placeholder": "Your email",
-        "show_payment_icons": true
-      },
       "blocks": {
         "quick_1": {
           "type": "quick_link",
@@ -74,8 +75,30 @@
           }
         }
       },
-      "block_order": ["quick_1", "quick_2", "quick_3", "quick_4", "support_1", "support_2", "support_3", "support_4"]
+      "block_order": [
+        "quick_1",
+        "quick_2",
+        "quick_3",
+        "quick_4",
+        "support_1",
+        "support_2",
+        "support_3",
+        "support_4"
+      ],
+      "settings": {
+        "description": "Science-backed clarity and strength. Effortless daily creatine for brain, body, and balance.",
+        "email": "hello@drinkmoby.com",
+        "newsletter_heading": "Join the Movement",
+        "newsletter_text": "Science-backed insights. Product drops. Delivered monthly.",
+        "newsletter_placeholder": "Your email",
+        "success_message": "You're in! Welcome to the MOBY community.",
+        "show_payment_icons": true,
+        "show_country_selector": true,
+        "show_language_selector": true
+      }
     }
   },
-  "order": ["moby_footer"]
+  "order": [
+    "moby_footer"
+  ]
 }
