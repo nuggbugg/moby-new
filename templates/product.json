@@ -28,8 +28,7 @@
         "enable_preorder": true,
         "preorder_button_text": "Pre-order Now",
         "preorder_badge_text": "Pre-order",
-        "preorder_shipping_text": "Expected to ship in February 2026",
-        "preorder_max_qty": 20
+        "preorder_shipping_text": "Expected to ship in February 2026"
       }
     },
     "moby_features": {
@@ -116,7 +115,9 @@
         "point_3"
       ],
       "settings": {
-        "badge": "Daily Strength & Power Support"
+        "badge": "Daily Strength & Power Support",
+        "image": "shopify://shop_images/Creatinestick.webp",
+        "image_alt": "MOBY Creatine"
       }
     },
     "moby_why_stickpacks": {
