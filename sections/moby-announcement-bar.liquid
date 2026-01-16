@@ -1,0 +1,87 @@
+{% comment %}
+  MOBY Announcement Bar
+  - Simple top banner for announcements
+  - Lime background with dark text
+{% endcomment %}
+
+{%- if section.settings.show_bar -%}
+<div class="moby-announcement-bar">
+  {%- if section.settings.link != blank -%}
+    <a href="{{ section.settings.link }}" class="moby-announcement-bar__link">
+      <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
+    </a>
+  {%- else -%}
+    <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
+  {%- endif -%}
+</div>
+{%- endif -%}
+
+<style>
+  .moby-announcement-bar {
+    background: var(--moby-lime, #F9FDB5);
+    padding: 10px 20px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .moby-announcement-bar__link {
+    text-decoration: none;
+    display: block;
+  }
+
+  .moby-announcement-bar__link:hover .moby-announcement-bar__text {
+    opacity: 0.8;
+  }
+
+  .moby-announcement-bar__text {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--moby-dark, #1B1A0F);
+    transition: opacity 0.2s ease;
+  }
+
+  @media (min-width: 768px) {
+    .moby-announcement-bar {
+      padding: 12px 24px;
+    }
+
+    .moby-announcement-bar__text {
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Announcement Bar",
+  "tag": "section",
+  "class": "moby-announcement-bar-wrapper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_bar",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "🎉 PRE-ORDER NOW – 20% OFF LAUNCH DISCOUNT"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link (optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Announcement Bar"
+    }
+  ]
+}
+{% endschema %}
