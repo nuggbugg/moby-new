@@ -246,7 +246,7 @@
         {%- if is_preorder -%}
         <div class="moby-buy-box__preorder-qty-wrapper">
           <p class="moby-qty-label">Quantity</p>
-          {% render 'moby-preorder-quantity', value: 1, min: 1, max: section.settings.preorder_max_qty | default: 10, input_id: 'preorder-qty-input' %}
+          {% render 'moby-preorder-quantity', value: 1, min: 1, max: 10, input_id: 'preorder-qty-input' %}
           {%- if section.settings.preorder_shipping_text != blank -%}
             <p class="moby-buy-box__preorder-shipping">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1953,15 +1953,6 @@ document.addEventListener('DOMContentLoaded', function() {
       "label": "Expected shipping text",
       "default": "Expected to ship in February 2025",
       "info": "Displayed below quantity picker during pre-order"
-    },
-    {
-      "type": "range",
-      "id": "preorder_max_qty",
-      "label": "Maximum pre-order quantity",
-      "min": 1,
-      "max": 20,
-      "step": 1,
-      "default": 10
     }
   ],
   "presets": [
