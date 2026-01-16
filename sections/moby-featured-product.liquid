@@ -110,7 +110,16 @@
 
           <!-- Price -->
           <div class="moby-featured-product__price-wrapper">
-            <span class="moby-featured-product__price">{{ current_variant.price | money }}</span>
+            {%- if current_variant.compare_at_price > current_variant.price -%}
+              <div class="moby-featured-product__price-display">
+                <span class="moby-featured-product__price moby-featured-product__price--sale">{{ current_variant.price | money }}</span>
+                <span class="moby-featured-product__price-compare">{{ current_variant.compare_at_price | money }}</span>
+                {%- assign savings_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+                <span class="moby-featured-product__price-badge">Save {{ savings_percent }}%</span>
+              </div>
+            {%- else -%}
+              <span class="moby-featured-product__price">{{ current_variant.price | money }}</span>
+            {%- endif -%}
             {%- if section.settings.subscription_link != blank -%}
               <a href="{{ section.settings.subscription_link }}" class="moby-featured-product__subscription-link">
                 Subscribe & save 10%
@@ -505,11 +514,42 @@
     gap: 8px;
   }
 
+  .moby-featured-product__price-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   .moby-featured-product__price {
     font-family: 'N27', sans-serif;
     font-size: 30px;
     font-weight: 700;
     color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-featured-product__price--sale {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .moby-featured-product__price-compare {
+    font-family: 'N27', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(28, 26, 16, 0.5);
+    text-decoration: line-through;
+  }
+
+  .moby-featured-product__price-badge {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 6px 12px;
+    background: var(--moby-olive, #4F4A32);
+    color: #ffffff;
+    border-radius: 4px;
   }
 
   .moby-featured-product__subscription-link {
