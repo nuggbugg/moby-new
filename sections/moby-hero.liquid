@@ -13,7 +13,7 @@
   endif
 %}
 
-<section class="moby-hero{% unless has_image %} moby-hero--placeholder{% endunless %}">
+<section class="moby-hero{% unless has_image %} moby-hero--placeholder{% endunless %}" style="--mobile-focal-point: {{ section.settings.mobile_focal_point | default: 'center center' }};">
   {% if has_image %}
     <div class="moby-hero__image-wrapper">
       {{ section.settings.image | image_url: width: 2560 | image_tag:
@@ -220,6 +220,10 @@
 
   /* Mobile Styles */
   @media (max-width: 767px) {
+    .moby-hero__image {
+      object-position: var(--mobile-focal-point, center center);
+    }
+
     .moby-hero__overlay {
       background: linear-gradient(
         0deg,
@@ -259,6 +263,24 @@
       "id": "image",
       "label": "Background image",
       "info": "Recommended: 1920x1080px or larger"
+    },
+    {
+      "type": "select",
+      "id": "mobile_focal_point",
+      "label": "Mobile image focal point",
+      "info": "Choose which part of the image to focus on mobile",
+      "options": [
+        { "value": "top left", "label": "Top left" },
+        { "value": "top center", "label": "Top center" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "center left", "label": "Center left" },
+        { "value": "center center", "label": "Center (default)" },
+        { "value": "center right", "label": "Center right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom center", "label": "Bottom center" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center center"
     },
     {
       "type": "text",
