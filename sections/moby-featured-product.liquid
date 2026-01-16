@@ -15,6 +15,13 @@
   assign featured_image = product.featured_image
   assign variant_inventory = current_variant.inventory_quantity | default: 0
   assign inventory_policy = current_variant.inventory_policy | default: 'deny'
+
+  assign is_preorder = false
+  if section.settings.enable_preorder
+    if current_variant.inventory_quantity <= 0 and current_variant.inventory_policy == 'continue'
+      assign is_preorder = true
+    endif
+  endif
 -%}
 
 <section class="moby-section moby-featured-product" id="moby-featured-product-{{ section.id }}">
@@ -71,6 +78,12 @@
 
           <!-- Title -->
           <h2 class="moby-featured-product__title">{{ product.title }}</h2>
+
+          {%- if is_preorder -%}
+            <span class="moby-featured-product__preorder-badge">
+              {{ section.settings.preorder_badge_text | default: 'Pre-order' }}
+            </span>
+          {%- endif -%}
 
           <!-- Klarna Badge -->
           {%- if section.settings.show_klarna_badge -%}
@@ -131,15 +144,18 @@
           <div class="moby-featured-product__buttons">
             <button
               type="button"
-              class="moby-featured-product__add-to-cart"
+              class="moby-featured-product__add-to-cart{% if is_preorder %} moby-featured-product__add-to-cart--preorder{% endif %}"
               data-variant-id="{{ current_variant.id }}"
               data-product-id="{{ product.id }}"
               data-product-handle="{{ product.handle }}"
               data-inventory-quantity="{{ variant_inventory }}"
               data-inventory-policy="{{ inventory_policy }}"
+              data-is-preorder="{{ is_preorder }}"
               {% unless current_variant.available %}disabled{% endunless %}
             >
-              {%- if current_variant.available -%}
+              {%- if is_preorder -%}
+                {{ section.settings.preorder_button_text | default: 'Pre-order Now' }}
+              {%- elsif current_variant.available -%}
                 Add to Cart
               {%- else -%}
                 Sold Out
@@ -212,10 +228,12 @@
       const productId = addToCartBtn.dataset.productId;
       const inventoryQty = parseInt(addToCartBtn.dataset.inventoryQuantity) || 0;
       const inventoryPolicy = addToCartBtn.dataset.inventoryPolicy || 'deny';
+      const isPreorder = addToCartBtn.dataset.isPreorder === 'true';
 
       // Function to check stock and update button
       async function checkStockAndUpdateButton() {
-        if (inventoryPolicy !== 'deny') return;
+        // Skip stock check for pre-order mode
+        if (inventoryPolicy !== 'deny' || isPreorder) return;
 
         try {
           const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
@@ -272,11 +290,11 @@
         this.textContent = 'Adding...';
 
         try {
-          // Fetch cart to validate stock
+          // Fetch cart to validate stock (skip for pre-order)
           const cartResponse = await fetch('/cart.js', { headers: { 'Accept': 'application/json' } });
           const cart = await cartResponse.json();
 
-          if (inventoryPolicy === 'deny') {
+          if (inventoryPolicy === 'deny' && !isPreorder) {
             let currentQtyInCart = 0;
             cart.items.forEach(item => {
               if (String(item.product_id) === String(productId)) {
@@ -650,6 +668,29 @@
     color: var(--moby-sage, #C9C8B6);
     font-family: 'N27', sans-serif;
   }
+
+  /* Pre-order styles */
+  .moby-featured-product__preorder-badge {
+    display: inline-block;
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(79, 74, 50, 0.12);
+    color: var(--moby-olive, #4F4A32);
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  .moby-featured-product__add-to-cart--preorder {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  .moby-featured-product__add-to-cart--preorder:hover {
+    background: var(--moby-dark, #1B1A0F);
+  }
 </style>
 
 {% schema %}
@@ -680,6 +721,29 @@
       "id": "subscription_link",
       "label": "Subscription link",
       "info": "Link to subscription option"
+    },
+    {
+      "type": "header",
+      "content": "Pre-order settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_preorder",
+      "label": "Enable pre-order mode",
+      "info": "Activates when inventory is 0 and 'Continue selling when out of stock' is enabled",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "preorder_button_text",
+      "label": "Pre-order button text",
+      "default": "Pre-order Now"
+    },
+    {
+      "type": "text",
+      "id": "preorder_badge_text",
+      "label": "Pre-order badge text",
+      "default": "Pre-order"
     }
   ],
   "blocks": [
