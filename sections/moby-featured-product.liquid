@@ -52,10 +52,10 @@
                   data-image-url="{{ image | image_url: width: 800 }}"
                   aria-label="View product image {{ forloop.index }}"
                 >
-                  {{ image | image_url: width: 200 | image_tag:
+                  {{ image | image_url: width: 400 | image_tag:
                     loading: 'lazy',
-                    sizes: '100px',
-                    widths: '100, 200',
+                    sizes: '120px',
+                    widths: '120, 240, 360',
                     alt: product.title | append: ' thumbnail'
                   }}
                 </button>
