@@ -1,0 +1,254 @@
+{% comment %}
+  MOBY Benefits Carousel Section
+  - Shows creatine benefits with images
+  - Horizontal scroll on mobile
+{% endcomment %}
+
+<section class="moby-section moby-benefits-carousel">
+  <div class="moby-container">
+    <h2 class="moby-benefits-carousel__heading">{{ section.settings.heading | default: "The Benefits That Move You Forward" }}</h2>
+
+    <div class="moby-benefits-carousel__track">
+      {%- for block in section.blocks -%}
+        <div class="moby-benefits-carousel__card" {{ block.shopify_attributes }}>
+          <div class="moby-benefits-carousel__image-wrapper">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 400 | image_tag:
+                loading: 'lazy',
+                alt: block.settings.title,
+                class: 'moby-benefits-carousel__image'
+              }}
+            {%- else -%}
+              <div class="moby-benefits-carousel__image-placeholder"></div>
+            {%- endif -%}
+          </div>
+          <h3 class="moby-benefits-carousel__title">{{ block.settings.title }}</h3>
+          <p class="moby-benefits-carousel__description">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .moby-benefits-carousel {
+    background: #ffffff;
+  }
+
+  .moby-benefits-carousel__heading {
+    font-family: 'Memoir', serif;
+    font-size: 24px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0 0 32px;
+    color: var(--moby-dark, #1B1A0F);
+  }
+
+  @media (min-width: 768px) {
+    .moby-benefits-carousel__heading {
+      font-size: 36px;
+      margin-bottom: 48px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .moby-benefits-carousel__heading {
+      font-size: 42px;
+    }
+  }
+
+  .moby-benefits-carousel__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+
+  .moby-benefits-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .moby-benefits-carousel__track {
+      gap: 24px;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .moby-benefits-carousel__track {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 24px;
+      overflow-x: visible;
+    }
+  }
+
+  .moby-benefits-carousel__card {
+    flex: 0 0 160px;
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 768px) {
+    .moby-benefits-carousel__card {
+      flex: 0 0 180px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .moby-benefits-carousel__card {
+      flex: 1;
+    }
+  }
+
+  .moby-benefits-carousel__image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .moby-benefits-carousel__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .moby-benefits-carousel__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--moby-sage, #C9C8B6) 0%, rgba(201, 200, 182, 0.5) 100%);
+  }
+
+  .moby-benefits-carousel__title {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 8px;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  @media (min-width: 768px) {
+    .moby-benefits-carousel__title {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .moby-benefits-carousel__description {
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(27, 26, 15, 0.7);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .moby-benefits-carousel__description {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Benefits Carousel",
+  "tag": "section",
+  "class": "moby-benefits-carousel-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Benefits That Move You Forward"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Strength and Power"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Enhances force production, making it essential for strength, sprinting, and explosive movements."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Benefits Carousel",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Strength and Power",
+            "description": "Enhances force production, making it essential for strength, sprinting, and explosive movements."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "ATP Production",
+            "description": "Increases intramuscular phosphocreatine stores by 20-40%, supporting high-intensity efforts and repeated power output."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Cognitive Function",
+            "description": "Supports brain energy metabolism, improving working memory, mental clarity, and focus during demanding tasks."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Hydration",
+            "description": "Supports cellular hydration by drawing water into muscle cells, optimizing function and performance."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Recovery",
+            "description": "Helps mitigate muscle damage and accelerates repair for faster bounce-back between sessions."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Fatigue Resistance",
+            "description": "Improves anaerobic threshold, ventilatory efficiency, and metabolic function, delaying fatigue."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

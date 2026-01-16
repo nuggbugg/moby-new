@@ -277,6 +277,64 @@
         "subheading": "Pure creatine, nothing else. Third-party tested, precisely dosed, and produced in Sweden under the strictest standards."
       }
     },
+    "moby_benefits_carousel": {
+      "type": "moby-benefits-carousel",
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Strength and Power",
+            "description": "Enhances force production, making it essential for strength, sprinting, and explosive movements."
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "title": "ATP Production",
+            "description": "Increases intramuscular phosphocreatine stores by 20-40%, supporting high-intensity efforts and repeated power output."
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Cognitive Function",
+            "description": "Supports brain energy metabolism, improving working memory, mental clarity, and focus during demanding tasks."
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Hydration",
+            "description": "Supports cellular hydration by drawing water into muscle cells, optimizing function and performance."
+          }
+        },
+        "benefit_5": {
+          "type": "benefit",
+          "settings": {
+            "title": "Recovery",
+            "description": "Helps mitigate muscle damage and accelerates repair for faster bounce-back between sessions."
+          }
+        },
+        "benefit_6": {
+          "type": "benefit",
+          "settings": {
+            "title": "Fatigue Resistance",
+            "description": "Improves anaerobic threshold, ventilatory efficiency, and metabolic function, delaying fatigue."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4",
+        "benefit_5",
+        "benefit_6"
+      ],
+      "settings": {
+        "heading": "The Benefits That Move You Forward"
+      }
+    },
     "moby_research": {
       "type": "moby-research",
       "blocks": {
@@ -405,6 +463,7 @@
     "moby_why_stickpacks",
     "moby_product_tabs",
     "moby_why_moby",
+    "moby_benefits_carousel",
     "moby_research",
     "176615865915cd46a8",
     "moby_sticky_bar"
