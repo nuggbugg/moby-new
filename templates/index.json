@@ -14,6 +14,7 @@
       "settings": {
         "image": "shopify://shop_images/Hero_Mountain_1920x1071_237d2301-276a-4398-ae4a-e183c758eb23.webp",
         "mobile_focal_point": "center center",
+        "badge": "PRE-ORDER NOW OPEN",
         "heading": "Creatine Sticks for Daily Performance",
         "subheading": "EFFORTLESS DAILY CREATINE FOR BRAIN, BODY, AND BALANCE",
         "button_text": "SHOP NOW",
@@ -157,7 +158,10 @@
         "product": "creatine",
         "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
         "show_klarna_badge": true,
-        "subscription_link": ""
+        "subscription_link": "",
+        "enable_preorder": true,
+        "preorder_button_text": "Pre-order Now",
+        "preorder_badge_text": "Pre-order"
       }
     },
     "moby_science": {
