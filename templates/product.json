@@ -14,6 +14,8 @@
       "settings": {
         "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
         "free_shipping_threshold": "500 kr",
+        "onetime_subheading": "Free shipping over THRESHOLD, volume discount.",
+        "subscribe_subheading": "Lowest price! Free shipping over THRESHOLD. Cancel anytime.",
         "show_klarna_badge": true,
         "show_description": true,
         "show_benefits": true,
@@ -22,7 +24,12 @@
         "show_payment_icons": true,
         "show_trust_footer": true,
         "show_trust_icons_desktop": true,
-        "show_back_in_stock": true
+        "show_back_in_stock": true,
+        "enable_preorder": true,
+        "preorder_button_text": "Pre-order Now",
+        "preorder_badge_text": "Pre-order",
+        "preorder_shipping_text": "Expected to ship in February 2026",
+        "preorder_max_qty": 10
       }
     },
     "moby_features": {
@@ -361,7 +368,11 @@
     },
     "moby_sticky_bar": {
       "type": "moby-sticky-bar",
-      "settings": {}
+      "settings": {
+        "enable_preorder": true,
+        "preorder_button_text": "Pre-order Now",
+        "preorder_badge_text": "Pre-order"
+      }
     }
   },
   "order": [
