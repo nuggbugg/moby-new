@@ -1743,8 +1743,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
 
-      console.log('Stock check:', { inventoryPolicy, inventoryQty, currentQtyInCart });
-
       // Check if stock is already exhausted (for deny policy)
       if (inventoryPolicy === 'deny' && currentQtyInCart >= inventoryQty) {
         submitBtn.disabled = true;
@@ -1827,16 +1825,6 @@ document.addEventListener('DOMContentLoaded', function() {
           if (String(item.product_id) === String(productId)) {
             currentQtyInCart += item.quantity;
           }
-        });
-
-        // Debug logging
-        console.log('Inventory check:', {
-          variantId,
-          productId,
-          inventoryPolicy,
-          inventoryQty,
-          currentQtyInCart,
-          requestedQty
         });
 
         // Check inventory for products with deny policy
