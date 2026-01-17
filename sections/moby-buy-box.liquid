@@ -575,6 +575,13 @@
     overflow: hidden;
   }
 
+  @media (min-width: 1024px) {
+    .moby-buy-box__gallery-inner {
+      flex-direction: row;
+      gap: 16px;
+    }
+  }
+
   .moby-buy-box__main-image {
     position: relative;
     aspect-ratio: 1;
@@ -664,17 +671,19 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    justify-content: flex-start;
   }
 
   .moby-buy-box__thumbnails::-webkit-scrollbar {
     display: none;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .moby-buy-box__thumbnails {
-      justify-content: center;
-      gap: 12px;
+      flex-direction: column;
+      width: 80px;
+      flex-shrink: 0;
+      overflow-x: visible;
+      order: -1;
     }
   }
 
@@ -691,10 +700,11 @@
     padding: 0;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .moby-buy-box__thumbnail {
-      width: 72px;
-      height: 72px;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
     }
   }
 
@@ -753,6 +763,7 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 24px;
+      margin-left: 96px;
     }
   }
 
