@@ -531,15 +531,21 @@
 
 <style>
   .moby-buy-box {
-    padding: 40px 0 60px;
+    padding: 16px 0 40px;
     background: var(--color-background, #ffffff);
     overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box {
+      padding: 40px 0 60px;
+    }
   }
 
   .moby-buy-box__layout {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 24px;
     max-width: 100%;
     overflow: hidden;
   }
@@ -834,14 +840,14 @@
   }
 
   .moby-buy-box__star {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     color: var(--moby-olive, #4F4A32);
   }
 
   .moby-buy-box__rating-count {
     font-family: 'N27', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     color: var(--moby-olive, #4F4A32);
   }
