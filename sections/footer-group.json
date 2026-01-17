@@ -32,14 +32,14 @@
           "type": "quick_link",
           "settings": {
             "label": "About Us",
-            "link": "/pages/about-us"
+            "link": "shopify://pages/about-us"
           }
         },
         "quick_4": {
           "type": "quick_link",
           "settings": {
             "label": "Partner with MOBY",
-            "link": "/pages/contact"
+            "link": "shopify://pages/contact"
           }
         },
         "support_1": {
