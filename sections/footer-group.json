@@ -18,14 +18,14 @@
           "type": "quick_link",
           "settings": {
             "label": "Shop",
-            "link": "/products/moby-creatine-sticks"
+            "link": "shopify://products/creatine"
           }
         },
         "quick_2": {
           "type": "quick_link",
           "settings": {
             "label": "The Power Station",
-            "link": "/blogs/power-station"
+            "link": "shopify://blogs/news"
           }
         },
         "quick_3": {
