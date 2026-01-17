@@ -172,18 +172,24 @@
         <!-- Rating Stars -->
         {%- assign rating_value = product.metafields.reviews.rating.value.rating | default: 5 -%}
         {%- assign rating_count = product.metafields.reviews.rating_count | default: 0 -%}
-        <div class="moby-buy-box__rating">
-          <div class="moby-buy-box__stars">
-            {%- for i in (1..5) -%}
-              <svg class="moby-buy-box__star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L14.9 8.6L22 9.3L17 14.1L18.2 21.2L12 17.8L5.8 21.2L7 14.1L2 9.3L9.1 8.6L12 2Z"/>
-              </svg>
-            {%- endfor -%}
+        <a href="#judgeme_product_reviews" class="moby-buy-box__rating-link">
+          <div class="moby-buy-box__rating">
+            <div class="moby-buy-box__stars">
+              {%- for i in (1..5) -%}
+                <svg class="moby-buy-box__star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2L14.9 8.6L22 9.3L17 14.1L18.2 21.2L12 17.8L5.8 21.2L7 14.1L2 9.3L9.1 8.6L12 2Z"/>
+                </svg>
+              {%- endfor -%}
+            </div>
+            <span class="moby-buy-box__rating-count">
+              {%- if rating_count > 0 -%}
+                {{ rating_count }} Early tester reviews
+              {%- else -%}
+                Early tester reviews
+              {%- endif -%}
+            </span>
           </div>
-          {%- if rating_count > 0 -%}
-            <span class="moby-buy-box__rating-count">{{ rating_count }} reviews</span>
-          {%- endif -%}
-        </div>
+        </a>
 
         <!-- Title & Stock -->
         <div class="moby-buy-box__header">
@@ -803,6 +809,16 @@
     gap: 8px;
     max-width: 100%;
     overflow: hidden;
+  }
+
+  .moby-buy-box__rating-link {
+    text-decoration: none;
+    display: block;
+    scroll-behavior: smooth;
+  }
+
+  .moby-buy-box__rating-link:hover .moby-buy-box__rating-count {
+    text-decoration: underline;
   }
 
   .moby-buy-box__rating {
