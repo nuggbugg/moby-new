@@ -438,8 +438,8 @@
     align-items: center;
     gap: 6px;
     padding: 8px 12px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(249, 253, 181, 0.12);
+    border: none;
     border-radius: var(--moby-radius);
     color: rgba(255, 255, 255, 0.8);
     font-family: var(--font-body--family, system-ui, sans-serif);
@@ -447,7 +447,7 @@
     font-weight: 400;
     letter-spacing: 0.02em;
     cursor: pointer;
-    transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+    transition: background 200ms ease, color 200ms ease;
   }
 
   @media (min-width: 1024px) {
@@ -457,8 +457,7 @@
   }
 
   .moby-header__language-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(249, 253, 181, 0.2);
     color: #ffffff;
   }
 
