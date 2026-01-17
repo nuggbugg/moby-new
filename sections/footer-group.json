@@ -46,7 +46,7 @@
           "type": "support_link",
           "settings": {
             "label": "Shipping & Returns",
-            "link": "/pages/shipping-and-returns",
+            "link": "shopify://pages/shipping-and-returns",
             "new_tab": false
           }
         },
@@ -62,7 +62,7 @@
           "type": "support_link",
           "settings": {
             "label": "Privacy Policy",
-            "link": "/pages/privacy-policy",
+            "link": "shopify://pages/privacy-policy",
             "new_tab": false
           }
         },
@@ -70,7 +70,7 @@
           "type": "support_link",
           "settings": {
             "label": "Terms of Service",
-            "link": "/pages/terms-of-service",
+            "link": "shopify://pages/terms-of-service",
             "new_tab": false
           }
         }
