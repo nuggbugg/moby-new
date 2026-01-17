@@ -63,7 +63,18 @@
           <div class="moby-lifestyle__product-info">
             <p class="moby-lifestyle__product-label">Featured Product</p>
             <h3 class="moby-lifestyle__product-title">{{ product.title }}</h3>
-            <p class="moby-lifestyle__product-price">{{ current_variant.price | money }}</p>
+            <div class="moby-lifestyle__price-wrapper">
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <div class="moby-lifestyle__price-display">
+                  <span class="moby-lifestyle__price-compare">{{ current_variant.compare_at_price | money }}</span>
+                  <span class="moby-lifestyle__product-price">{{ current_variant.price | money }}</span>
+                  {%- assign savings_percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round -%}
+                  <span class="moby-lifestyle__price-badge">-{{ savings_percent }}%</span>
+                </div>
+              {%- else -%}
+                <p class="moby-lifestyle__product-price">{{ current_variant.price | money }}</p>
+              {%- endif -%}
+            </div>
           </div>
         </a>
       {%- endif -%}
@@ -221,6 +232,37 @@
     font-weight: 300;
     color: #ffffff;
     margin: 0;
+  }
+
+  .moby-lifestyle__price-wrapper {
+    margin: 0;
+  }
+
+  .moby-lifestyle__price-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .moby-lifestyle__price-compare {
+    font-family: 'N27', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: line-through;
+  }
+
+  .moby-lifestyle__price-badge {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 4px 8px;
+    background: var(--moby-lime, #F9FDB5);
+    color: var(--moby-dark, #1C1A10);
+    border-radius: 4px;
   }
 </style>
 
