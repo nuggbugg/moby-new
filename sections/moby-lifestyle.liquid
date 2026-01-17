@@ -49,10 +49,10 @@
         <a href="{{ product.url }}" class="moby-lifestyle__product-card">
           <div class="moby-lifestyle__product-image">
             {%- if product.featured_image != blank -%}
-              {{ product.featured_image | image_url: width: 200 | image_tag:
+              {{ product.featured_image | image_url: width: 336 | image_tag:
                 loading: 'lazy',
-                width: 112,
-                height: 112,
+                sizes: '112px',
+                widths: '112, 224, 336',
                 alt: product.title
               }}
             {%- else -%}
