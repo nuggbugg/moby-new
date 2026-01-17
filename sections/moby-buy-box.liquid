@@ -531,15 +531,21 @@
 
 <style>
   .moby-buy-box {
-    padding: 40px 0 60px;
+    padding: 16px 0 40px;
     background: var(--color-background, #ffffff);
     overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .moby-buy-box {
+      padding: 40px 0 60px;
+    }
   }
 
   .moby-buy-box__layout {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 24px;
     max-width: 100%;
     overflow: hidden;
   }
