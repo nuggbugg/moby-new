@@ -48,6 +48,53 @@
 
     {{ content_for_header }}
 
+    {%- comment -%} Third-party app z-index overrides {%- endcomment -%}
+    {%- comment -%} Fix z-index conflict between Orbe geolocation popup and cookie consent {%- endcomment -%}
+    <style>
+      /* Cookie consent banner - ensure it's above all other overlays */
+      .cc-window,
+      .cookie-consent,
+      .cookie-banner,
+      [class*="cookie-consent"],
+      [id*="cookie-consent"],
+      [class*="CookieConsent"],
+      [id*="CookieConsent"],
+      .shopify-cookie-consent,
+      #shopify-pc__banner,
+      .shopify-pc-wrapper,
+      [data-cookie-consent],
+      /* Pandectes GDPR / Cookie consent common selectors */
+      [class*="pandectes"],
+      [id*="pandectes"],
+      .pdct-cookie-consent,
+      #pdct-consent-banner {
+        z-index: 2147483647 !important; /* Max z-index to ensure cookie consent is always on top */
+        position: relative !important;
+      }
+
+      /* Orbe geolocation popup backdrop - allow clicks to pass through to cookie consent */
+      [id*="orbe"]::backdrop,
+      [class*="orbe"]::backdrop,
+      [id*="orbe"] > [class*="overlay"],
+      [id*="orbe"] > [class*="backdrop"],
+      [class*="orbe"] > [class*="overlay"],
+      [class*="orbe"] > [class*="backdrop"] {
+        pointer-events: none !important;
+      }
+
+      /* Re-enable pointer events for the actual Orbe modal dialog content */
+      [id*="orbe"] [role="dialog"],
+      [class*="orbe"] [role="dialog"],
+      [id*="orbe"] [class*="modal-content"],
+      [id*="orbe"] [class*="popup-content"],
+      [class*="orbe"] [class*="modal-content"],
+      [class*="orbe"] [class*="popup-content"],
+      [id*="orbe"] form,
+      [class*="orbe"] form {
+        pointer-events: auto !important;
+      }
+    </style>
+
     {%- comment -%} Organization Schema for Knowledge Graph {%- endcomment -%}
     <script type="application/ld+json">
       {
