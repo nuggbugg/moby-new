@@ -14,8 +14,8 @@
       "settings": {
         "short_description": "Premium Creatine Monohydrate in convenient daily stick packs. One motion. One stick. Optimized performance.",
         "free_shipping_threshold": "500 kr",
-        "onetime_subheading": "Free shipping over THRESHOLD, volume discount.",
-        "subscribe_subheading": "Lowest price! Free shipping over THRESHOLD. Cancel anytime.",
+        "onetime_subheading": "Free shipping over THRESHOLD",
+        "subscribe_subheading": "Lowest price! Free shipping. Cancel anytime.",
         "show_klarna_badge": true,
         "show_description": true,
         "show_benefits": true,
