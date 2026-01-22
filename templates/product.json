@@ -25,7 +25,7 @@
         "show_trust_footer": true,
         "show_trust_icons_desktop": true,
         "show_back_in_stock": true,
-        "enable_preorder": true,
+        "enable_preorder": false,
         "preorder_button_text": "Pre-order Now",
         "preorder_badge_text": "Pre-order",
         "preorder_shipping_text": "Expected to ship in February 2026"
