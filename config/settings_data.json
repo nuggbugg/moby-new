@@ -96,6 +96,7 @@
           "show_once": true,
           "popup_delay": 12,
           "enable_sms": true,
+          "image": "shopify://shop_images/kreatin.webp",
           "step1_heading": "What are you looking to achieve?",
           "step1_subheading": "Tell us and be first when we launch",
           "goal_1": "Strength & Power",
