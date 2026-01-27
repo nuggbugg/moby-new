@@ -334,6 +334,10 @@
         console.log('Waitlist popup: localStorage cleared');
       }
 
+      // ALWAYS set up event listeners (even if popup won't auto-show)
+      // This ensures buttons work in theme editor preview
+      this.setupEventListeners();
+
       if (!enabled && !forceShow) return;
 
       // Check if already dismissed/submitted (skip if force showing)
@@ -345,12 +349,18 @@
       setTimeout(() => {
         this.showDialog();
       }, delay);
+    }
 
-      // Event listeners
+    setupEventListeners() {
+      // Close button
       this.closeButton?.addEventListener('click', () => this.closeDialog());
+
+      // Click outside to close
       this.dialog?.addEventListener('click', (e) => {
         if (e.target === this.dialog) this.closeDialog();
       });
+
+      // Escape key to close
       this.dialog?.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') this.closeDialog();
       });
