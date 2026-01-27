@@ -163,13 +163,13 @@
             Perfect for <strong>Strength & Power</strong>
           </p>
 
-          <form class="waitlist-popup__form" data-email-form>
-            <input type="hidden" name="goal" data-goal-input>
+          {%- form 'customer', class: 'waitlist-popup__form', id: 'waitlist-email-form' -%}
+            <input type="hidden" name="contact[tags]" value="waitlist,popup" data-tags-input>
 
             <div class="waitlist-popup__form-group">
               <input
                 type="email"
-                name="email"
+                name="contact[email]"
                 class="waitlist-popup__input"
                 placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
                 required
@@ -184,7 +184,7 @@
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
-          </form>
+          {%- endform -%}
 
           <button type="button" class="waitlist-popup__back" data-back>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -379,9 +379,10 @@
           selectedGoalEl.innerHTML = `Perfect for <strong>${goalText}</strong>`;
         }
 
-        const goalInput = this.querySelector('[data-goal-input]');
-        if (goalInput) {
-          goalInput.value = this.selectedGoal;
+        // Update the tags input with the selected goal
+        const tagsInput = this.querySelector('[data-tags-input]');
+        if (tagsInput) {
+          tagsInput.value = `waitlist,popup,goal-${this.selectedGoal}`;
         }
 
         this.goToStep(2);
@@ -413,13 +414,28 @@
     async handleSubmit(e) {
       const form = e.target;
 
-      // Email form
-      if (form.matches('[data-email-form]')) {
+      // Email form (Shopify customer form)
+      if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
         e.preventDefault();
-        const formData = new FormData(form);
-        this.collectedEmail = formData.get('email');
+        const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
+        const formData = new FormData(actualForm);
+        this.collectedEmail = formData.get('contact[email]');
 
-        await this.submitToShopify(this.collectedEmail, this.selectedGoal);
+        try {
+          // Submit to Shopify via fetch
+          const response = await fetch(actualForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          localStorage.setItem(this.storageKey, 'submitted');
+        } catch (error) {
+          console.error('Waitlist submission error:', error);
+          localStorage.setItem(this.storageKey, 'submitted');
+        }
 
         if (this.enableSms) {
           this.goToStep(3);
@@ -449,27 +465,6 @@
       if (e.key === 'Escape' && this.dialog?.open) {
         e.preventDefault();
         this.closeDialog();
-      }
-    }
-
-    async submitToShopify(email, goal) {
-      try {
-        const formData = new FormData();
-        formData.append('form_type', 'customer');
-        formData.append('utf8', '✓');
-        formData.append('contact[email]', email);
-        formData.append('contact[tags]', `waitlist,popup,goal-${goal}`);
-
-        await fetch('/contact#contact_form', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-
-        localStorage.setItem(this.storageKey, 'submitted');
-      } catch (error) {
-        console.error('Waitlist submission error:', error);
-        localStorage.setItem(this.storageKey, 'submitted');
       }
     }
 
@@ -662,6 +657,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     position: relative;
     z-index: 2;
   }
@@ -675,6 +672,9 @@
   .waitlist-popup__step {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
     animation: stepFadeIn 0.3s ease forwards;
   }
 
@@ -695,13 +695,16 @@
 
   .waitlist-popup__step-indicator {
     margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .waitlist-popup__indicator-line {
     display: block;
     width: 32px;
     height: 3px;
-    background: var(--moby-lime, #F9FDB5);
+    background: var(--moby-olive, #4F4A32);
     border-radius: 2px;
   }
 
@@ -719,10 +722,10 @@
   .waitlist-popup__subheading {
     font-family: 'N27', sans-serif;
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--moby-sage, #C9C8B6);
+    color: var(--moby-olive, #4F4A32);
     margin: 0 0 24px;
   }
 
@@ -746,6 +749,7 @@
     flex-direction: column;
     gap: 12px;
     margin-bottom: 24px;
+    width: 100%;
   }
 
   .waitlist-popup__goal {
@@ -805,6 +809,7 @@
   /* Form Styles */
   .waitlist-popup__form {
     margin-bottom: 16px;
+    width: 100%;
   }
 
   .waitlist-popup__form-group {
@@ -996,12 +1001,13 @@
   .waitlist-popup__privacy {
     font-family: 'N27', sans-serif;
     font-size: 11px;
-    font-weight: 300;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--moby-sage, #C9C8B6);
+    color: var(--moby-olive, #4F4A32);
     text-align: center;
     margin: 0;
+    opacity: 0.7;
   }
 
   /* Success Step */
@@ -1021,21 +1027,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 20px 24px;
-    background: rgba(201, 200, 182, 0.1);
+    gap: 8px;
+    padding: 24px 32px;
+    background: rgba(249, 253, 181, 0.3);
+    border: 1px solid rgba(79, 74, 50, 0.1);
     border-radius: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     text-align: center;
+    width: 100%;
   }
 
   .waitlist-popup__success-label {
     font-family: 'N27', sans-serif;
     font-size: 11px;
-    font-weight: 300;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--moby-sage, #C9C8B6);
+    color: var(--moby-olive, #4F4A32);
+    opacity: 0.7;
   }
 
   .waitlist-popup__success-value {
