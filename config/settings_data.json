@@ -94,7 +94,7 @@
         "settings": {
           "enabled": true,
           "show_once": true,
-          "popup_delay": 5,
+          "popup_delay": 12,
           "enable_sms": true,
           "step1_heading": "What are you looking to achieve?",
           "step1_subheading": "Tell us and be first when we launch",
