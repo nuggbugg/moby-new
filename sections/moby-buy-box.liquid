@@ -220,7 +220,7 @@
             {%- endif -%}
           {%- else -%}
             <span class="moby-buy-box__stock moby-buy-box__stock--out">
-              Out of Stock
+              {{ section.settings.out_of_stock_text | default: 'Out of Stock' }}
             </span>
           {%- endif -%}
         </div>
@@ -2066,6 +2066,13 @@ document.addEventListener('DOMContentLoaded', function() {
       "label": "Show 'Notify Me' for sold out products",
       "info": "Displays an email signup form instead of disabled button when product is sold out",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "out_of_stock_text",
+      "label": "Out of stock badge text",
+      "default": "Out of Stock",
+      "info": "Text displayed in the badge when product is sold out (e.g., 'Launching Soon')"
     },
     {
       "type": "header",
