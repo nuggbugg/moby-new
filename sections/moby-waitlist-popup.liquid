@@ -428,28 +428,11 @@
       const email = form.querySelector('input[type="email"]')?.value;
       const tags = form.querySelector('[data-tags-input]')?.value || 'waitlist,popup';
       this.collectedEmail = email;
+      this.collectedTags = tags;
 
-      // Submit to Shopify using fetch
-      try {
-        const formData = new FormData();
-        formData.append('form_type', 'customer');
-        formData.append('utf8', '✓');
-        formData.append('contact[email]', email);
-        formData.append('contact[tags]', tags);
-
-        // Get CSRF token from page if available
-        const csrfToken = document.querySelector('input[name="authenticity_token"]')?.value;
-        if (csrfToken) {
-          formData.append('authenticity_token', csrfToken);
-        }
-
-        await fetch('/contact#contact_form', {
-          method: 'POST',
-          body: formData
-        });
-      } catch (error) {
-        console.error('Waitlist submission error:', error);
-      }
+      // Don't submit to Shopify here - just save data and continue
+      // Data will be logged for now (can integrate with Klaviyo/Mailchimp later)
+      console.log('Email collected:', email, 'Tags:', tags);
 
       localStorage.setItem(this.storageKey, 'submitted');
 
