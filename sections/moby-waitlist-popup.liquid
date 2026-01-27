@@ -412,27 +412,37 @@
       // Email form (Shopify customer form)
       if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
         e.preventDefault();
+        e.stopPropagation();
+
         const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
         this.collectedEmail = actualForm.querySelector('input[type="email"]')?.value;
 
         // Create hidden iframe for form submission
-        const iframeName = 'waitlist-submit-frame';
-        let iframe = document.querySelector(`iframe[name="${iframeName}"]`);
-        if (!iframe) {
-          iframe = document.createElement('iframe');
-          iframe.name = iframeName;
-          iframe.style.display = 'none';
-          document.body.appendChild(iframe);
-        }
+        const iframeName = 'waitlist-submit-frame-' + Date.now();
+        const iframe = document.createElement('iframe');
+        iframe.name = iframeName;
+        iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
+        document.body.appendChild(iframe);
 
-        // Set form target to iframe and submit
-        actualForm.target = iframeName;
-        actualForm.submit();
+        // Wait for iframe to be ready
+        await new Promise(resolve => {
+          iframe.onload = resolve;
+          // Set a timeout in case onload doesn't fire
+          setTimeout(resolve, 100);
+        });
 
-        // Reset form target
+        // Clone the form and submit via iframe
+        const clonedForm = actualForm.cloneNode(true);
+        clonedForm.style.display = 'none';
+        clonedForm.target = iframeName;
+        document.body.appendChild(clonedForm);
+        clonedForm.submit();
+
+        // Clean up after submission
         setTimeout(() => {
-          actualForm.target = '';
-        }, 100);
+          clonedForm.remove();
+          iframe.remove();
+        }, 2000);
 
         localStorage.setItem(this.storageKey, 'submitted');
 
