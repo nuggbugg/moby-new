@@ -314,78 +314,111 @@
       this.totalSteps = 3;
       this.selectedGoal = null;
       this.collectedEmail = null;
+      this.boundHandleClick = this.handleClick.bind(this);
+      this.boundHandleSubmit = this.handleSubmit.bind(this);
+      this.boundHandleKeydown = this.handleKeydown.bind(this);
     }
 
     connectedCallback() {
-      // Query for elements here (not in constructor) because children aren't available until connected
-      this.dialog = this.querySelector('[ref="dialog"]');
-      this.closeButton = this.querySelector('[ref="closeButton"]');
+      // Query for elements
+      this.dialog = this.querySelector('dialog');
       this.enableSms = this.dataset.enableSms === 'true';
 
       const enabled = this.dataset.enabled === 'true';
       const showOnce = this.dataset.showOnce === 'true';
       const delay = parseInt(this.dataset.delay, 10) || 5000;
 
-      // Allow forcing popup via URL parameter (for testing)
+      // URL parameters for testing
       const urlParams = new URLSearchParams(window.location.search);
       const forceShow = urlParams.get('show_waitlist') === 'true';
 
-      // Clear localStorage if force reset is requested
       if (urlParams.get('reset_waitlist') === 'true') {
         localStorage.removeItem(this.storageKey);
-        console.log('Waitlist popup: localStorage cleared');
       }
 
-      // ALWAYS set up event listeners (even if popup won't auto-show)
-      // This ensures buttons work in theme editor preview
-      this.setupEventListeners();
+      // Use event delegation - attach listeners to the component itself
+      this.addEventListener('click', this.boundHandleClick);
+      this.addEventListener('submit', this.boundHandleSubmit);
+      this.addEventListener('keydown', this.boundHandleKeydown);
+
+      // Also listen on dialog for backdrop clicks
+      if (this.dialog) {
+        this.dialog.addEventListener('click', (e) => {
+          if (e.target === this.dialog) this.closeDialog();
+        });
+      }
 
       if (!enabled && !forceShow) return;
 
-      // Check if already dismissed/submitted (skip if force showing)
       if (showOnce && localStorage.getItem(this.storageKey) && !forceShow) {
         return;
       }
 
-      // Show popup after delay
-      setTimeout(() => {
-        this.showDialog();
-      }, delay);
+      setTimeout(() => this.showDialog(), delay);
     }
 
-    setupEventListeners() {
+    handleClick(e) {
+      const target = e.target;
+
       // Close button
-      this.closeButton?.addEventListener('click', () => this.closeDialog());
+      if (target.closest('[ref="closeButton"]')) {
+        e.preventDefault();
+        this.closeDialog();
+        return;
+      }
 
-      // Click outside to close
-      this.dialog?.addEventListener('click', (e) => {
-        if (e.target === this.dialog) this.closeDialog();
-      });
+      // Goal buttons
+      const goalBtn = target.closest('.waitlist-popup__goal');
+      if (goalBtn) {
+        e.preventDefault();
+        this.selectedGoal = goalBtn.dataset.goal;
+        const goalText = goalBtn.querySelector('.waitlist-popup__goal-text')?.textContent || '';
 
-      // Escape key to close
-      this.dialog?.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeDialog();
-      });
+        const selectedGoalEl = this.querySelector('[data-selected-goal]');
+        if (selectedGoalEl) {
+          selectedGoalEl.innerHTML = `Perfect for <strong>${goalText}</strong>`;
+        }
 
-      // Goal selection
-      this.querySelectorAll('.waitlist-popup__goal').forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.selectedGoal = btn.dataset.goal;
-          const goalText = btn.querySelector('.waitlist-popup__goal-text').textContent;
-          this.querySelector('[data-selected-goal]').innerHTML = `Perfect for <strong>${goalText}</strong>`;
-          this.querySelector('[data-goal-input]').value = this.selectedGoal;
-          this.goToStep(2);
-        });
-      });
+        const goalInput = this.querySelector('[data-goal-input]');
+        if (goalInput) {
+          goalInput.value = this.selectedGoal;
+        }
+
+        this.goToStep(2);
+        return;
+      }
+
+      // Back button
+      if (target.closest('[data-back]')) {
+        e.preventDefault();
+        this.goToStep(1);
+        return;
+      }
+
+      // Skip button
+      if (target.closest('[data-skip]')) {
+        e.preventDefault();
+        this.goToStep(4);
+        return;
+      }
+
+      // Success close button
+      if (target.closest('[data-close-success]')) {
+        e.preventDefault();
+        this.closeDialog();
+        return;
+      }
+    }
+
+    async handleSubmit(e) {
+      const form = e.target;
 
       // Email form
-      const emailForm = this.querySelector('[data-email-form]');
-      emailForm?.addEventListener('submit', async (e) => {
+      if (form.matches('[data-email-form]')) {
         e.preventDefault();
-        const formData = new FormData(emailForm);
+        const formData = new FormData(form);
         this.collectedEmail = formData.get('email');
 
-        // Submit to Shopify customer list
         await this.submitToShopify(this.collectedEmail, this.selectedGoal);
 
         if (this.enableSms) {
@@ -393,61 +426,34 @@
         } else {
           this.goToStep(4);
         }
-      });
+        return;
+      }
 
       // SMS form
-      const smsForm = this.querySelector('[data-sms-form]');
-      smsForm?.addEventListener('submit', async (e) => {
+      if (form.matches('[data-sms-form]')) {
         e.preventDefault();
-        const formData = new FormData(smsForm);
+        const formData = new FormData(form);
         const countryCode = formData.get('country_code');
         const phone = formData.get('phone');
 
         if (phone) {
-          // Could submit phone to a service here
           console.log('Phone collected:', countryCode + phone);
         }
 
         this.goToStep(4);
-      });
+        return;
+      }
+    }
 
-      // Back button
-      this.querySelector('[data-back]')?.addEventListener('click', () => {
-        this.goToStep(1);
-      });
-
-      // Skip button
-      this.querySelector('[data-skip]')?.addEventListener('click', () => {
-        this.goToStep(4);
-      });
-
-      // Success close button
-      this.querySelector('[data-close-success]')?.addEventListener('click', () => {
+    handleKeydown(e) {
+      if (e.key === 'Escape' && this.dialog?.open) {
+        e.preventDefault();
         this.closeDialog();
-      });
+      }
     }
 
     async submitToShopify(email, goal) {
       try {
-        // Create a hidden form and submit it
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/contact#contact_form';
-        form.style.display = 'none';
-
-        const emailInput = document.createElement('input');
-        emailInput.type = 'hidden';
-        emailInput.name = 'contact[email]';
-        emailInput.value = email;
-        form.appendChild(emailInput);
-
-        const tagsInput = document.createElement('input');
-        tagsInput.type = 'hidden';
-        tagsInput.name = 'contact[tags]';
-        tagsInput.value = `waitlist,popup,goal-${goal}`;
-        form.appendChild(tagsInput);
-
-        // Use fetch to submit without page reload
         const formData = new FormData();
         formData.append('form_type', 'customer');
         formData.append('utf8', '✓');
@@ -457,39 +463,32 @@
         await fetch('/contact#contact_form', {
           method: 'POST',
           body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
+          headers: { 'Accept': 'application/json' }
         });
 
         localStorage.setItem(this.storageKey, 'submitted');
       } catch (error) {
         console.error('Waitlist submission error:', error);
-        // Still mark as submitted to prevent annoying the user
         localStorage.setItem(this.storageKey, 'submitted');
       }
     }
 
     goToStep(step) {
-      // Hide all steps
       this.querySelectorAll('.waitlist-popup__step').forEach(s => {
         s.hidden = true;
       });
 
-      // Show target step
       const targetStep = this.querySelector(`[data-step="${step}"]`);
       if (targetStep) {
         targetStep.hidden = false;
         this.currentStep = step;
 
-        // Update progress bar
         const progressBar = this.querySelector('[data-progress-bar]');
         if (progressBar) {
           const progress = ((step - 1) / this.totalSteps) * 100;
           progressBar.style.width = `${progress}%`;
         }
 
-        // Focus first input if exists
         const firstInput = targetStep.querySelector('input');
         if (firstInput) {
           setTimeout(() => firstInput.focus(), 100);
