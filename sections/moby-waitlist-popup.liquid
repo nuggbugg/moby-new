@@ -310,7 +310,6 @@
       this.selectedGoal = null;
       this.collectedEmail = null;
       this.boundHandleClick = this.handleClick.bind(this);
-      this.boundHandleSubmit = this.handleSubmit.bind(this);
       this.boundHandleKeydown = this.handleKeydown.bind(this);
     }
 
@@ -331,10 +330,29 @@
         localStorage.removeItem(this.storageKey);
       }
 
-      // Use event delegation - attach listeners to the component itself
+      // Use event delegation for clicks
       this.addEventListener('click', this.boundHandleClick);
-      this.addEventListener('submit', this.boundHandleSubmit);
       this.addEventListener('keydown', this.boundHandleKeydown);
+
+      // Directly attach to forms to prevent default submission
+      const emailForm = this.querySelector('#waitlist-email-form');
+      if (emailForm) {
+        emailForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.submitEmailForm(emailForm);
+          return false;
+        });
+      }
+
+      const smsForm = this.querySelector('[data-sms-form]');
+      if (smsForm) {
+        smsForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.submitSmsForm(smsForm);
+          return false;
+        });
+      }
 
       // Also listen on dialog for backdrop clicks
       if (this.dialog) {
@@ -406,68 +424,53 @@
       }
     }
 
-    async handleSubmit(e) {
-      const form = e.target;
+    submitEmailForm(form) {
+      this.collectedEmail = form.querySelector('input[type="email"]')?.value;
 
-      // Email form (Shopify customer form)
-      if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
-        e.preventDefault();
-        e.stopPropagation();
+      // Create hidden iframe for form submission
+      const iframeName = 'waitlist-submit-frame-' + Date.now();
+      const iframe = document.createElement('iframe');
+      iframe.name = iframeName;
+      iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
+      document.body.appendChild(iframe);
 
-        const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
-        this.collectedEmail = actualForm.querySelector('input[type="email"]')?.value;
+      // Clone the form and submit via iframe
+      const clonedForm = form.cloneNode(true);
+      clonedForm.style.display = 'none';
+      clonedForm.target = iframeName;
+      clonedForm.id = ''; // Remove ID to avoid duplicates
+      document.body.appendChild(clonedForm);
 
-        // Create hidden iframe for form submission
-        const iframeName = 'waitlist-submit-frame-' + Date.now();
-        const iframe = document.createElement('iframe');
-        iframe.name = iframeName;
-        iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-        document.body.appendChild(iframe);
-
-        // Wait for iframe to be ready
-        await new Promise(resolve => {
-          iframe.onload = resolve;
-          // Set a timeout in case onload doesn't fire
-          setTimeout(resolve, 100);
-        });
-
-        // Clone the form and submit via iframe
-        const clonedForm = actualForm.cloneNode(true);
-        clonedForm.style.display = 'none';
-        clonedForm.target = iframeName;
-        document.body.appendChild(clonedForm);
+      // Submit after a small delay to ensure iframe is ready
+      setTimeout(() => {
         clonedForm.submit();
+      }, 50);
 
-        // Clean up after submission
-        setTimeout(() => {
-          clonedForm.remove();
-          iframe.remove();
-        }, 2000);
+      // Clean up after submission
+      setTimeout(() => {
+        clonedForm.remove();
+        iframe.remove();
+      }, 3000);
 
-        localStorage.setItem(this.storageKey, 'submitted');
+      localStorage.setItem(this.storageKey, 'submitted');
 
-        if (this.enableSms) {
-          this.goToStep(3);
-        } else {
-          this.goToStep(4);
-        }
-        return;
-      }
-
-      // SMS form
-      if (form.matches('[data-sms-form]')) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const countryCode = formData.get('country_code');
-        const phone = formData.get('phone');
-
-        if (phone) {
-          console.log('Phone collected:', countryCode + phone);
-        }
-
+      if (this.enableSms) {
+        this.goToStep(3);
+      } else {
         this.goToStep(4);
-        return;
       }
+    }
+
+    submitSmsForm(form) {
+      const formData = new FormData(form);
+      const countryCode = formData.get('country_code');
+      const phone = formData.get('phone');
+
+      if (phone) {
+        console.log('Phone collected:', countryCode + phone);
+      }
+
+      this.goToStep(4);
     }
 
     handleKeydown(e) {
