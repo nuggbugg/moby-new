@@ -334,6 +334,10 @@
         console.log('Waitlist popup: localStorage cleared');
       }
 
+      // Always attach event listeners (needed for manual trigger from announcement bar)
+      this.initEventListeners();
+
+      // Only auto-show if enabled
       if (!enabled && !forceShow) return;
 
       // Check if already dismissed/submitted (skip if force showing)
@@ -345,8 +349,10 @@
       setTimeout(() => {
         this.showDialog();
       }, delay);
+    }
 
-      // Event listeners
+    initEventListeners() {
+      // Close button and backdrop
       this.closeButton?.addEventListener('click', () => this.closeDialog());
       this.dialog?.addEventListener('click', (e) => {
         if (e.target === this.dialog) this.closeDialog();
