@@ -284,11 +284,6 @@
             {{ section.settings.success_subheading | default: "We'll notify you when we launch" }}
           </p>
 
-          <div class="waitlist-popup__success-box">
-            <span class="waitlist-popup__success-label">{{ section.settings.success_label | default: 'Your exclusive early access' }}</span>
-            <span class="waitlist-popup__success-value">{{ section.settings.success_value | default: 'First in line at launch' }}</span>
-          </div>
-
           <button type="button" class="waitlist-popup__submit" data-close-success>
             {{ section.settings.success_button | default: 'Got it' }}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -418,24 +413,28 @@
       if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
         e.preventDefault();
         const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
-        const formData = new FormData(actualForm);
-        this.collectedEmail = formData.get('contact[email]');
+        this.collectedEmail = actualForm.querySelector('input[type="email"]')?.value;
 
-        try {
-          // Submit to Shopify via fetch
-          const response = await fetch(actualForm.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'Accept': 'application/json'
-            }
-          });
-
-          localStorage.setItem(this.storageKey, 'submitted');
-        } catch (error) {
-          console.error('Waitlist submission error:', error);
-          localStorage.setItem(this.storageKey, 'submitted');
+        // Create hidden iframe for form submission
+        const iframeName = 'waitlist-submit-frame';
+        let iframe = document.querySelector(`iframe[name="${iframeName}"]`);
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.name = iframeName;
+          iframe.style.display = 'none';
+          document.body.appendChild(iframe);
         }
+
+        // Set form target to iframe and submit
+        actualForm.target = iframeName;
+        actualForm.submit();
+
+        // Reset form target
+        setTimeout(() => {
+          actualForm.target = '';
+        }, 100);
+
+        localStorage.setItem(this.storageKey, 'submitted');
 
         if (this.enableSms) {
           this.goToStep(3);
@@ -1000,14 +999,13 @@
   /* Privacy Text */
   .waitlist-popup__privacy {
     font-family: 'N27', sans-serif;
-    font-size: 11px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--moby-olive, #4F4A32);
+    color: var(--moby-dark, #1B1A0F);
     text-align: center;
-    margin: 0;
-    opacity: 0.7;
+    margin: 24px 0 0;
   }
 
   /* Success Step */
@@ -1021,39 +1019,6 @@
     background: var(--moby-lime, #F9FDB5);
     border-radius: 50%;
     color: var(--moby-olive, #4F4A32);
-  }
-
-  .waitlist-popup__success-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 24px 32px;
-    background: rgba(249, 253, 181, 0.3);
-    border: 1px solid rgba(79, 74, 50, 0.1);
-    border-radius: 6px;
-    margin-bottom: 24px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .waitlist-popup__success-label {
-    font-family: 'N27', sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--moby-olive, #4F4A32);
-    opacity: 0.7;
-  }
-
-  .waitlist-popup__success-value {
-    font-family: 'Memoir', serif;
-    font-size: 20px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var(--moby-dark, #1C1A10);
   }
 </style>
 
