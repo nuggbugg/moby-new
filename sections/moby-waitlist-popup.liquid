@@ -163,13 +163,13 @@
             Perfect for <strong>Strength & Power</strong>
           </p>
 
-          <form class="waitlist-popup__form" data-email-form>
-            <input type="hidden" name="goal" data-goal-input>
+          {%- form 'customer', class: 'waitlist-popup__form', id: 'waitlist-email-form' -%}
+            <input type="hidden" name="contact[tags]" value="waitlist,popup" data-tags-input>
 
             <div class="waitlist-popup__form-group">
               <input
                 type="email"
-                name="email"
+                name="contact[email]"
                 class="waitlist-popup__input"
                 placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
                 required
@@ -184,7 +184,7 @@
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
-          </form>
+          {%- endform -%}
 
           <button type="button" class="waitlist-popup__back" data-back>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -379,9 +379,10 @@
           selectedGoalEl.innerHTML = `Perfect for <strong>${goalText}</strong>`;
         }
 
-        const goalInput = this.querySelector('[data-goal-input]');
-        if (goalInput) {
-          goalInput.value = this.selectedGoal;
+        // Update the tags input with the selected goal
+        const tagsInput = this.querySelector('[data-tags-input]');
+        if (tagsInput) {
+          tagsInput.value = `waitlist,popup,goal-${this.selectedGoal}`;
         }
 
         this.goToStep(2);
@@ -413,13 +414,28 @@
     async handleSubmit(e) {
       const form = e.target;
 
-      // Email form
-      if (form.matches('[data-email-form]')) {
+      // Email form (Shopify customer form)
+      if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
         e.preventDefault();
-        const formData = new FormData(form);
-        this.collectedEmail = formData.get('email');
+        const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
+        const formData = new FormData(actualForm);
+        this.collectedEmail = formData.get('contact[email]');
 
-        await this.submitToShopify(this.collectedEmail, this.selectedGoal);
+        try {
+          // Submit to Shopify via fetch
+          const response = await fetch(actualForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          localStorage.setItem(this.storageKey, 'submitted');
+        } catch (error) {
+          console.error('Waitlist submission error:', error);
+          localStorage.setItem(this.storageKey, 'submitted');
+        }
 
         if (this.enableSms) {
           this.goToStep(3);
@@ -449,27 +465,6 @@
       if (e.key === 'Escape' && this.dialog?.open) {
         e.preventDefault();
         this.closeDialog();
-      }
-    }
-
-    async submitToShopify(email, goal) {
-      try {
-        const formData = new FormData();
-        formData.append('form_type', 'customer');
-        formData.append('utf8', '✓');
-        formData.append('contact[email]', email);
-        formData.append('contact[tags]', `waitlist,popup,goal-${goal}`);
-
-        await fetch('/contact#contact_form', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-
-        localStorage.setItem(this.storageKey, 'submitted');
-      } catch (error) {
-        console.error('Waitlist submission error:', error);
-        localStorage.setItem(this.storageKey, 'submitted');
       }
     }
 
