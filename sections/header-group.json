@@ -16,7 +16,7 @@
       "settings": {
         "show_bar": true,
         "text": "JOIN WAITLIST FOR PRE-LAUNCH OFFER",
-        "link": "shopify://products/creatine"
+        "trigger_waitlist": true
       }
     },
     "moby_header": {
