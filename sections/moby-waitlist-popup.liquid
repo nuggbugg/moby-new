@@ -163,13 +163,13 @@
             Perfect for <strong>Strength & Power</strong>
           </p>
 
-          {%- form 'customer', class: 'waitlist-popup__form', id: 'waitlist-email-form' -%}
-            <input type="hidden" name="contact[tags]" value="waitlist,popup" data-tags-input>
+          <form class="waitlist-popup__form" id="waitlist-email-form" onsubmit="return false;">
+            <input type="hidden" name="tags" value="waitlist,popup" data-tags-input>
 
             <div class="waitlist-popup__form-group">
               <input
                 type="email"
-                name="contact[email]"
+                name="email"
                 class="waitlist-popup__input"
                 placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
                 required
@@ -184,7 +184,7 @@
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
-          {%- endform -%}
+          </form>
 
           <button type="button" class="waitlist-popup__back" data-back>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -424,33 +424,32 @@
       }
     }
 
-    submitEmailForm(form) {
-      this.collectedEmail = form.querySelector('input[type="email"]')?.value;
+    async submitEmailForm(form) {
+      const email = form.querySelector('input[type="email"]')?.value;
+      const tags = form.querySelector('[data-tags-input]')?.value || 'waitlist,popup';
+      this.collectedEmail = email;
 
-      // Create hidden iframe for form submission
-      const iframeName = 'waitlist-submit-frame-' + Date.now();
-      const iframe = document.createElement('iframe');
-      iframe.name = iframeName;
-      iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-      document.body.appendChild(iframe);
+      // Submit to Shopify using fetch
+      try {
+        const formData = new FormData();
+        formData.append('form_type', 'customer');
+        formData.append('utf8', '✓');
+        formData.append('contact[email]', email);
+        formData.append('contact[tags]', tags);
 
-      // Clone the form and submit via iframe
-      const clonedForm = form.cloneNode(true);
-      clonedForm.style.display = 'none';
-      clonedForm.target = iframeName;
-      clonedForm.id = ''; // Remove ID to avoid duplicates
-      document.body.appendChild(clonedForm);
+        // Get CSRF token from page if available
+        const csrfToken = document.querySelector('input[name="authenticity_token"]')?.value;
+        if (csrfToken) {
+          formData.append('authenticity_token', csrfToken);
+        }
 
-      // Submit after a small delay to ensure iframe is ready
-      setTimeout(() => {
-        clonedForm.submit();
-      }, 50);
-
-      // Clean up after submission
-      setTimeout(() => {
-        clonedForm.remove();
-        iframe.remove();
-      }, 3000);
+        await fetch('/contact#contact_form', {
+          method: 'POST',
+          body: formData
+        });
+      } catch (error) {
+        console.error('Waitlist submission error:', error);
+      }
 
       localStorage.setItem(this.storageKey, 'submitted');
 
