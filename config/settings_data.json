@@ -236,6 +236,16 @@
           "button_vertical_position": "higher",
           "greeting_message": ""
         }
+      },
+      "4677439793077996495": {
+        "type": "shopify://apps/pixee-facebook-pixel/blocks/facebook-pixel/61bbb1d9-d4be-4d08-879a-ee3ccb59f558",
+        "disabled": false,
+        "settings": {}
+      },
+      "3758703918006478555": {
+        "type": "shopify://apps/pixee-facebook-pixel/blocks/consent-banner/61bbb1d9-d4be-4d08-879a-ee3ccb59f558",
+        "disabled": true,
+        "settings": {}
       }
     },
     "color_schemes": {
