@@ -25,6 +25,7 @@
         "show_trust_footer": true,
         "show_trust_icons_desktop": true,
         "show_back_in_stock": true,
+        "out_of_stock_text": "LAUNCHING SOON",
         "enable_preorder": false,
         "preorder_button_text": "Pre-order Now",
         "preorder_badge_text": "Pre-order",
