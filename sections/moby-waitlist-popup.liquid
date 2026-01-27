@@ -12,7 +12,7 @@
 
 <waitlist-popup-component
   class="waitlist-popup"
-  data-delay="{{ section.settings.delay | default: 5000 }}"
+  data-delay="{{ section.settings.delay | times: 1000 | default: 5000 }}"
   data-show-once="{{ section.settings.show_once }}"
   data-enabled="{{ section.settings.enabled }}"
   data-enable-sms="{{ section.settings.enable_sms }}"
@@ -1055,13 +1055,13 @@
     {
       "type": "range",
       "id": "delay",
-      "label": "Delay before showing",
-      "min": 1000,
-      "max": 120000,
-      "step": 1000,
-      "default": 5000,
-      "unit": "ms",
-      "info": "1 second = 1000ms. Max is 2 minutes (120000ms)."
+      "label": "Delay before showing (seconds)",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 5,
+      "unit": "s",
+      "info": "How many seconds to wait before showing the popup"
     },
     {
       "type": "checkbox",
