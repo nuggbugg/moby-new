@@ -217,9 +217,9 @@
     border: none;
     border-radius: 6px;
     padding: 0;
-    max-width: 720px;
-    width: calc(100% - 32px);
-    max-height: calc(100vh - 32px);
+    max-width: 800px;
+    width: calc(100% - 24px);
+    max-height: calc(100vh - 24px);
     background: #fff;
     box-shadow: 0 25px 50px -12px rgba(28, 26, 16, 0.25);
     overflow: hidden;
@@ -263,12 +263,13 @@
   .newsletter-popup__container {
     display: grid;
     grid-template-columns: 1fr;
-    min-height: 400px;
+    min-height: auto;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     .newsletter-popup__container {
       grid-template-columns: 1fr 1fr;
+      min-height: 480px;
     }
   }
 
@@ -277,17 +278,18 @@
     top: 12px;
     right: 12px;
     z-index: 10;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .newsletter-popup__close:hover {
@@ -295,6 +297,7 @@
     transform: scale(1.05);
   }
 
+  /* Visual Side */
   .newsletter-popup__visual {
     display: none;
     background: var(--moby-lime, #F9FDB5);
@@ -302,7 +305,7 @@
     overflow: hidden;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     .newsletter-popup__visual {
       display: block;
     }
@@ -321,6 +324,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    background: linear-gradient(180deg, #87CEEB 0%, #FFE4B5 50%, #FFA07A 100%);
   }
 
   .newsletter-popup__pattern-svg {
@@ -329,22 +333,33 @@
     width: 100%;
     height: 100%;
     color: var(--moby-olive, #4F4A32);
+    opacity: 0.15;
   }
 
   .newsletter-popup__pattern-icon {
     position: relative;
     z-index: 1;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
     color: var(--moby-olive, #4F4A32);
   }
 
+  /* Content Side */
   .newsletter-popup__content {
     padding: 40px 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     .newsletter-popup__content {
       padding: 48px 40px;
     }
@@ -354,24 +369,23 @@
     display: inline-block;
     font-family: 'N27', sans-serif;
     font-size: 11px;
-    font-weight: 400;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--moby-olive, #4F4A32);
+    color: var(--moby-dark, #1B1A0F);
     background: var(--moby-lime, #F9FDB5);
-    padding: 6px 12px;
+    padding: 8px 16px;
     border-radius: 100px;
-    margin-bottom: 16px;
-    width: fit-content;
+    margin-bottom: 20px;
   }
 
   .newsletter-popup__heading {
     font-family: 'Memoir', serif;
-    font-size: clamp(28px, 5vw, 36px);
+    font-size: clamp(24px, 5vw, 32px);
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     margin: 0 0 12px;
     line-height: 1.1;
   }
@@ -381,12 +395,15 @@
     font-size: 14px;
     font-weight: 300;
     line-height: 1.6;
-    color: var(--moby-olive, #4F4A32);
+    color: var(--moby-dark, #1B1A0F);
     margin: 0 0 24px;
+    max-width: 320px;
   }
 
   .newsletter-popup__form {
-    margin-bottom: 16px;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 20px;
   }
 
   .newsletter-popup__form-group {
@@ -398,17 +415,21 @@
     font-family: 'N27', sans-serif;
     font-size: 14px;
     font-weight: 300;
-    color: var(--moby-dark, #1C1A10);
+    color: var(--moby-dark, #1B1A0F);
     background: #fff;
     border: 1px solid var(--moby-sage, #C9C8B6);
     border-radius: 6px;
-    padding: 14px 16px;
+    padding: 16px 20px;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
   }
 
   .newsletter-popup__input::placeholder {
-    color: var(--moby-sage, #C9C8B6);
+    color: var(--moby-olive, #4F4A32);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
   }
 
   .newsletter-popup__input:focus {
@@ -419,7 +440,7 @@
   .newsletter-popup__submit {
     width: 100%;
     font-family: 'N27', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -427,13 +448,13 @@
     background: var(--moby-olive, #4F4A32);
     border: none;
     border-radius: 6px;
-    padding: 14px 24px;
+    padding: 16px 24px;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.15s ease;
   }
 
   .newsletter-popup__submit:hover {
-    background: var(--moby-dark, #1C1A10);
+    background: var(--moby-dark, #1B1A0F);
   }
 
   .newsletter-popup__submit:active {
@@ -443,31 +464,33 @@
   .newsletter-popup__success {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     font-family: 'N27', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    color: #16a34a;
+    color: var(--moby-olive, #4F4A32);
     margin-top: 12px;
-    padding: 12px;
-    background: rgba(22, 163, 74, 0.1);
+    padding: 16px;
+    background: var(--moby-lime, #F9FDB5);
     border-radius: 6px;
   }
 
   .newsletter-popup__error {
     font-family: 'N27', sans-serif;
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
     color: #dc2626;
     margin-top: 8px;
   }
 
   .newsletter-popup__privacy {
     font-family: 'N27', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--moby-olive, #4F4A32);
-    opacity: 0.7;
     margin: 0;
     text-align: center;
   }
