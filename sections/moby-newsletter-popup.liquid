@@ -9,7 +9,7 @@
 
 <newsletter-popup-component
   class="newsletter-popup"
-  data-delay="{{ section.settings.delay | times: 1000 | default: 5000 }}"
+  data-delay="{{ section.settings.popup_delay | times: 1000 | default: 5000 }}"
   data-show-once="{{ section.settings.show_once }}"
   data-enabled="{{ section.settings.enabled }}"
 >
@@ -496,7 +496,7 @@
     },
     {
       "type": "range",
-      "id": "delay",
+      "id": "popup_delay",
       "label": "Delay before showing (seconds)",
       "min": 1,
       "max": 30,
