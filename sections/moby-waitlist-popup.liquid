@@ -309,17 +309,19 @@
   class WaitlistPopupComponent extends HTMLElement {
     constructor() {
       super();
-      this.dialog = this.querySelector('[ref="dialog"]');
-      this.closeButton = this.querySelector('[ref="closeButton"]');
       this.storageKey = 'moby-waitlist-popup-dismissed';
       this.currentStep = 1;
       this.totalSteps = 3;
       this.selectedGoal = null;
       this.collectedEmail = null;
-      this.enableSms = this.dataset.enableSms === 'true';
     }
 
     connectedCallback() {
+      // Query for elements here (not in constructor) because children aren't available until connected
+      this.dialog = this.querySelector('[ref="dialog"]');
+      this.closeButton = this.querySelector('[ref="closeButton"]');
+      this.enableSms = this.dataset.enableSms === 'true';
+
       const enabled = this.dataset.enabled === 'true';
       const showOnce = this.dataset.showOnce === 'true';
       const delay = parseInt(this.dataset.delay, 10) || 5000;
@@ -334,6 +336,10 @@
         console.log('Waitlist popup: localStorage cleared');
       }
 
+      // ALWAYS set up event listeners (even if popup won't auto-show)
+      // This ensures buttons work in theme editor preview
+      this.setupEventListeners();
+
       if (!enabled && !forceShow) return;
 
       // Check if already dismissed/submitted (skip if force showing)
@@ -345,12 +351,18 @@
       setTimeout(() => {
         this.showDialog();
       }, delay);
+    }
 
-      // Event listeners
+    setupEventListeners() {
+      // Close button
       this.closeButton?.addEventListener('click', () => this.closeDialog());
+
+      // Click outside to close
       this.dialog?.addEventListener('click', (e) => {
         if (e.target === this.dialog) this.closeDialog();
       });
+
+      // Escape key to close
       this.dialog?.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') this.closeDialog();
       });
