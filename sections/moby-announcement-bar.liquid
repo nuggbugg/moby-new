@@ -6,7 +6,11 @@
 
 {%- if section.settings.show_bar -%}
 <div class="moby-announcement-bar">
-  {%- if section.settings.link != blank -%}
+  {%- if section.settings.trigger_waitlist -%}
+    <button type="button" class="moby-announcement-bar__button" data-open-waitlist>
+      <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
+    </button>
+  {%- elsif section.settings.link != blank -%}
     <a href="{{ section.settings.link }}" class="moby-announcement-bar__link">
       <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
     </a>
@@ -14,6 +18,20 @@
     <span class="moby-announcement-bar__text">{{ section.settings.text }}</span>
   {%- endif -%}
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const openWaitlistBtn = document.querySelector('[data-open-waitlist]');
+    if (openWaitlistBtn) {
+      openWaitlistBtn.addEventListener('click', function() {
+        const waitlistPopup = document.querySelector('waitlist-popup-component');
+        if (waitlistPopup && waitlistPopup.dialog) {
+          waitlistPopup.showDialog();
+        }
+      });
+    }
+  });
+</script>
 <style>
   :root { --moby-announcement-height: 38px; }
   .moby-announcement-bar-wrapper { height: 38px; }
@@ -41,12 +59,19 @@
     justify-content: center;
   }
 
-  .moby-announcement-bar__link {
+  .moby-announcement-bar__link,
+  .moby-announcement-bar__button {
     text-decoration: none;
     display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
   }
 
-  .moby-announcement-bar__link:hover .moby-announcement-bar__text {
+  .moby-announcement-bar__link:hover .moby-announcement-bar__text,
+  .moby-announcement-bar__button:hover .moby-announcement-bar__text {
     opacity: 0.8;
   }
 
@@ -91,9 +116,17 @@
       "default": "🎉 PRE-ORDER NOW – 20% OFF LAUNCH DISCOUNT"
     },
     {
+      "type": "checkbox",
+      "id": "trigger_waitlist",
+      "label": "Open waitlist popup on click",
+      "default": false,
+      "info": "When enabled, clicking the bar opens the waitlist popup instead of navigating to a link"
+    },
+    {
       "type": "url",
       "id": "link",
-      "label": "Link (optional)"
+      "label": "Link (optional)",
+      "info": "Ignored if 'Open waitlist popup' is enabled"
     }
   ],
   "presets": [
