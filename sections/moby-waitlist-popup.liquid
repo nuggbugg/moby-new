@@ -1,0 +1,1238 @@
+{% comment %}
+  MOBY Waitlist Popup
+  - Beautiful multi-step popup for waitlist campaign
+  - Step 1: Goal selection ("What are you looking to achieve?")
+  - Step 2: Email capture
+  - Step 3: SMS/Phone capture (optional)
+  - Step 4: Success confirmation
+  - Uses localStorage to remember if user dismissed/submitted
+{% endcomment %}
+
+<script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+
+<waitlist-popup-component
+  class="waitlist-popup"
+  data-delay="{{ section.settings.delay | default: 5000 }}"
+  data-show-once="{{ section.settings.show_once }}"
+  data-enabled="{{ section.settings.enabled }}"
+  data-enable-sms="{{ section.settings.enable_sms }}"
+>
+  <dialog
+    ref="dialog"
+    class="waitlist-popup__dialog"
+    aria-labelledby="waitlist-popup-heading"
+  >
+    <div class="waitlist-popup__container">
+      <!-- Close Button -->
+      <button
+        ref="closeButton"
+        class="waitlist-popup__close"
+        aria-label="{{ 'accessibility.close_dialog' | t }}"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Visual Side -->
+      <div class="waitlist-popup__visual">
+        {% if section.settings.image != blank %}
+          <img
+            src="{{ section.settings.image | image_url: width: 800 }}"
+            alt="{{ section.settings.image.alt | default: 'Join the waitlist' }}"
+            class="waitlist-popup__image"
+            loading="lazy"
+          >
+        {% else %}
+          <!-- Default gradient background -->
+          <div class="waitlist-popup__gradient"></div>
+        {% endif %}
+
+        <!-- Progress bar on image side (mobile hidden) -->
+        <div class="waitlist-popup__visual-progress">
+          <div class="waitlist-popup__visual-progress-bar" data-progress-bar></div>
+        </div>
+      </div>
+
+      <!-- Content Side -->
+      <div class="waitlist-popup__content">
+        <!-- Step 1: Goal Selection -->
+        <div class="waitlist-popup__step" data-step="1">
+          <div class="waitlist-popup__step-indicator">
+            <span class="waitlist-popup__indicator-line"></span>
+          </div>
+
+          <h2 id="waitlist-popup-heading" class="waitlist-popup__heading">
+            {{ section.settings.step1_heading | default: 'What are you looking to achieve?' }}
+          </h2>
+
+          <p class="waitlist-popup__subheading">
+            {{ section.settings.step1_subheading | default: 'Tell us and be first when we launch' }}
+          </p>
+
+          <div class="waitlist-popup__goals">
+            <button type="button" class="waitlist-popup__goal" data-goal="strength">
+              <span class="waitlist-popup__goal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6.5 6.5L17.5 17.5M6.5 6.5V12M6.5 6.5H12M17.5 17.5V12M17.5 17.5H12"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </span>
+              <span class="waitlist-popup__goal-text">{{ section.settings.goal_1 | default: 'Strength & Power' }}</span>
+              <span class="waitlist-popup__goal-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <button type="button" class="waitlist-popup__goal" data-goal="focus">
+              <span class="waitlist-popup__goal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="6"/>
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+              </span>
+              <span class="waitlist-popup__goal-text">{{ section.settings.goal_2 | default: 'Focus & Cognition' }}</span>
+              <span class="waitlist-popup__goal-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <button type="button" class="waitlist-popup__goal" data-goal="energy">
+              <span class="waitlist-popup__goal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </span>
+              <span class="waitlist-popup__goal-text">{{ section.settings.goal_3 | default: 'Energy & Endurance' }}</span>
+              <span class="waitlist-popup__goal-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <button type="button" class="waitlist-popup__goal" data-goal="recovery">
+              <span class="waitlist-popup__goal-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M23 4v6h-6M1 20v-6h6"/>
+                  <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                </svg>
+              </span>
+              <span class="waitlist-popup__goal-text">{{ section.settings.goal_4 | default: 'Recovery & Performance' }}</span>
+              <span class="waitlist-popup__goal-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Progress Dots -->
+          <div class="waitlist-popup__dots">
+            <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
+            <span class="waitlist-popup__dot"></span>
+            <span class="waitlist-popup__dot"></span>
+          </div>
+
+          <p class="waitlist-popup__privacy">
+            {{ section.settings.privacy_text | default: 'No spam, ever. Unsubscribe anytime.' }}
+          </p>
+        </div>
+
+        <!-- Step 2: Email Capture -->
+        <div class="waitlist-popup__step" data-step="2" hidden>
+          <div class="waitlist-popup__step-indicator">
+            <span class="waitlist-popup__indicator-line"></span>
+          </div>
+
+          <h2 class="waitlist-popup__heading">
+            {{ section.settings.step2_heading | default: 'Join the Waitlist' }}
+          </h2>
+
+          <p class="waitlist-popup__subheading">
+            {{ section.settings.step2_subheading | default: 'Be first when we launch.' }}
+          </p>
+
+          <p class="waitlist-popup__goal-selected" data-selected-goal>
+            Perfect for <strong>Strength & Power</strong>
+          </p>
+
+          <form class="waitlist-popup__form" data-email-form>
+            <input type="hidden" name="goal" data-goal-input>
+
+            <div class="waitlist-popup__form-group">
+              <input
+                type="email"
+                name="email"
+                class="waitlist-popup__input"
+                placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
+                required
+                autocomplete="email"
+                aria-label="Email address"
+              >
+            </div>
+
+            <button type="submit" class="waitlist-popup__submit">
+              {{ section.settings.email_button | default: 'Continue' }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </form>
+
+          <button type="button" class="waitlist-popup__back" data-back>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back
+          </button>
+
+          <!-- Progress Dots -->
+          <div class="waitlist-popup__dots">
+            <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
+            <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
+            <span class="waitlist-popup__dot"></span>
+          </div>
+
+          <p class="waitlist-popup__privacy">
+            {{ section.settings.privacy_text | default: 'No spam, ever. Unsubscribe anytime.' }}
+          </p>
+        </div>
+
+        <!-- Step 3: SMS Capture -->
+        <div class="waitlist-popup__step" data-step="3" hidden>
+          <div class="waitlist-popup__step-indicator">
+            <span class="waitlist-popup__indicator-line"></span>
+          </div>
+
+          <h2 class="waitlist-popup__heading">
+            {{ section.settings.step3_heading | default: 'Get First Access' }}
+          </h2>
+
+          <p class="waitlist-popup__subheading">
+            {{ section.settings.step3_subheading | default: 'SMS subscribers get exclusive drops before everyone else' }}
+          </p>
+
+          <form class="waitlist-popup__form" data-sms-form>
+            <div class="waitlist-popup__phone-group">
+              <div class="waitlist-popup__country-select">
+                <select name="country_code" class="waitlist-popup__country-dropdown" aria-label="Country code">
+                  <option value="+46" data-flag="🇸🇪" selected>🇸🇪 +46</option>
+                  <option value="+1" data-flag="🇺🇸">🇺🇸 +1</option>
+                  <option value="+44" data-flag="🇬🇧">🇬🇧 +44</option>
+                  <option value="+49" data-flag="🇩🇪">🇩🇪 +49</option>
+                  <option value="+33" data-flag="🇫🇷">🇫🇷 +33</option>
+                  <option value="+45" data-flag="🇩🇰">🇩🇰 +45</option>
+                  <option value="+47" data-flag="🇳🇴">🇳🇴 +47</option>
+                  <option value="+358" data-flag="🇫🇮">🇫🇮 +358</option>
+                  <option value="+31" data-flag="🇳🇱">🇳🇱 +31</option>
+                  <option value="+34" data-flag="🇪🇸">🇪🇸 +34</option>
+                  <option value="+39" data-flag="🇮🇹">🇮🇹 +39</option>
+                  <option value="+61" data-flag="🇦🇺">🇦🇺 +61</option>
+                </select>
+              </div>
+              <input
+                type="tel"
+                name="phone"
+                class="waitlist-popup__phone-input"
+                placeholder="{{ section.settings.phone_placeholder | default: '70 123 4567' }}"
+                autocomplete="tel"
+                aria-label="Phone number"
+              >
+            </div>
+
+            <button type="submit" class="waitlist-popup__submit">
+              {{ section.settings.sms_button | default: 'Complete' }}
+            </button>
+          </form>
+
+          <button type="button" class="waitlist-popup__skip" data-skip>
+            {{ section.settings.skip_text | default: 'Skip for now' }}
+          </button>
+
+          <!-- Progress Dots -->
+          <div class="waitlist-popup__dots">
+            <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
+            <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
+            <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
+          </div>
+
+          <p class="waitlist-popup__privacy">
+            {{ section.settings.privacy_text | default: 'No spam, ever. Unsubscribe anytime.' }}
+          </p>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div class="waitlist-popup__step" data-step="4" hidden>
+          <div class="waitlist-popup__success-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+
+          <h2 class="waitlist-popup__heading">
+            {{ section.settings.success_heading | default: "You're on the List" }}
+          </h2>
+
+          <p class="waitlist-popup__subheading">
+            {{ section.settings.success_subheading | default: "We'll notify you when we launch" }}
+          </p>
+
+          <div class="waitlist-popup__success-box">
+            <span class="waitlist-popup__success-label">{{ section.settings.success_label | default: 'Your exclusive early access' }}</span>
+            <span class="waitlist-popup__success-value">{{ section.settings.success_value | default: 'First in line at launch' }}</span>
+          </div>
+
+          <button type="button" class="waitlist-popup__submit" data-close-success>
+            {{ section.settings.success_button | default: 'Got it' }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </button>
+
+          <p class="waitlist-popup__privacy">
+            {{ section.settings.privacy_text | default: 'No spam, ever. Unsubscribe anytime.' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</waitlist-popup-component>
+
+<script>
+  class WaitlistPopupComponent extends HTMLElement {
+    constructor() {
+      super();
+      this.dialog = this.querySelector('[ref="dialog"]');
+      this.closeButton = this.querySelector('[ref="closeButton"]');
+      this.storageKey = 'moby-waitlist-popup-dismissed';
+      this.currentStep = 1;
+      this.totalSteps = 3;
+      this.selectedGoal = null;
+      this.collectedEmail = null;
+      this.enableSms = this.dataset.enableSms === 'true';
+    }
+
+    connectedCallback() {
+      const enabled = this.dataset.enabled === 'true';
+      const showOnce = this.dataset.showOnce === 'true';
+      const delay = parseInt(this.dataset.delay, 10) || 5000;
+
+      // Allow forcing popup via URL parameter (for testing)
+      const urlParams = new URLSearchParams(window.location.search);
+      const forceShow = urlParams.get('show_waitlist') === 'true';
+
+      // Clear localStorage if force reset is requested
+      if (urlParams.get('reset_waitlist') === 'true') {
+        localStorage.removeItem(this.storageKey);
+        console.log('Waitlist popup: localStorage cleared');
+      }
+
+      if (!enabled && !forceShow) return;
+
+      // Check if already dismissed/submitted (skip if force showing)
+      if (showOnce && localStorage.getItem(this.storageKey) && !forceShow) {
+        return;
+      }
+
+      // Show popup after delay
+      setTimeout(() => {
+        this.showDialog();
+      }, delay);
+
+      // Event listeners
+      this.closeButton?.addEventListener('click', () => this.closeDialog());
+      this.dialog?.addEventListener('click', (e) => {
+        if (e.target === this.dialog) this.closeDialog();
+      });
+      this.dialog?.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeDialog();
+      });
+
+      // Goal selection
+      this.querySelectorAll('.waitlist-popup__goal').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.selectedGoal = btn.dataset.goal;
+          const goalText = btn.querySelector('.waitlist-popup__goal-text').textContent;
+          this.querySelector('[data-selected-goal]').innerHTML = `Perfect for <strong>${goalText}</strong>`;
+          this.querySelector('[data-goal-input]').value = this.selectedGoal;
+          this.goToStep(2);
+        });
+      });
+
+      // Email form
+      const emailForm = this.querySelector('[data-email-form]');
+      emailForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(emailForm);
+        this.collectedEmail = formData.get('email');
+
+        // Submit to Shopify customer list
+        await this.submitToShopify(this.collectedEmail, this.selectedGoal);
+
+        if (this.enableSms) {
+          this.goToStep(3);
+        } else {
+          this.goToStep(4);
+        }
+      });
+
+      // SMS form
+      const smsForm = this.querySelector('[data-sms-form]');
+      smsForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(smsForm);
+        const countryCode = formData.get('country_code');
+        const phone = formData.get('phone');
+
+        if (phone) {
+          // Could submit phone to a service here
+          console.log('Phone collected:', countryCode + phone);
+        }
+
+        this.goToStep(4);
+      });
+
+      // Back button
+      this.querySelector('[data-back]')?.addEventListener('click', () => {
+        this.goToStep(1);
+      });
+
+      // Skip button
+      this.querySelector('[data-skip]')?.addEventListener('click', () => {
+        this.goToStep(4);
+      });
+
+      // Success close button
+      this.querySelector('[data-close-success]')?.addEventListener('click', () => {
+        this.closeDialog();
+      });
+    }
+
+    async submitToShopify(email, goal) {
+      try {
+        // Create a hidden form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/contact#contact_form';
+        form.style.display = 'none';
+
+        const emailInput = document.createElement('input');
+        emailInput.type = 'hidden';
+        emailInput.name = 'contact[email]';
+        emailInput.value = email;
+        form.appendChild(emailInput);
+
+        const tagsInput = document.createElement('input');
+        tagsInput.type = 'hidden';
+        tagsInput.name = 'contact[tags]';
+        tagsInput.value = `waitlist,popup,goal-${goal}`;
+        form.appendChild(tagsInput);
+
+        // Use fetch to submit without page reload
+        const formData = new FormData();
+        formData.append('form_type', 'customer');
+        formData.append('utf8', '✓');
+        formData.append('contact[email]', email);
+        formData.append('contact[tags]', `waitlist,popup,goal-${goal}`);
+
+        await fetch('/contact#contact_form', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        localStorage.setItem(this.storageKey, 'submitted');
+      } catch (error) {
+        console.error('Waitlist submission error:', error);
+        // Still mark as submitted to prevent annoying the user
+        localStorage.setItem(this.storageKey, 'submitted');
+      }
+    }
+
+    goToStep(step) {
+      // Hide all steps
+      this.querySelectorAll('.waitlist-popup__step').forEach(s => {
+        s.hidden = true;
+      });
+
+      // Show target step
+      const targetStep = this.querySelector(`[data-step="${step}"]`);
+      if (targetStep) {
+        targetStep.hidden = false;
+        this.currentStep = step;
+
+        // Update progress bar
+        const progressBar = this.querySelector('[data-progress-bar]');
+        if (progressBar) {
+          const progress = ((step - 1) / this.totalSteps) * 100;
+          progressBar.style.width = `${progress}%`;
+        }
+
+        // Focus first input if exists
+        const firstInput = targetStep.querySelector('input');
+        if (firstInput) {
+          setTimeout(() => firstInput.focus(), 100);
+        }
+      }
+    }
+
+    showDialog() {
+      if (!this.dialog) return;
+      this.dialog.showModal();
+      document.documentElement.setAttribute('scroll-lock', '');
+    }
+
+    closeDialog() {
+      if (!this.dialog) return;
+      this.dialog.classList.add('dialog-closing');
+      localStorage.setItem(this.storageKey, 'dismissed');
+
+      this.dialog.addEventListener('animationend', () => {
+        this.dialog.classList.remove('dialog-closing');
+        this.dialog.close();
+        document.documentElement.removeAttribute('scroll-lock');
+      }, { once: true });
+    }
+  }
+
+  if (!customElements.get('waitlist-popup-component')) {
+    customElements.define('waitlist-popup-component', WaitlistPopupComponent);
+  }
+</script>
+
+<style>
+  .waitlist-popup__dialog {
+    position: fixed;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+    max-width: 900px;
+    width: calc(100% - 24px);
+    max-height: calc(100vh - 24px);
+    background: #fff;
+    box-shadow: 0 25px 50px -12px rgba(28, 26, 16, 0.25);
+    overflow: hidden;
+  }
+
+  .waitlist-popup__dialog::backdrop {
+    background: rgba(28, 26, 16, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .waitlist-popup__dialog[open] {
+    animation: waitlistSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .waitlist-popup__dialog.dialog-closing {
+    animation: waitlistSlideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes waitlistSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes waitlistSlideOut {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+  }
+
+  .waitlist-popup__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 500px;
+  }
+
+  @media (min-width: 768px) {
+    .waitlist-popup__container {
+      grid-template-columns: 1fr 1fr;
+      min-height: 560px;
+    }
+  }
+
+  .waitlist-popup__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--moby-dark, #1C1A10);
+    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .waitlist-popup__close:hover {
+    background: #fff;
+    transform: scale(1.05);
+  }
+
+  /* Visual Side */
+  .waitlist-popup__visual {
+    display: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .waitlist-popup__visual {
+      display: block;
+    }
+  }
+
+  .waitlist-popup__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .waitlist-popup__gradient {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg,
+      #87CEEB 0%,
+      #FFE4B5 50%,
+      #FFA07A 100%
+    );
+  }
+
+  .waitlist-popup__visual-progress {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    width: 48px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .waitlist-popup__visual-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--moby-lime, #F9FDB5);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Content Side */
+  .waitlist-popup__content {
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  @media (min-width: 768px) {
+    .waitlist-popup__content {
+      padding: 48px 48px;
+    }
+  }
+
+  .waitlist-popup__step {
+    display: flex;
+    flex-direction: column;
+    animation: stepFadeIn 0.3s ease forwards;
+  }
+
+  .waitlist-popup__step[hidden] {
+    display: none;
+  }
+
+  @keyframes stepFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .waitlist-popup__step-indicator {
+    margin-bottom: 24px;
+  }
+
+  .waitlist-popup__indicator-line {
+    display: block;
+    width: 32px;
+    height: 3px;
+    background: var(--moby-lime, #F9FDB5);
+    border-radius: 2px;
+  }
+
+  .waitlist-popup__heading {
+    font-family: 'Memoir', serif;
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+    margin: 0 0 8px;
+    line-height: 1.1;
+  }
+
+  .waitlist-popup__subheading {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-sage, #C9C8B6);
+    margin: 0 0 24px;
+  }
+
+  .waitlist-popup__goal-selected {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+    margin: 0 0 24px;
+  }
+
+  .waitlist-popup__goal-selected strong {
+    font-weight: 500;
+  }
+
+  /* Goal Buttons */
+  .waitlist-popup__goals {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .waitlist-popup__goal {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid rgba(201, 200, 182, 0.5);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+  }
+
+  .waitlist-popup__goal:hover {
+    border-color: var(--moby-olive, #4F4A32);
+    background: rgba(249, 253, 181, 0.15);
+  }
+
+  .waitlist-popup__goal-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(201, 200, 182, 0.15);
+    border-radius: 50%;
+    color: var(--moby-olive, #4F4A32);
+    flex-shrink: 0;
+  }
+
+  .waitlist-popup__goal-text {
+    flex: 1;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  .waitlist-popup__goal-arrow {
+    color: var(--moby-sage, #C9C8B6);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .waitlist-popup__goal:hover .waitlist-popup__goal-arrow {
+    transform: translateX(4px);
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Form Styles */
+  .waitlist-popup__form {
+    margin-bottom: 16px;
+  }
+
+  .waitlist-popup__form-group {
+    margin-bottom: 12px;
+  }
+
+  .waitlist-popup__input {
+    width: 100%;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--moby-dark, #1C1A10);
+    background: #fff;
+    border: 1px solid var(--moby-sage, #C9C8B6);
+    border-radius: 6px;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    text-align: center;
+  }
+
+  .waitlist-popup__input::placeholder {
+    color: var(--moby-sage, #C9C8B6);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+  }
+
+  .waitlist-popup__input:focus {
+    border-color: var(--moby-olive, #4F4A32);
+    box-shadow: 0 0 0 3px rgba(79, 74, 50, 0.1);
+  }
+
+  /* Phone Input Group */
+  .waitlist-popup__phone-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .waitlist-popup__country-select {
+    flex-shrink: 0;
+  }
+
+  .waitlist-popup__country-dropdown {
+    height: 100%;
+    padding: 16px 12px;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    color: var(--moby-dark, #1C1A10);
+    background: #fff;
+    border: 1px solid var(--moby-sage, #C9C8B6);
+    border-radius: 6px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234F4A32' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 28px;
+  }
+
+  .waitlist-popup__country-dropdown:focus {
+    outline: none;
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  .waitlist-popup__phone-input {
+    flex: 1;
+    font-family: 'N27', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--moby-dark, #1C1A10);
+    background: #fff;
+    border: 1px solid var(--moby-sage, #C9C8B6);
+    border-radius: 6px;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .waitlist-popup__phone-input::placeholder {
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .waitlist-popup__phone-input:focus {
+    border-color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Submit Button */
+  .waitlist-popup__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    background: var(--moby-olive, #4F4A32);
+    border: none;
+    border-radius: 6px;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .waitlist-popup__submit:hover {
+    background: var(--moby-dark, #1C1A10);
+  }
+
+  .waitlist-popup__submit:active {
+    transform: scale(0.98);
+  }
+
+  /* Back Button */
+  .waitlist-popup__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--moby-sage, #C9C8B6);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    margin: 0 auto;
+    transition: color 0.2s ease;
+  }
+
+  .waitlist-popup__back:hover {
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  /* Skip Button */
+  .waitlist-popup__skip {
+    font-family: 'N27', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--moby-olive, #4F4A32);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px;
+    margin: 0 auto;
+    display: block;
+    transition: color 0.2s ease;
+  }
+
+  .waitlist-popup__skip:hover {
+    color: var(--moby-dark, #1C1A10);
+  }
+
+  /* Progress Dots */
+  .waitlist-popup__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 24px 0 16px;
+  }
+
+  .waitlist-popup__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(201, 200, 182, 0.4);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .waitlist-popup__dot--active {
+    background: var(--moby-olive, #4F4A32);
+    transform: scale(1.2);
+  }
+
+  .waitlist-popup__dot--completed {
+    background: var(--moby-olive, #4F4A32);
+  }
+
+  /* Privacy Text */
+  .waitlist-popup__privacy {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--moby-sage, #C9C8B6);
+    text-align: center;
+    margin: 0;
+  }
+
+  /* Success Step */
+  .waitlist-popup__success-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--moby-lime, #F9FDB5);
+    border-radius: 50%;
+    color: var(--moby-olive, #4F4A32);
+  }
+
+  .waitlist-popup__success-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 20px 24px;
+    background: rgba(201, 200, 182, 0.1);
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .waitlist-popup__success-label {
+    font-family: 'N27', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-sage, #C9C8B6);
+  }
+
+  .waitlist-popup__success-value {
+    font-family: 'Memoir', serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--moby-dark, #1C1A10);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "MOBY Waitlist Popup",
+  "tag": "section",
+  "class": "waitlist-popup-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Popup Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_once",
+      "label": "Only show once per visitor",
+      "default": true,
+      "info": "Uses localStorage to remember if popup was dismissed"
+    },
+    {
+      "type": "range",
+      "id": "delay",
+      "label": "Delay before showing",
+      "min": 1000,
+      "max": 120000,
+      "step": 1000,
+      "default": 5000,
+      "unit": "ms",
+      "info": "1 second = 1000ms. Max is 2 minutes (120000ms)."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sms",
+      "label": "Enable SMS collection step",
+      "default": true,
+      "info": "Adds an optional step for phone number collection"
+    },
+    {
+      "type": "header",
+      "content": "Visual"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave blank for gradient background"
+    },
+    {
+      "type": "header",
+      "content": "Step 1: Goal Selection"
+    },
+    {
+      "type": "text",
+      "id": "step1_heading",
+      "label": "Heading",
+      "default": "What are you looking to achieve?"
+    },
+    {
+      "type": "text",
+      "id": "step1_subheading",
+      "label": "Subheading",
+      "default": "Tell us and be first when we launch"
+    },
+    {
+      "type": "text",
+      "id": "goal_1",
+      "label": "Goal 1",
+      "default": "Strength & Power"
+    },
+    {
+      "type": "text",
+      "id": "goal_2",
+      "label": "Goal 2",
+      "default": "Focus & Cognition"
+    },
+    {
+      "type": "text",
+      "id": "goal_3",
+      "label": "Goal 3",
+      "default": "Energy & Endurance"
+    },
+    {
+      "type": "text",
+      "id": "goal_4",
+      "label": "Goal 4",
+      "default": "Recovery & Performance"
+    },
+    {
+      "type": "header",
+      "content": "Step 2: Email Capture"
+    },
+    {
+      "type": "text",
+      "id": "step2_heading",
+      "label": "Heading",
+      "default": "Join the Waitlist"
+    },
+    {
+      "type": "text",
+      "id": "step2_subheading",
+      "label": "Subheading",
+      "default": "Be first when we launch."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "email_button",
+      "label": "Button text",
+      "default": "Continue"
+    },
+    {
+      "type": "header",
+      "content": "Step 3: SMS Capture"
+    },
+    {
+      "type": "text",
+      "id": "step3_heading",
+      "label": "Heading",
+      "default": "Get First Access"
+    },
+    {
+      "type": "text",
+      "id": "step3_subheading",
+      "label": "Subheading",
+      "default": "SMS subscribers get exclusive drops before everyone else"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone placeholder",
+      "default": "70 123 4567"
+    },
+    {
+      "type": "text",
+      "id": "sms_button",
+      "label": "Button text",
+      "default": "Complete"
+    },
+    {
+      "type": "text",
+      "id": "skip_text",
+      "label": "Skip text",
+      "default": "Skip for now"
+    },
+    {
+      "type": "header",
+      "content": "Step 4: Success"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Heading",
+      "default": "You're on the List"
+    },
+    {
+      "type": "text",
+      "id": "success_subheading",
+      "label": "Subheading",
+      "default": "We'll notify you when we launch"
+    },
+    {
+      "type": "text",
+      "id": "success_label",
+      "label": "Success box label",
+      "default": "Your exclusive early access"
+    },
+    {
+      "type": "text",
+      "id": "success_value",
+      "label": "Success box value",
+      "default": "First in line at launch"
+    },
+    {
+      "type": "text",
+      "id": "success_button",
+      "label": "Button text",
+      "default": "Got it"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "privacy_text",
+      "label": "Privacy text",
+      "default": "No spam, ever. Unsubscribe anytime."
+    }
+  ],
+  "presets": [
+    {
+      "name": "MOBY Waitlist Popup"
+    }
+  ]
+}
+{% endschema %}
