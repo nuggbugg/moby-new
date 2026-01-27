@@ -76,9 +76,9 @@
       "moby-newsletter-popup": {
         "type": "moby-newsletter-popup",
         "settings": {
-          "enabled": true,
+          "enabled": false,
           "show_once": true,
-          "delay": 9000,
+          "popup_delay": 5,
           "image": "shopify://shop_images/Creatinestick.webp",
           "badge": "Exclusive Club",
           "heading": "Join the MOBY Family",
@@ -86,6 +86,36 @@
           "placeholder": "Enter your email",
           "button_text": "Get on the list",
           "success_message": "You're in! Check your email.",
+          "privacy_text": "No spam, ever. Unsubscribe anytime."
+        }
+      },
+      "moby-waitlist-popup": {
+        "type": "moby-waitlist-popup",
+        "settings": {
+          "enabled": true,
+          "show_once": true,
+          "popup_delay": 5,
+          "enable_sms": true,
+          "step1_heading": "What are you looking to achieve?",
+          "step1_subheading": "Tell us and be first when we launch",
+          "goal_1": "Strength & Power",
+          "goal_2": "Focus & Cognition",
+          "goal_3": "Energy & Endurance",
+          "goal_4": "Recovery & Performance",
+          "step2_heading": "Join the Waitlist",
+          "step2_subheading": "Be first when we launch.",
+          "email_placeholder": "Enter your email",
+          "email_button": "Continue",
+          "step3_heading": "Get First Access",
+          "step3_subheading": "SMS subscribers get exclusive drops before everyone else",
+          "phone_placeholder": "70 123 4567",
+          "sms_button": "Complete",
+          "skip_text": "Skip for now",
+          "success_heading": "You're on the List",
+          "success_subheading": "We'll notify you when we launch",
+          "success_label": "Your exclusive early access",
+          "success_value": "First in line at launch",
+          "success_button": "Got it",
           "privacy_text": "No spam, ever. Unsubscribe anytime."
         }
       }
