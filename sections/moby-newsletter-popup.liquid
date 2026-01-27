@@ -22,7 +22,6 @@
       <!-- Close Button -->
       <button
         ref="closeButton"
-        on:click="/closeDialog"
         class="newsletter-popup__close"
         aria-label="{{ 'accessibility.close_dialog' | t }}"
       >
@@ -477,8 +476,6 @@
 {% schema %}
 {
   "name": "MOBY Newsletter Popup",
-  "tag": "section",
-  "class": "newsletter-popup-section",
   "settings": [
     {
       "type": "header",
