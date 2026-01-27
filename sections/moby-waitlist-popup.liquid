@@ -562,6 +562,7 @@
     display: grid;
     grid-template-columns: 1fr;
     min-height: 500px;
+    position: relative;
   }
 
   @media (min-width: 768px) {
@@ -600,6 +601,7 @@
     display: none;
     position: relative;
     overflow: hidden;
+    z-index: 1;
   }
 
   @media (min-width: 768px) {
@@ -650,6 +652,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
+    z-index: 2;
   }
 
   @media (min-width: 768px) {
@@ -746,6 +749,9 @@
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
+    pointer-events: auto;
+    position: relative;
+    z-index: 1;
   }
 
   .waitlist-popup__goal:hover {
