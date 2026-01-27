@@ -92,7 +92,7 @@
       "moby-waitlist-popup": {
         "type": "moby-waitlist-popup",
         "settings": {
-          "enabled": false,
+          "enabled": true,
           "show_once": true,
           "popup_delay": 12,
           "enable_sms": true,
