@@ -3,8 +3,7 @@
   - Beautiful multi-step popup for waitlist campaign
   - Step 1: Goal selection ("What are you looking to achieve?")
   - Step 2: Email capture
-  - Step 3: SMS/Phone capture (optional)
-  - Step 4: Success confirmation
+  - Step 3: Success confirmation
   - Uses localStorage to remember if user dismissed/submitted
 {% endcomment %}
 
@@ -15,7 +14,6 @@
   data-delay="{{ section.settings.popup_delay | times: 1000 | default: 5000 }}"
   data-show-once="{{ section.settings.show_once }}"
   data-enabled="{{ section.settings.enabled }}"
-  data-enable-sms="{{ section.settings.enable_sms }}"
 >
   <dialog
     ref="dialog"
@@ -137,7 +135,6 @@
           <div class="waitlist-popup__dots">
             <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
             <span class="waitlist-popup__dot"></span>
-            <span class="waitlist-popup__dot"></span>
           </div>
 
           <p class="waitlist-popup__privacy">
@@ -197,7 +194,6 @@
           <div class="waitlist-popup__dots">
             <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
             <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
-            <span class="waitlist-popup__dot"></span>
           </div>
 
           <p class="waitlist-popup__privacy">
@@ -205,71 +201,8 @@
           </p>
         </div>
 
-        <!-- Step 3: SMS Capture -->
+        <!-- Step 3: Success -->
         <div class="waitlist-popup__step" data-step="3" hidden>
-          <div class="waitlist-popup__step-indicator">
-            <span class="waitlist-popup__indicator-line"></span>
-          </div>
-
-          <h2 class="waitlist-popup__heading">
-            {{ section.settings.step3_heading | default: 'Get First Access' }}
-          </h2>
-
-          <p class="waitlist-popup__subheading">
-            {{ section.settings.step3_subheading | default: 'SMS subscribers get exclusive drops before everyone else' }}
-          </p>
-
-          <form class="waitlist-popup__form" data-sms-form>
-            <div class="waitlist-popup__phone-group">
-              <div class="waitlist-popup__country-select">
-                <select name="country_code" class="waitlist-popup__country-dropdown" aria-label="Country code">
-                  <option value="+46" data-flag="🇸🇪" selected>🇸🇪 +46</option>
-                  <option value="+1" data-flag="🇺🇸">🇺🇸 +1</option>
-                  <option value="+44" data-flag="🇬🇧">🇬🇧 +44</option>
-                  <option value="+49" data-flag="🇩🇪">🇩🇪 +49</option>
-                  <option value="+33" data-flag="🇫🇷">🇫🇷 +33</option>
-                  <option value="+45" data-flag="🇩🇰">🇩🇰 +45</option>
-                  <option value="+47" data-flag="🇳🇴">🇳🇴 +47</option>
-                  <option value="+358" data-flag="🇫🇮">🇫🇮 +358</option>
-                  <option value="+31" data-flag="🇳🇱">🇳🇱 +31</option>
-                  <option value="+34" data-flag="🇪🇸">🇪🇸 +34</option>
-                  <option value="+39" data-flag="🇮🇹">🇮🇹 +39</option>
-                  <option value="+61" data-flag="🇦🇺">🇦🇺 +61</option>
-                </select>
-              </div>
-              <input
-                type="tel"
-                name="phone"
-                class="waitlist-popup__phone-input"
-                placeholder="{{ section.settings.phone_placeholder | default: '70 123 4567' }}"
-                autocomplete="tel"
-                aria-label="Phone number"
-              >
-            </div>
-
-            <button type="submit" class="waitlist-popup__submit">
-              {{ section.settings.sms_button | default: 'Complete' }}
-            </button>
-          </form>
-
-          <button type="button" class="waitlist-popup__skip" data-skip>
-            {{ section.settings.skip_text | default: 'Skip for now' }}
-          </button>
-
-          <!-- Progress Dots -->
-          <div class="waitlist-popup__dots">
-            <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
-            <span class="waitlist-popup__dot waitlist-popup__dot--completed"></span>
-            <span class="waitlist-popup__dot waitlist-popup__dot--active"></span>
-          </div>
-
-          <p class="waitlist-popup__privacy">
-            {{ section.settings.privacy_text | default: 'No spam, ever. Unsubscribe anytime.' }}
-          </p>
-        </div>
-
-        <!-- Step 4: Success -->
-        <div class="waitlist-popup__step" data-step="4" hidden>
           <div class="waitlist-popup__success-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="20 6 9 17 4 12"></polyline>
@@ -306,18 +239,16 @@
       super();
       this.storageKey = 'moby-waitlist-popup-dismissed';
       this.currentStep = 1;
-      this.totalSteps = 3;
+      this.totalSteps = 2;
       this.selectedGoal = null;
       this.collectedEmail = null;
       this.boundHandleClick = this.handleClick.bind(this);
-      this.boundHandleSubmit = this.handleSubmit.bind(this);
       this.boundHandleKeydown = this.handleKeydown.bind(this);
     }
 
     connectedCallback() {
       // Query for elements
       this.dialog = this.querySelector('dialog');
-      this.enableSms = this.dataset.enableSms === 'true';
 
       const enabled = this.dataset.enabled === 'true';
       const showOnce = this.dataset.showOnce === 'true';
@@ -331,10 +262,20 @@
         localStorage.removeItem(this.storageKey);
       }
 
-      // Use event delegation - attach listeners to the component itself
+      // Use event delegation for clicks
       this.addEventListener('click', this.boundHandleClick);
-      this.addEventListener('submit', this.boundHandleSubmit);
       this.addEventListener('keydown', this.boundHandleKeydown);
+
+      // Directly attach to form to prevent default submission
+      const emailForm = this.querySelector('#waitlist-email-form');
+      if (emailForm) {
+        emailForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.submitEmailForm(emailForm);
+          return false;
+        });
+      }
 
       // Also listen on dialog for backdrop clicks
       if (this.dialog) {
@@ -391,13 +332,6 @@
         return;
       }
 
-      // Skip button
-      if (target.closest('[data-skip]')) {
-        e.preventDefault();
-        this.goToStep(4);
-        return;
-      }
-
       // Success close button
       if (target.closest('[data-close-success]')) {
         e.preventDefault();
@@ -406,77 +340,19 @@
       }
     }
 
-    async submitEmailForm(form) {
+    submitEmailForm(form) {
       const email = form.querySelector('input[type="email"]')?.value;
       const tags = form.querySelector('[data-tags-input]')?.value || 'waitlist,popup';
       this.collectedEmail = email;
       this.collectedTags = tags;
 
-      // Don't submit to Shopify here - just save data and continue
-      // Data will be logged for now (can integrate with Klaviyo/Mailchimp later)
-      console.log('Email collected:', email, 'Tags:', tags);
-    async handleSubmit(e) {
-      const form = e.target;
+      // Log for tracking (integrate with Klaviyo/Mailchimp later)
+      console.log('Waitlist submission:', { email, tags, goal: this.selectedGoal });
 
-      // Email form (Shopify customer form)
-      if (form.id === 'waitlist-email-form' || form.closest('#waitlist-email-form')) {
-        e.preventDefault();
-        e.stopPropagation();
+      localStorage.setItem(this.storageKey, 'submitted');
 
-        const actualForm = form.id === 'waitlist-email-form' ? form : form.closest('#waitlist-email-form');
-        this.collectedEmail = actualForm.querySelector('input[type="email"]')?.value;
-
-        // Create hidden iframe for form submission
-        const iframeName = 'waitlist-submit-frame-' + Date.now();
-        const iframe = document.createElement('iframe');
-        iframe.name = iframeName;
-        iframe.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;';
-        document.body.appendChild(iframe);
-
-        // Wait for iframe to be ready
-        await new Promise(resolve => {
-          iframe.onload = resolve;
-          // Set a timeout in case onload doesn't fire
-          setTimeout(resolve, 100);
-        });
-
-        // Clone the form and submit via iframe
-        const clonedForm = actualForm.cloneNode(true);
-        clonedForm.style.display = 'none';
-        clonedForm.target = iframeName;
-        document.body.appendChild(clonedForm);
-        clonedForm.submit();
-
-        // Clean up after submission
-        setTimeout(() => {
-          clonedForm.remove();
-          iframe.remove();
-        }, 2000);
-
-        localStorage.setItem(this.storageKey, 'submitted');
-
-        if (this.enableSms) {
-          this.goToStep(3);
-        } else {
-          this.goToStep(4);
-        }
-        return;
-      }
-
-      // SMS form
-      if (form.matches('[data-sms-form]')) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const countryCode = formData.get('country_code');
-        const phone = formData.get('phone');
-
-        if (phone) {
-          console.log('Phone collected:', countryCode + phone);
-        }
-
-        this.goToStep(4);
-        return;
-      }
+      // Go to thank you screen
+      this.goToStep(3);
     }
 
     handleKeydown(e) {
@@ -861,62 +737,6 @@
     box-shadow: 0 0 0 3px rgba(79, 74, 50, 0.1);
   }
 
-  /* Phone Input Group */
-  .waitlist-popup__phone-group {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .waitlist-popup__country-select {
-    flex-shrink: 0;
-  }
-
-  .waitlist-popup__country-dropdown {
-    height: 100%;
-    padding: 16px 12px;
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    color: var(--moby-dark, #1C1A10);
-    background: #fff;
-    border: 1px solid var(--moby-sage, #C9C8B6);
-    border-radius: 6px;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%234F4A32' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    padding-right: 28px;
-  }
-
-  .waitlist-popup__country-dropdown:focus {
-    outline: none;
-    border-color: var(--moby-olive, #4F4A32);
-  }
-
-  .waitlist-popup__phone-input {
-    flex: 1;
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--moby-dark, #1C1A10);
-    background: #fff;
-    border: 1px solid var(--moby-sage, #C9C8B6);
-    border-radius: 6px;
-    padding: 16px 20px;
-    outline: none;
-    transition: border-color 0.2s ease;
-  }
-
-  .waitlist-popup__phone-input::placeholder {
-    color: var(--moby-sage, #C9C8B6);
-  }
-
-  .waitlist-popup__phone-input:focus {
-    border-color: var(--moby-olive, #4F4A32);
-  }
-
   /* Submit Button */
   .waitlist-popup__submit {
     display: flex;
@@ -966,28 +786,6 @@
 
   .waitlist-popup__back:hover {
     color: var(--moby-olive, #4F4A32);
-  }
-
-  /* Skip Button */
-  .waitlist-popup__skip {
-    font-family: 'N27', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--moby-olive, #4F4A32);
-    background: none;
-    border: none;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 12px;
-    margin: 0 auto;
-    display: block;
-    transition: color 0.2s ease;
-  }
-
-  .waitlist-popup__skip:hover {
-    color: var(--moby-dark, #1C1A10);
   }
 
   /* Progress Dots */
@@ -1074,13 +872,6 @@
       "info": "How many seconds to wait before showing the popup"
     },
     {
-      "type": "checkbox",
-      "id": "enable_sms",
-      "label": "Enable SMS collection step",
-      "default": true,
-      "info": "Adds an optional step for phone number collection"
-    },
-    {
       "type": "header",
       "content": "Visual"
     },
@@ -1160,41 +951,7 @@
     },
     {
       "type": "header",
-      "content": "Step 3: SMS Capture"
-    },
-    {
-      "type": "text",
-      "id": "step3_heading",
-      "label": "Heading",
-      "default": "Get First Access"
-    },
-    {
-      "type": "text",
-      "id": "step3_subheading",
-      "label": "Subheading",
-      "default": "SMS subscribers get exclusive drops before everyone else"
-    },
-    {
-      "type": "text",
-      "id": "phone_placeholder",
-      "label": "Phone placeholder",
-      "default": "70 123 4567"
-    },
-    {
-      "type": "text",
-      "id": "sms_button",
-      "label": "Button text",
-      "default": "Complete"
-    },
-    {
-      "type": "text",
-      "id": "skip_text",
-      "label": "Skip text",
-      "default": "Skip for now"
-    },
-    {
-      "type": "header",
-      "content": "Step 4: Success"
+      "content": "Step 3: Success"
     },
     {
       "type": "text",
@@ -1207,18 +964,6 @@
       "id": "success_subheading",
       "label": "Subheading",
       "default": "We'll notify you when we launch"
-    },
-    {
-      "type": "text",
-      "id": "success_label",
-      "label": "Success box label",
-      "default": "Your exclusive early access"
-    },
-    {
-      "type": "text",
-      "id": "success_value",
-      "label": "Success box value",
-      "default": "First in line at launch"
     },
     {
       "type": "text",
