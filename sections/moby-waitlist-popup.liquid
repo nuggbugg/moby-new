@@ -163,13 +163,13 @@
             Perfect for <strong>Strength & Power</strong>
           </p>
 
-          {%- form 'customer', class: 'waitlist-popup__form', id: 'waitlist-email-form' -%}
-            <input type="hidden" name="contact[tags]" value="waitlist,popup" data-tags-input>
+          <form class="waitlist-popup__form" id="waitlist-email-form" onsubmit="return false;">
+            <input type="hidden" name="tags" value="waitlist,popup" data-tags-input>
 
             <div class="waitlist-popup__form-group">
               <input
                 type="email"
-                name="contact[email]"
+                name="email"
                 class="waitlist-popup__input"
                 placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
                 required
@@ -184,7 +184,7 @@
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
-          {%- endform -%}
+          </form>
 
           <button type="button" class="waitlist-popup__back" data-back>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -406,6 +406,15 @@
       }
     }
 
+    async submitEmailForm(form) {
+      const email = form.querySelector('input[type="email"]')?.value;
+      const tags = form.querySelector('[data-tags-input]')?.value || 'waitlist,popup';
+      this.collectedEmail = email;
+      this.collectedTags = tags;
+
+      // Don't submit to Shopify here - just save data and continue
+      // Data will be logged for now (can integrate with Klaviyo/Mailchimp later)
+      console.log('Email collected:', email, 'Tags:', tags);
     async handleSubmit(e) {
       const form = e.target;
 
