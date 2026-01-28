@@ -209,6 +209,15 @@
         this.showDialog(trigger, true); // Force open even if already opened
       });
 
+      // Close button and backdrop click handlers (must be before early return)
+      this.closeButton?.addEventListener('click', () => this.closeDialog());
+      this.dialog?.addEventListener('click', (e) => {
+        if (e.target === this.dialog) this.closeDialog();
+      });
+      this.dialog?.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') this.closeDialog();
+      });
+
       if (!enabled && !forceShow) return;
 
       // Check if already dismissed/submitted (skip if force showing)
@@ -254,15 +263,6 @@
           }
         }, delay);
       }
-
-      // Event listeners
-      this.closeButton?.addEventListener('click', () => this.closeDialog());
-      this.dialog?.addEventListener('click', (e) => {
-        if (e.target === this.dialog) this.closeDialog();
-      });
-      this.dialog?.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeDialog();
-      });
 
       // Track form submission
       this.form?.addEventListener('submit', () => {
