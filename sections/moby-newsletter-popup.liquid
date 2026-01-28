@@ -151,11 +151,6 @@
   class NewsletterPopupComponent extends HTMLElement {
     constructor() {
       super();
-      this.dialog = this.querySelector('[ref="dialog"]');
-      this.closeButton = this.querySelector('[ref="closeButton"]');
-      this.teaserButton = this.querySelector('[ref="teaserButton"]');
-      this.teaserText = this.querySelector('[ref="teaserText"]');
-      this.form = this.querySelector('form');
       this.storageKey = 'moby-newsletter-popup-dismissed';
       this.signupStorageKey = 'moby-notify-signup';
       this.exitIntentFired = false;
@@ -163,6 +158,13 @@
     }
 
     connectedCallback() {
+      // Query DOM elements after component is connected
+      this.dialog = this.querySelector('[ref="dialog"]');
+      this.closeButton = this.querySelector('[ref="closeButton"]');
+      this.teaserButton = this.querySelector('[ref="teaserButton"]');
+      this.teaserText = this.querySelector('[ref="teaserText"]');
+      this.form = this.querySelector('form');
+
       const enabled = this.dataset.enabled === 'true';
       const showOnce = this.dataset.showOnce === 'true';
       const exitIntent = this.dataset.exitIntent === 'true';
