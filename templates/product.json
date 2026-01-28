@@ -26,6 +26,7 @@
         "show_trust_icons_desktop": true,
         "show_back_in_stock": true,
         "notify_popup_image": "shopify://shop_images/kreatin_030cb381-fc55-497d-8009-e5e3a6e51b63.webp",
+        "notify_popup_image_height": 375,
         "notify_popup_heading": "Be First in Line",
         "notify_popup_description": "Sign up now and get an exclusive launch discount when we go live!",
         "notify_popup_button_text": "Get Me On the List",
