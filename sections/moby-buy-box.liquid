@@ -419,7 +419,17 @@
         {%- if is_sold_out and section.settings.show_back_in_stock -%}
           {%- comment -%} Show Notify Me button for sold out products {%- endcomment -%}
           <div class="moby-buy-box__notify-wrapper">
-            {% render 'back-in-stock-notification', product: product, variant: current_variant, class: 'moby-buy-box__add-btn' %}
+            {% render 'back-in-stock-notification',
+              product: product,
+              variant: current_variant,
+              class: 'moby-buy-box__add-btn',
+              popup_heading: section.settings.notify_popup_heading,
+              popup_description: section.settings.notify_popup_description,
+              popup_button_text: section.settings.notify_popup_button_text,
+              popup_success_message: section.settings.notify_popup_success_message,
+              popup_privacy_text: section.settings.notify_popup_privacy_text,
+              popup_image: section.settings.notify_popup_image
+            %}
           </div>
         {%- else -%}
           <form method="post" action="/cart/add" id="moby-buy-box-form" class="moby-buy-box__form{% if is_preorder %} moby-buy-box__form--preorder{% endif %}"
@@ -458,7 +468,17 @@
           {%- comment -%} Hidden back-in-stock component for dynamic stock exhaustion (triggered by JS when cart qty >= inventory) {%- endcomment -%}
           {%- if inventory_policy == 'deny' -%}
             <style>.back-in-stock__button--hidden-trigger { display: none !important; }</style>
-            {% render 'back-in-stock-notification', product: product, variant: current_variant, class: 'back-in-stock__button--hidden-trigger' %}
+            {% render 'back-in-stock-notification',
+              product: product,
+              variant: current_variant,
+              class: 'back-in-stock__button--hidden-trigger',
+              popup_heading: section.settings.notify_popup_heading,
+              popup_description: section.settings.notify_popup_description,
+              popup_button_text: section.settings.notify_popup_button_text,
+              popup_success_message: section.settings.notify_popup_success_message,
+              popup_privacy_text: section.settings.notify_popup_privacy_text,
+              popup_image: section.settings.notify_popup_image
+            %}
           {%- endif -%}
         {%- endif -%}
 
@@ -2066,6 +2086,51 @@ document.addEventListener('DOMContentLoaded', function() {
       "label": "Show 'Notify Me' for sold out products",
       "info": "Displays an email signup form instead of disabled button when product is sold out",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Notify popup customization"
+    },
+    {
+      "type": "image_picker",
+      "id": "notify_popup_image",
+      "label": "Popup image",
+      "info": "Optional image displayed at the top of the popup"
+    },
+    {
+      "type": "text",
+      "id": "notify_popup_heading",
+      "label": "Popup heading",
+      "default": "Be First in Line",
+      "info": "Main heading text in the popup"
+    },
+    {
+      "type": "textarea",
+      "id": "notify_popup_description",
+      "label": "Popup description",
+      "default": "Sign up now and get an exclusive launch discount when we go live!",
+      "info": "Description text below the heading"
+    },
+    {
+      "type": "text",
+      "id": "notify_popup_button_text",
+      "label": "Submit button text",
+      "default": "Get My Discount",
+      "info": "Text on the submit button"
+    },
+    {
+      "type": "text",
+      "id": "notify_popup_success_message",
+      "label": "Success message",
+      "default": "You're on the list! Check your inbox for your exclusive discount.",
+      "info": "Message shown after successful signup"
+    },
+    {
+      "type": "text",
+      "id": "notify_popup_privacy_text",
+      "label": "Privacy text",
+      "default": "We'll only email you about our launch and your exclusive offer.",
+      "info": "Small text at the bottom of the popup"
     },
     {
       "type": "text",

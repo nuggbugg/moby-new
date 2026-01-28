@@ -1,10 +1,16 @@
 {%- doc -%}
-  Renders a "Notify Me" button for out-of-stock products that opens an email capture modal.
-  Syncs with Shopify customer list with product-specific tags.
+  Renders a "Notify Me" button for out-of-stock/prelaunch products that opens an email capture modal.
+  Customizable for launch signup with discount messaging and optional image.
 
   @param {object} product - The product object
   @param {object} variant - The specific variant (optional, defaults to selected_or_first_available_variant)
   @param {string} [class] - Additional CSS classes for the button
+  @param {string} [popup_heading] - Custom heading text
+  @param {string} [popup_description] - Custom description text
+  @param {string} [popup_button_text] - Custom submit button text
+  @param {string} [popup_success_message] - Custom success message
+  @param {string} [popup_privacy_text] - Custom privacy text
+  @param {object} [popup_image] - Image object for the popup
 {%- enddoc -%}
 
 {%- liquid
@@ -13,6 +19,20 @@
   assign product_handle = product.handle
   assign variant_id = current_variant.id
   assign form_id = 'back-in-stock-form-' | append: variant_id
+
+  # Default texts - launch focused
+  assign default_heading = 'Be First in Line'
+  assign default_description = 'Sign up now and get an exclusive launch discount when we go live!'
+  assign default_button_text = 'Get My Discount'
+  assign default_success_message = "You're on the list! Check your inbox for your exclusive discount."
+  assign default_privacy_text = "We'll only email you about our launch and your exclusive offer."
+
+  # Use custom texts if provided, otherwise defaults
+  assign heading_text = popup_heading | default: default_heading
+  assign description_text = popup_description | default: default_description
+  assign button_text = popup_button_text | default: default_button_text
+  assign success_text = popup_success_message | default: default_success_message
+  assign privacy_text = popup_privacy_text | default: default_privacy_text
 -%}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
@@ -60,17 +80,29 @@
         </svg>
       </button>
 
-      <!-- Icon -->
-      <div class="back-in-stock__modal-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
-      </div>
+      <!-- Image (optional) -->
+      {%- if popup_image != blank -%}
+        <div class="back-in-stock__modal-image">
+          <img
+            src="{{ popup_image | image_url: width: 400 }}"
+            alt="{{ popup_image.alt | default: heading_text | escape }}"
+            width="400"
+            height="{{ 400 | divided_by: popup_image.aspect_ratio | round }}"
+            loading="lazy"
+          >
+        </div>
+      {%- else -%}
+        <!-- Icon (fallback when no image) -->
+        <div class="back-in-stock__modal-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+        </div>
+      {%- endif -%}
 
       <!-- Heading -->
       <h2 id="back-in-stock-heading-{{ variant_id }}" class="back-in-stock__modal-heading">
-        Get Notified
+        {{ heading_text }}
       </h2>
 
       <!-- Product Info -->
@@ -80,7 +112,7 @@
 
       <!-- Description -->
       <p class="back-in-stock__modal-description">
-        Enter your email and we'll notify you as soon as this item is back in stock.
+        {{ description_text }}
       </p>
 
       <!-- Form -->
@@ -101,7 +133,7 @@
         </div>
 
         <button type="submit" class="back-in-stock__submit">
-          Notify Me
+          {{ button_text }}
         </button>
 
         {%- if form.posted_successfully? -%}
@@ -109,7 +141,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
-            <span>You're on the list! We'll email you when it's back.</span>
+            <span>{{ success_text }}</span>
           </div>
         {%- endif -%}
 
@@ -122,7 +154,7 @@
 
       <!-- Privacy -->
       <p class="back-in-stock__privacy">
-        We'll only use your email to notify you about this product.
+        {{ privacy_text }}
       </p>
     </div>
   </dialog>
@@ -292,6 +324,20 @@
     background: var(--moby-lime, #F9FDB5);
     border-radius: 50%;
     color: var(--moby-olive, #4F4A32);
+  }
+
+  .back-in-stock__modal-image {
+    width: calc(100% + 48px);
+    margin: -32px -24px 20px;
+    overflow: hidden;
+  }
+
+  .back-in-stock__modal-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 200px;
   }
 
   .back-in-stock__modal-heading {
