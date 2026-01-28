@@ -429,7 +429,9 @@
               popup_success_message: section.settings.notify_popup_success_message,
               popup_privacy_text: section.settings.notify_popup_privacy_text,
               popup_image: section.settings.notify_popup_image,
-              popup_image_height: section.settings.notify_popup_image_height
+              popup_image_height: section.settings.notify_popup_image_height,
+              popup_already_signed_up_text: section.settings.notify_popup_already_signed_up_text,
+              popup_success_redirect_url: section.settings.notify_popup_success_redirect_url
             %}
           </div>
         {%- else -%}
@@ -479,7 +481,9 @@
               popup_success_message: section.settings.notify_popup_success_message,
               popup_privacy_text: section.settings.notify_popup_privacy_text,
               popup_image: section.settings.notify_popup_image,
-              popup_image_height: section.settings.notify_popup_image_height
+              popup_image_height: section.settings.notify_popup_image_height,
+              popup_already_signed_up_text: section.settings.notify_popup_already_signed_up_text,
+              popup_success_redirect_url: section.settings.notify_popup_success_redirect_url
             %}
           {%- endif -%}
         {%- endif -%}
@@ -2144,6 +2148,19 @@ document.addEventListener('DOMContentLoaded', function() {
       "label": "Privacy text",
       "default": "We'll only email you about our launch and your exclusive offer.",
       "info": "Small text at the bottom of the popup"
+    },
+    {
+      "type": "text",
+      "id": "notify_popup_already_signed_up_text",
+      "label": "Already signed up button text",
+      "default": "You're Already on the List!",
+      "info": "Button text shown when user has already signed up"
+    },
+    {
+      "type": "url",
+      "id": "notify_popup_success_redirect_url",
+      "label": "Success redirect URL",
+      "info": "Optional. Redirect users to this page after signup (e.g., /pages/thank-you)"
     },
     {
       "type": "text",
