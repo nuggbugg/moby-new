@@ -218,19 +218,24 @@
         if (e.key === 'Escape') this.closeDialog();
       });
 
-      if (!enabled && !forceShow) return;
+      // Track form submission (must be before early return)
+      this.form?.addEventListener('submit', () => {
+        const email = this.form.querySelector('input[type="email"]')?.value;
+        this.pushDataLayer('newsletter_form_submitted', { email });
+        localStorage.setItem(this.storageKey, 'submitted');
+        this.markAsSignedUp();
+      });
 
-      // Check if already dismissed/submitted (skip if force showing)
-      if (showOnce && localStorage.getItem(this.storageKey) && !forceShow) {
-        return;
-      }
-
-      // Check if form was just submitted successfully
+      // Check if form was just submitted successfully (must be before early return)
       const successEl = this.querySelector('[data-success="true"]');
       if (successEl) {
         localStorage.setItem(this.storageKey, 'submitted');
         this.markAsSignedUp();
         this.pushDataLayer('newsletter_signup_success');
+
+        // Hide form inputs and show only success message
+        this.querySelector('.newsletter-popup__form-group')?.style.setProperty('display', 'none');
+        this.querySelector('.newsletter-popup__submit')?.style.setProperty('display', 'none');
 
         // Show the success state briefly then redirect or close
         this.showDialog('form_success');
@@ -241,6 +246,13 @@
         } else {
           setTimeout(() => this.closeDialog(), 3000);
         }
+        return;
+      }
+
+      if (!enabled && !forceShow) return;
+
+      // Check if already dismissed/submitted (skip if force showing)
+      if (showOnce && localStorage.getItem(this.storageKey) && !forceShow) {
         return;
       }
 
@@ -263,14 +275,6 @@
           }
         }, delay);
       }
-
-      // Track form submission
-      this.form?.addEventListener('submit', () => {
-        const email = this.form.querySelector('input[type="email"]')?.value;
-        this.pushDataLayer('newsletter_form_submitted', { email });
-        localStorage.setItem(this.storageKey, 'submitted');
-        this.markAsSignedUp();
-      });
     }
 
     checkAlreadySignedUp() {
