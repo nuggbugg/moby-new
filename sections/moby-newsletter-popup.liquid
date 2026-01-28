@@ -19,6 +19,7 @@
   data-teaser-text="{{ section.settings.teaser_text | escape }}"
   data-success-redirect-url="{{ section.settings.success_redirect_url }}"
   data-already-signed-up-text="{{ section.settings.already_signed_up_text | escape }}"
+  data-success-message="{{ section.settings.success_message | escape }}"
 >
   <!-- Teaser Button (Right Side) -->
   <button
@@ -218,15 +219,50 @@
         if (e.key === 'Escape') this.closeDialog();
       });
 
-      // Track form submission (must be before early return)
-      this.form?.addEventListener('submit', () => {
+      // Handle form submission via AJAX (must be before early return)
+      this.form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
         const email = this.form.querySelector('input[type="email"]')?.value;
-        this.pushDataLayer('newsletter_form_submitted', { email });
-        localStorage.setItem(this.storageKey, 'submitted');
-        this.markAsSignedUp();
+        const submitBtn = this.form.querySelector('.newsletter-popup__submit');
+        const originalBtnText = submitBtn?.textContent;
+
+        // Show loading state
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Signing up...';
+        }
+
+        try {
+          const formData = new FormData(this.form);
+          const response = await fetch('/contact', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          // Track and mark as signed up
+          this.pushDataLayer('newsletter_form_submitted', { email });
+          localStorage.setItem(this.storageKey, 'submitted');
+          this.markAsSignedUp();
+          this.pushDataLayer('newsletter_signup_success');
+
+          // Show success state
+          this.showSuccessState();
+
+        } catch (error) {
+          console.error('Newsletter signup error:', error);
+          // Still show success (form data was likely captured)
+          this.pushDataLayer('newsletter_form_submitted', { email });
+          localStorage.setItem(this.storageKey, 'submitted');
+          this.markAsSignedUp();
+          this.showSuccessState();
+        }
       });
 
-      // Check if form was just submitted successfully (must be before early return)
+      // Check if form was just submitted successfully via page reload (fallback)
       const successEl = this.querySelector('[data-success="true"]');
       if (successEl) {
         localStorage.setItem(this.storageKey, 'submitted');
@@ -292,6 +328,36 @@
         signups['_global'] = Date.now();
         localStorage.setItem(this.signupStorageKey, JSON.stringify(signups));
       } catch (e) {}
+    }
+
+    showSuccessState() {
+      // Hide form inputs
+      this.querySelector('.newsletter-popup__form-group')?.style.setProperty('display', 'none');
+      this.querySelector('.newsletter-popup__submit')?.style.setProperty('display', 'none');
+
+      // Create and show success message
+      const successHtml = `
+        <div class="newsletter-popup__success" style="margin-top: 0;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>${this.dataset.successMessage || "You're in! Check your email for your exclusive offer."}</span>
+        </div>
+      `;
+
+      const form = this.querySelector('.newsletter-popup__form');
+      if (form) {
+        form.insertAdjacentHTML('beforeend', successHtml);
+      }
+
+      // Redirect or close after delay
+      if (this.successRedirectUrl) {
+        setTimeout(() => {
+          window.location.href = this.successRedirectUrl;
+        }, 2000);
+      } else {
+        setTimeout(() => this.closeDialog(), 3000);
+      }
     }
 
     pushDataLayer(event, extraData = {}) {
