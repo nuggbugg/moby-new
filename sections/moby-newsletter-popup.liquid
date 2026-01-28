@@ -1,18 +1,40 @@
 {% comment %}
   MOBY Newsletter Popup
-  - Beautiful on-brand popup that appears after delay
+  - Triggers on exit intent and/or after delay
+  - Teaser button on right side of screen
   - Uses localStorage to remember if user dismissed/submitted
-  - Syncs with Shopify customer list
+  - DataLayer tracking for analytics
+  - Optional redirect after signup
 {% endcomment %}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
 
 <newsletter-popup-component
   class="newsletter-popup"
-  data-delay="{{ section.settings.popup_delay | times: 1000 | default: 5000 }}"
+  data-delay="{{ section.settings.popup_delay | times: 1000 | default: 12000 }}"
   data-show-once="{{ section.settings.show_once }}"
   data-enabled="{{ section.settings.enabled }}"
+  data-exit-intent="{{ section.settings.exit_intent }}"
+  data-show-teaser="{{ section.settings.show_teaser }}"
+  data-teaser-text="{{ section.settings.teaser_text | escape }}"
+  data-success-redirect-url="{{ section.settings.success_redirect_url }}"
+  data-already-signed-up-text="{{ section.settings.already_signed_up_text | escape }}"
 >
+  <!-- Teaser Button (Right Side) -->
+  <button
+    ref="teaserButton"
+    class="newsletter-popup__teaser"
+    aria-label="Open signup popup"
+  >
+    <span class="newsletter-popup__teaser-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
+    </span>
+    <span class="newsletter-popup__teaser-text" ref="teaserText">{{ section.settings.teaser_text | default: 'Get Discount' }}</span>
+  </button>
+
   <dialog
     ref="dialog"
     class="newsletter-popup__dialog"
@@ -55,7 +77,7 @@
             </svg>
             <div class="newsletter-popup__pattern-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
               </svg>
             </div>
           </div>
@@ -76,7 +98,7 @@
 
         <!-- Description -->
         <p class="newsletter-popup__description">
-          {{ section.settings.description | default: 'Get 10% off your first order plus exclusive access to new products, wellness tips, and members-only offers.' }}
+          {{ section.settings.description | default: 'Get exclusive access to our launch discount and be first to know when we go live.' }}
         </p>
 
         <!-- Form -->
@@ -97,7 +119,7 @@
           </div>
 
           <button type="submit" class="newsletter-popup__submit">
-            {{ section.settings.button_text | default: 'Get My 10% Off' }}
+            {{ section.settings.button_text | default: 'Get My Discount' }}
           </button>
 
           {%- if form.posted_successfully? -%}
@@ -131,14 +153,23 @@
       super();
       this.dialog = this.querySelector('[ref="dialog"]');
       this.closeButton = this.querySelector('[ref="closeButton"]');
+      this.teaserButton = this.querySelector('[ref="teaserButton"]');
+      this.teaserText = this.querySelector('[ref="teaserText"]');
       this.form = this.querySelector('form');
       this.storageKey = 'moby-newsletter-popup-dismissed';
+      this.signupStorageKey = 'moby-notify-signup';
+      this.exitIntentFired = false;
+      this.hasOpened = false;
     }
 
     connectedCallback() {
       const enabled = this.dataset.enabled === 'true';
       const showOnce = this.dataset.showOnce === 'true';
-      const delay = parseInt(this.dataset.delay, 10) || 3000;
+      const exitIntent = this.dataset.exitIntent === 'true';
+      const showTeaser = this.dataset.showTeaser === 'true';
+      const delay = parseInt(this.dataset.delay, 10) || 12000;
+      this.successRedirectUrl = this.dataset.successRedirectUrl || '';
+      this.alreadySignedUpText = this.dataset.alreadySignedUpText || '';
 
       // Allow forcing popup via URL parameter (for testing)
       const urlParams = new URLSearchParams(window.location.search);
@@ -147,8 +178,34 @@
       // Clear localStorage if force reset is requested
       if (urlParams.get('reset_newsletter') === 'true') {
         localStorage.removeItem(this.storageKey);
+        localStorage.removeItem(this.signupStorageKey);
         console.log('Newsletter popup: localStorage cleared');
       }
+
+      // Check if already signed up (from notify popup)
+      const alreadySignedUp = this.checkAlreadySignedUp();
+
+      // Update teaser button if already signed up
+      if (alreadySignedUp && this.alreadySignedUpText && this.teaserText) {
+        this.teaserText.textContent = this.alreadySignedUpText;
+        this.teaserButton?.classList.add('newsletter-popup__teaser--signed-up');
+      }
+
+      // Show/hide teaser button
+      if (showTeaser && enabled) {
+        this.teaserButton?.classList.add('newsletter-popup__teaser--visible');
+      }
+
+      // Teaser button click
+      this.teaserButton?.addEventListener('click', () => {
+        this.showDialog('teaser_click');
+      });
+
+      // Listen for notify button clicks (from product pages)
+      document.addEventListener('open-newsletter-popup', (e) => {
+        const trigger = e.detail?.trigger || 'external';
+        this.showDialog(trigger, true); // Force open even if already opened
+      });
 
       if (!enabled && !forceShow) return;
 
@@ -161,16 +218,40 @@
       const successEl = this.querySelector('[data-success="true"]');
       if (successEl) {
         localStorage.setItem(this.storageKey, 'submitted');
-        // Show the success state briefly then close
-        this.showDialog();
-        setTimeout(() => this.closeDialog(), 3000);
+        this.markAsSignedUp();
+        this.pushDataLayer('newsletter_signup_success');
+
+        // Show the success state briefly then redirect or close
+        this.showDialog('form_success');
+        if (this.successRedirectUrl) {
+          setTimeout(() => {
+            window.location.href = this.successRedirectUrl;
+          }, 1500);
+        } else {
+          setTimeout(() => this.closeDialog(), 3000);
+        }
         return;
       }
 
-      // Show popup after delay
-      setTimeout(() => {
-        this.showDialog();
-      }, delay);
+      // Exit intent listener (desktop only)
+      if (exitIntent && !('ontouchstart' in window)) {
+        document.addEventListener('mouseout', (e) => {
+          if (this.exitIntentFired || this.hasOpened) return;
+          if (e.clientY <= 0 || e.clientX <= 0 || e.clientX >= window.innerWidth) {
+            this.exitIntentFired = true;
+            this.showDialog('exit_intent');
+          }
+        });
+      }
+
+      // Timer-based trigger
+      if (delay > 0) {
+        setTimeout(() => {
+          if (!this.hasOpened) {
+            this.showDialog('timer');
+          }
+        }, delay);
+      }
 
       // Event listeners
       this.closeButton?.addEventListener('click', () => this.closeDialog());
@@ -181,16 +262,55 @@
         if (e.key === 'Escape') this.closeDialog();
       });
 
-      // Mark as dismissed when form submits
+      // Track form submission
       this.form?.addEventListener('submit', () => {
+        const email = this.form.querySelector('input[type="email"]')?.value;
+        this.pushDataLayer('newsletter_form_submitted', { email });
         localStorage.setItem(this.storageKey, 'submitted');
+        this.markAsSignedUp();
       });
     }
 
-    showDialog() {
+    checkAlreadySignedUp() {
+      try {
+        const signups = JSON.parse(localStorage.getItem(this.signupStorageKey) || '{}');
+        return signups['_global'] ? true : false;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    markAsSignedUp() {
+      try {
+        const signups = JSON.parse(localStorage.getItem(this.signupStorageKey) || '{}');
+        signups['_global'] = Date.now();
+        localStorage.setItem(this.signupStorageKey, JSON.stringify(signups));
+      } catch (e) {}
+    }
+
+    pushDataLayer(event, extraData = {}) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: event,
+        popup_type: 'newsletter',
+        ...extraData
+      });
+    }
+
+    showDialog(trigger = 'unknown', force = false) {
       if (!this.dialog) return;
+      if (this.hasOpened && !force) return;
+
+      // Don't reopen if already open
+      if (this.dialog.open) return;
+
+      this.hasOpened = true;
       this.dialog.showModal();
       document.documentElement.setAttribute('scroll-lock', '');
+      this.pushDataLayer('newsletter_popup_opened', { trigger });
+
+      // Hide teaser when popup is open
+      this.teaserButton?.classList.remove('newsletter-popup__teaser--visible');
     }
 
     closeDialog() {
@@ -202,6 +322,10 @@
         this.dialog.classList.remove('dialog-closing');
         this.dialog.close();
         document.documentElement.removeAttribute('scroll-lock');
+        // Show teaser again after close
+        if (this.dataset.showTeaser === 'true' && this.dataset.enabled === 'true') {
+          this.teaserButton?.classList.add('newsletter-popup__teaser--visible');
+        }
       }, { once: true });
     }
   }
@@ -212,6 +336,66 @@
 </script>
 
 <style>
+  /* Teaser Button */
+  .newsletter-popup__teaser {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) translateX(100%);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'N27', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--moby-dark, #1B1A0F);
+    background: var(--moby-lime, #F9FDB5);
+    border: none;
+    border-radius: 6px 0 0 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    box-shadow: -4px 0 12px rgba(28, 26, 16, 0.15);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .newsletter-popup__teaser--visible {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .newsletter-popup__teaser:hover {
+    background: #eef2a0;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  .newsletter-popup__teaser--signed-up {
+    background: var(--moby-olive, #4F4A32);
+    color: #fff;
+  }
+
+  .newsletter-popup__teaser--signed-up:hover {
+    background: var(--moby-dark, #1B1A0F);
+  }
+
+  .newsletter-popup__teaser-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .newsletter-popup__teaser-text {
+    white-space: nowrap;
+  }
+
+  /* Dialog */
   .newsletter-popup__dialog {
     position: fixed;
     border: none;
@@ -261,16 +445,9 @@
   }
 
   .newsletter-popup__container {
-    display: grid;
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-
-  @media (min-width: 768px) {
-    .newsletter-popup__container {
-      grid-template-columns: 1fr 1fr;
-      min-height: 480px;
-    }
+    display: flex;
+    min-height: 400px;
+    position: relative;
   }
 
   .newsletter-popup__close {
@@ -278,43 +455,41 @@
     top: 12px;
     right: 12px;
     z-index: 10;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    color: var(--moby-dark, #1B1A0F);
-    transition: background 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: var(--moby-olive, #4F4A32);
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
   .newsletter-popup__close:hover {
-    background: #fff;
-    transform: scale(1.05);
+    background: var(--moby-lime, #F9FDB5);
+    color: var(--moby-dark, #1B1A0F);
   }
 
   /* Visual Side */
   .newsletter-popup__visual {
-    display: none;
-    background: var(--moby-lime, #F9FDB5);
+    flex: 0 0 45%;
+    background: var(--moby-dark, #1B1A0F);
     position: relative;
     overflow: hidden;
-  }
-
-  @media (min-width: 768px) {
-    .newsletter-popup__visual {
-      display: block;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .newsletter-popup__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: absolute;
+    inset: 0;
   }
 
   .newsletter-popup__pattern {
@@ -323,8 +498,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--moby-lime, #F9FDB5);
     position: relative;
-    background: linear-gradient(180deg, #87CEEB 0%, #FFE4B5 50%, #FFA07A 100%);
   }
 
   .newsletter-popup__pattern-svg {
@@ -332,8 +507,6 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    color: var(--moby-olive, #4F4A32);
-    opacity: 0.15;
   }
 
   .newsletter-popup__pattern-icon {
@@ -344,25 +517,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--moby-lime, #F9FDB5);
     border-radius: 50%;
     color: var(--moby-olive, #4F4A32);
   }
 
   /* Content Side */
   .newsletter-popup__content {
-    padding: 40px 24px;
+    flex: 1;
+    padding: 48px 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
-  }
-
-  @media (min-width: 768px) {
-    .newsletter-popup__content {
-      padding: 48px 40px;
-    }
   }
 
   .newsletter-popup__badge {
@@ -371,23 +539,23 @@
     font-size: 11px;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--moby-dark, #1B1A0F);
     background: var(--moby-lime, #F9FDB5);
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 100px;
     margin-bottom: 20px;
   }
 
   .newsletter-popup__heading {
     font-family: 'Memoir', serif;
-    font-size: clamp(24px, 5vw, 32px);
+    font-size: 28px;
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    line-height: 1.1;
     color: var(--moby-dark, #1B1A0F);
     margin: 0 0 12px;
-    line-height: 1.1;
   }
 
   .newsletter-popup__description {
@@ -395,8 +563,8 @@
     font-size: 14px;
     font-weight: 300;
     line-height: 1.6;
-    color: var(--moby-dark, #1B1A0F);
-    margin: 0 0 24px;
+    color: var(--moby-olive, #4F4A32);
+    margin: 0 0 28px;
     max-width: 320px;
   }
 
@@ -494,6 +662,42 @@
     margin: 0;
     text-align: center;
   }
+
+  /* Mobile */
+  @media screen and (max-width: 749px) {
+    .newsletter-popup__teaser {
+      top: auto;
+      bottom: 80px;
+      writing-mode: horizontal-tb;
+      border-radius: 6px 0 0 6px;
+      padding: 10px 14px;
+    }
+
+    .newsletter-popup__teaser--visible:hover {
+      transform: translateY(0) translateX(-4px);
+    }
+
+    .newsletter-popup__container {
+      flex-direction: column;
+      min-height: auto;
+    }
+
+    .newsletter-popup__visual {
+      display: none;
+    }
+
+    .newsletter-popup__content {
+      padding: 48px 24px;
+    }
+
+    .newsletter-popup__heading {
+      font-size: 24px;
+    }
+
+    .newsletter-popup__description {
+      font-size: 13px;
+    }
+  }
 </style>
 
 {% schema %}
@@ -518,15 +722,46 @@
       "info": "Uses localStorage to remember if popup was dismissed"
     },
     {
+      "type": "checkbox",
+      "id": "exit_intent",
+      "label": "Show on exit intent",
+      "default": true,
+      "info": "Popup appears when mouse moves toward closing the tab (desktop only)"
+    },
+    {
       "type": "range",
       "id": "popup_delay",
       "label": "Delay before showing (seconds)",
-      "min": 1,
-      "max": 30,
+      "min": 0,
+      "max": 60,
       "step": 1,
-      "default": 5,
+      "default": 12,
       "unit": "s",
-      "info": "How many seconds to wait before showing the popup"
+      "info": "How many seconds to wait before showing. Set to 0 to disable timer (only exit intent)."
+    },
+    {
+      "type": "header",
+      "content": "Teaser Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_teaser",
+      "label": "Show teaser button",
+      "default": true,
+      "info": "Small button on right side that opens the popup"
+    },
+    {
+      "type": "text",
+      "id": "teaser_text",
+      "label": "Teaser button text",
+      "default": "Get Discount"
+    },
+    {
+      "type": "text",
+      "id": "already_signed_up_text",
+      "label": "Already signed up teaser text",
+      "default": "You're In!",
+      "info": "Text shown on teaser when user has already signed up"
     },
     {
       "type": "header",
@@ -552,13 +787,13 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Join the Waitlist"
+      "default": "Get Launch Access"
     },
     {
       "type": "textarea",
       "id": "description",
       "label": "Description",
-      "default": "Be first to know when we launch. Get exclusive early access to MOBY products and wellness tips."
+      "default": "Sign up now and get an exclusive launch discount when we go live!"
     },
     {
       "type": "text",
@@ -570,19 +805,29 @@
       "type": "text",
       "id": "button_text",
       "label": "Button text",
-      "default": "Join Waitlist"
+      "default": "Get My Discount"
     },
     {
       "type": "text",
       "id": "success_message",
       "label": "Success message",
-      "default": "You're on the list! We'll notify you when we launch."
+      "default": "You're in! Check your email for your exclusive offer."
     },
     {
       "type": "text",
       "id": "privacy_text",
       "label": "Privacy text",
       "default": "No spam, ever. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Tracking"
+    },
+    {
+      "type": "url",
+      "id": "success_redirect_url",
+      "label": "Success redirect URL",
+      "info": "Optional. Redirect users to this page after signup (e.g., /pages/thank-you)"
     }
   ],
   "presets": [
