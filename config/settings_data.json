@@ -76,7 +76,7 @@
       "moby-newsletter-popup": {
         "type": "moby-newsletter-popup",
         "settings": {
-          "enabled": false,
+          "enabled": true,
           "show_once": true,
           "exit_intent": true,
           "popup_delay": 5,
