@@ -1,0 +1,65 @@
+{
+  "sections": {
+    "launch_hero": {
+      "type": "moby-launch-hero",
+      "settings": {
+        "badge_text": "Launching Soon",
+        "heading": "Something Big is Coming",
+        "subheading": "Get an exclusive launch discount",
+        "description": "Be the first to know when we launch and receive an exclusive discount only for early supporters.",
+        "button_text": "Get Early Access",
+        "success_message": "You're in! Check your inbox for your exclusive offer.",
+        "privacy_text": "No spam. Unsubscribe anytime.",
+        "overlay_opacity": 45,
+        "show_counter": true,
+        "counter_number": "500+",
+        "counter_label": "people already signed up"
+      }
+    },
+    "launch_usps": {
+      "type": "moby-launch-usps",
+      "blocks": {
+        "usp_1": {
+          "type": "usp",
+          "settings": {
+            "title": "Exclusive Discount",
+            "text": "Get a special launch discount that won't be available after we go live."
+          }
+        },
+        "usp_2": {
+          "type": "usp",
+          "settings": {
+            "title": "Early Access",
+            "text": "Be the first to shop our full range before anyone else."
+          }
+        },
+        "usp_3": {
+          "type": "usp",
+          "settings": {
+            "title": "Limited Spots",
+            "text": "Only a limited number of early access spots are available."
+          }
+        }
+      },
+      "block_order": ["usp_1", "usp_2", "usp_3"],
+      "settings": {
+        "heading": "Why Sign Up?",
+        "description": "Join hundreds of early supporters and get exclusive perks."
+      }
+    },
+    "launch_cta": {
+      "type": "moby-launch-cta",
+      "settings": {
+        "heading": "Don't Miss Out",
+        "description": "Sign up now and be the first to access our launch collection with an exclusive discount.",
+        "button_text": "Count Me In",
+        "success_message": "You're in! Check your inbox for your exclusive offer."
+      }
+    }
+  },
+  "order": [
+    "launch_hero",
+    "launch_usps",
+    "launch_cta"
+  ]
+}
