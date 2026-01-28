@@ -79,7 +79,7 @@
           "enabled": true,
           "show_once": true,
           "exit_intent": true,
-          "popup_delay": 5,
+          "popup_delay": 12,
           "show_teaser": true,
           "teaser_text": "GET PRE-ACCESS",
           "already_signed_up_text": "You're In!",
