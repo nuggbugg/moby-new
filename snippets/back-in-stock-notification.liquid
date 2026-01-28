@@ -1,63 +1,26 @@
 {%- doc -%}
-  Renders a "Notify Me" button for out-of-stock/prelaunch products that opens an email capture modal.
-  Customizable for launch signup with discount messaging and optional image.
+  Renders a "Notify Me" button that triggers the global newsletter popup.
+  This button appears on sold out/prelaunch products.
 
   @param {object} product - The product object
-  @param {object} variant - The specific variant (optional, defaults to selected_or_first_available_variant)
+  @param {object} variant - The specific variant (optional)
   @param {string} [class] - Additional CSS classes for the button
-  @param {string} [popup_heading] - Custom heading text
-  @param {string} [popup_description] - Custom description text
-  @param {string} [popup_button_text] - Custom submit button text
-  @param {string} [popup_success_message] - Custom success message
-  @param {string} [popup_privacy_text] - Custom privacy text
-  @param {object} [popup_image] - Image object for the popup
-  @param {number} [popup_image_height] - Height of the popup image in pixels
-  @param {string} [popup_already_signed_up_text] - Text for already signed up state
-  @param {string} [popup_success_redirect_url] - URL to redirect after successful signup
 {%- enddoc -%}
 
 {%- liquid
   assign current_variant = variant | default: product.selected_or_first_available_variant
-  assign variant_title = current_variant.title | default: product.title
   assign product_handle = product.handle
-  assign variant_id = current_variant.id
-  assign form_id = 'back-in-stock-form-' | append: variant_id
-
-  # Default texts - launch focused
-  assign default_heading = 'Be First in Line'
-  assign default_description = 'Sign up now and get an exclusive launch discount when we go live!'
-  assign default_button_text = 'Get My Discount'
-  assign default_success_message = "You're on the list! Check your inbox for your exclusive discount."
-  assign default_privacy_text = "We'll only email you about our launch and your exclusive offer."
-  assign default_already_signed_up_text = "You're Already on the List!"
-
-  # Use custom texts if provided, otherwise defaults
-  assign heading_text = popup_heading | default: default_heading
-  assign description_text = popup_description | default: default_description
-  assign button_text = popup_button_text | default: default_button_text
-  assign success_text = popup_success_message | default: default_success_message
-  assign privacy_text = popup_privacy_text | default: default_privacy_text
-  assign image_height = popup_image_height | default: 200
-  assign already_signed_up_text = popup_already_signed_up_text | default: default_already_signed_up_text
-  assign success_redirect_url = popup_success_redirect_url | default: ''
+  assign product_title = product.title
 -%}
 
-<script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
-
-<back-in-stock-component
+<notify-button-component
   class="back-in-stock"
   data-product-handle="{{ product_handle }}"
-  data-variant-id="{{ variant_id }}"
-  data-variant-title="{{ variant_title | escape }}"
-  data-product-title="{{ product.title | escape }}"
-  data-already-signed-up-text="{{ already_signed_up_text | escape }}"
-  data-success-redirect-url="{{ success_redirect_url }}"
+  data-product-title="{{ product_title | escape }}"
 >
-  <!-- Notify Me Button -->
   <button
     type="button"
     ref="notifyButton"
-    on:click="/openModal"
     class="button back-in-stock__button {{ class }}"
   >
     <span class="back-in-stock__icon" ref="buttonIcon">
@@ -73,223 +36,66 @@
     </span>
     <span class="back-in-stock__text" ref="buttonText">{{ 'products.product.notify_when_available' | t | default: 'Notify Me When Available' }}</span>
   </button>
-
-  <!-- Modal -->
-  <dialog
-    ref="dialog"
-    class="back-in-stock__dialog"
-    aria-labelledby="back-in-stock-heading-{{ variant_id }}"
-  >
-    <div class="back-in-stock__modal">
-      <!-- Close Button -->
-      <button
-        ref="closeButton"
-        on:click="/closeModal"
-        class="back-in-stock__close"
-        aria-label="{{ 'accessibility.close_dialog' | t }}"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-
-      <!-- Image (optional) -->
-      {%- if popup_image != blank -%}
-        <div class="back-in-stock__modal-image" style="height: {{ image_height }}px;">
-          <img
-            src="{{ popup_image | image_url: width: 800 }}"
-            alt="{{ popup_image.alt | default: heading_text | escape }}"
-            loading="lazy"
-          >
-        </div>
-      {%- else -%}
-        <!-- Icon (fallback when no image) -->
-        <div class="back-in-stock__modal-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-          </svg>
-        </div>
-      {%- endif -%}
-
-      <!-- Heading -->
-      <h2 id="back-in-stock-heading-{{ variant_id }}" class="back-in-stock__modal-heading">
-        {{ heading_text }}
-      </h2>
-
-      <!-- Product Info -->
-      <p class="back-in-stock__modal-product">
-        {{ product.title }}{% if variant_title != 'Default Title' and variant_title != product.title %} - {{ variant_title }}{% endif %}
-      </p>
-
-      <!-- Description -->
-      <p class="back-in-stock__modal-description">
-        {{ description_text }}
-      </p>
-
-      <!-- Form -->
-      {%- form 'contact', class: 'back-in-stock__form', id: form_id -%}
-        <input type="hidden" name="contact[body]" value="Back in Stock Request: {{ product.title }}{% if variant_title != 'Default Title' %} - {{ variant_title }}{% endif %} (Variant ID: {{ variant_id }}, Product: {{ product_handle }})">
-
-        <div class="back-in-stock__form-group">
-          <input
-            type="email"
-            name="contact[email]"
-            id="back-in-stock-email-{{ variant_id }}"
-            class="back-in-stock__input"
-            placeholder="Enter your email"
-            required
-            autocomplete="email"
-            aria-label="Email address"
-          >
-        </div>
-
-        <button type="submit" class="back-in-stock__submit">
-          {{ button_text }}
-        </button>
-
-        {%- if form.posted_successfully? -%}
-          <div class="back-in-stock__success" data-success="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            <span>{{ success_text }}</span>
-          </div>
-        {%- endif -%}
-
-        {%- if form.errors -%}
-          <p class="back-in-stock__error">
-            {{ form.errors.messages['email'] | default: 'Please enter a valid email address.' }}
-          </p>
-        {%- endif -%}
-      {%- endform -%}
-
-      <!-- Privacy -->
-      <p class="back-in-stock__privacy">
-        {{ privacy_text }}
-      </p>
-    </div>
-  </dialog>
-</back-in-stock-component>
+</notify-button-component>
 
 <script>
-  class BackInStockComponent extends HTMLElement {
+  class NotifyButtonComponent extends HTMLElement {
     constructor() {
       super();
-      this.dialog = this.querySelector('[ref="dialog"]');
       this.notifyButton = this.querySelector('[ref="notifyButton"]');
-      this.closeButton = this.querySelector('[ref="closeButton"]');
-      this.form = this.querySelector('form');
       this.buttonText = this.querySelector('[ref="buttonText"]');
       this.buttonIcon = this.querySelector('[ref="buttonIcon"]');
       this.buttonIconCheck = this.querySelector('[ref="buttonIconCheck"]');
       this.storageKey = 'moby-notify-signup';
       this.productHandle = this.dataset.productHandle;
       this.productTitle = this.dataset.productTitle;
-      this.variantId = this.dataset.variantId;
-      this.alreadySignedUpText = this.dataset.alreadySignedUpText;
-      this.successRedirectUrl = this.dataset.successRedirectUrl;
     }
 
     connectedCallback() {
       // Check if user already signed up
       this.checkAlreadySignedUp();
 
+      // Click triggers global newsletter popup
       this.notifyButton?.addEventListener('click', () => {
-        this.openModal();
-        this.pushDataLayer('notify_popup_opened');
-      });
-      this.closeButton?.addEventListener('click', () => this.closeModal());
-      this.dialog?.addEventListener('click', (e) => {
-        if (e.target === this.dialog) this.closeModal();
-      });
-      this.dialog?.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') this.closeModal();
-      });
+        // Push dataLayer event
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'notify_button_clicked',
+          product_handle: this.productHandle,
+          product_title: this.productTitle
+        });
 
-      // Track form submission
-      this.form?.addEventListener('submit', () => {
-        const email = this.form.querySelector('input[type="email"]')?.value;
-        this.pushDataLayer('notify_form_submitted', { email });
-        this.markAsSignedUp();
+        // Dispatch event to open global newsletter popup
+        document.dispatchEvent(new CustomEvent('open-newsletter-popup', {
+          detail: {
+            trigger: 'notify_button',
+            product: this.productHandle
+          }
+        }));
       });
-
-      // Check if form was just submitted successfully
-      const successEl = this.querySelector('[data-success="true"]');
-      if (successEl) {
-        this.pushDataLayer('notify_signup_success');
-        this.openModal();
-
-        // Redirect if URL is set
-        if (this.successRedirectUrl) {
-          setTimeout(() => {
-            window.location.href = this.successRedirectUrl;
-          }, 1500);
-        } else {
-          setTimeout(() => this.closeModal(), 3000);
-        }
-      }
     }
 
     checkAlreadySignedUp() {
       try {
         const signups = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
-        if (signups[this.productHandle] || signups['_global']) {
+        if (signups['_global']) {
           this.setAlreadySignedUpState();
         }
       } catch (e) {}
     }
 
-    markAsSignedUp() {
-      try {
-        const signups = JSON.parse(localStorage.getItem(this.storageKey) || '{}');
-        signups[this.productHandle] = Date.now();
-        signups['_global'] = Date.now();
-        localStorage.setItem(this.storageKey, JSON.stringify(signups));
-      } catch (e) {}
-    }
-
     setAlreadySignedUpState() {
-      if (this.buttonText && this.alreadySignedUpText) {
-        this.buttonText.textContent = this.alreadySignedUpText;
+      if (this.buttonText) {
+        this.buttonText.textContent = "You're Already on the List!";
       }
       if (this.buttonIcon) this.buttonIcon.style.display = 'none';
       if (this.buttonIconCheck) this.buttonIconCheck.style.display = 'flex';
       this.notifyButton?.classList.add('back-in-stock__button--signed-up');
     }
-
-    pushDataLayer(event, extraData = {}) {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: event,
-        product_handle: this.productHandle,
-        product_title: this.productTitle,
-        variant_id: this.variantId,
-        ...extraData
-      });
-    }
-
-    openModal() {
-      if (!this.dialog) return;
-      this.dialog.showModal();
-      document.documentElement.setAttribute('scroll-lock', '');
-      this.querySelector('input[type="email"]')?.focus();
-    }
-
-    closeModal() {
-      if (!this.dialog) return;
-      this.dialog.classList.add('dialog-closing');
-
-      this.dialog.addEventListener('animationend', () => {
-        this.dialog.classList.remove('dialog-closing');
-        this.dialog.close();
-        document.documentElement.removeAttribute('scroll-lock');
-      }, { once: true });
-    }
   }
 
-  if (!customElements.get('back-in-stock-component')) {
-    customElements.define('back-in-stock-component', BackInStockComponent);
+  if (!customElements.get('notify-button-component')) {
+    customElements.define('notify-button-component', NotifyButtonComponent);
   }
 </script>
 
@@ -300,15 +106,14 @@
     justify-content: center;
     gap: 8px;
     width: 100%;
-    background: var(--moby-sage, #C9C8B6);
-    color: var(--moby-dark, #1C1A10);
+    background: var(--moby-olive, #4F4A32);
+    color: #fff;
     border: none;
     transition: background 0.2s ease, transform 0.15s ease;
   }
 
   .back-in-stock__button:hover {
-    background: var(--moby-olive, #4F4A32);
-    color: #fff;
+    background: var(--moby-dark, #1B1A0F);
   }
 
   .back-in-stock__button:active {
@@ -316,12 +121,13 @@
   }
 
   .back-in-stock__button--signed-up {
-    background: var(--moby-olive, #4F4A32);
-    color: #fff;
+    background: var(--moby-sage, #C9C8B6);
+    color: var(--moby-dark, #1B1A0F);
   }
 
   .back-in-stock__button--signed-up:hover {
-    background: var(--moby-dark, #1B1A0F);
+    background: var(--moby-olive, #4F4A32);
+    color: #fff;
   }
 
   .back-in-stock__icon {
@@ -333,220 +139,7 @@
     color: var(--moby-lime, #F9FDB5);
   }
 
-  .back-in-stock__dialog {
-    position: fixed;
-    border: none;
-    border-radius: 6px;
-    padding: 0;
-    max-width: 400px;
-    width: calc(100% - 32px);
-    background: #fff;
-    box-shadow: 0 25px 50px -12px rgba(28, 26, 16, 0.25);
-    overflow: hidden;
-  }
-
-  .back-in-stock__dialog::backdrop {
-    background: rgba(28, 26, 16, 0.6);
-    backdrop-filter: blur(4px);
-  }
-
-  .back-in-stock__dialog[open] {
-    animation: bisSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  .back-in-stock__dialog.dialog-closing {
-    animation: bisSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  @keyframes bisSlideIn {
-    from {
-      opacity: 0;
-      transform: translateY(16px) scale(0.96);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes bisSlideOut {
-    from {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(16px) scale(0.96);
-    }
-  }
-
-  .back-in-stock__modal {
-    padding: 32px 24px;
-    text-align: center;
-    position: relative;
-  }
-
-  .back-in-stock__close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    color: var(--moby-sage, #C9C8B6);
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-
-  .back-in-stock__close:hover {
-    background: rgba(201, 200, 182, 0.2);
-    color: var(--moby-dark, #1C1A10);
-  }
-
-  .back-in-stock__modal-icon {
-    width: 56px;
-    height: 56px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--moby-lime, #F9FDB5);
-    border-radius: 50%;
+  .back-in-stock__button--signed-up .back-in-stock__icon--check {
     color: var(--moby-olive, #4F4A32);
-  }
-
-  .back-in-stock__modal-image {
-    width: calc(100% + 48px);
-    margin: -32px -24px 20px;
-    overflow: hidden;
-  }
-
-  .back-in-stock__modal-image img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-
-  .back-in-stock__modal-heading {
-    font-family: 'Memoir', serif;
-    font-size: 24px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    color: var(--moby-dark, #1C1A10);
-    margin: 0 0 8px;
-  }
-
-  .back-in-stock__modal-product {
-    font-family: 'N27', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--moby-olive, #4F4A32);
-    margin: 0 0 8px;
-  }
-
-  .back-in-stock__modal-description {
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 1.5;
-    color: var(--moby-olive, #4F4A32);
-    margin: 0 0 20px;
-  }
-
-  .back-in-stock__form {
-    margin-bottom: 12px;
-  }
-
-  .back-in-stock__form-group {
-    margin-bottom: 12px;
-  }
-
-  .back-in-stock__input {
-    width: 100%;
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--moby-dark, #1C1A10);
-    background: #fff;
-    border: 1px solid var(--moby-sage, #C9C8B6);
-    border-radius: 6px;
-    padding: 12px 16px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    text-align: center;
-  }
-
-  .back-in-stock__input::placeholder {
-    color: var(--moby-sage, #C9C8B6);
-  }
-
-  .back-in-stock__input:focus {
-    border-color: var(--moby-olive, #4F4A32);
-    box-shadow: 0 0 0 3px rgba(79, 74, 50, 0.1);
-  }
-
-  .back-in-stock__submit {
-    width: 100%;
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #fff;
-    background: var(--moby-olive, #4F4A32);
-    border: none;
-    border-radius: 6px;
-    padding: 12px 24px;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.15s ease;
-  }
-
-  .back-in-stock__submit:hover {
-    background: var(--moby-dark, #1C1A10);
-  }
-
-  .back-in-stock__submit:active {
-    transform: scale(0.98);
-  }
-
-  .back-in-stock__success {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: 'N27', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    color: #16a34a;
-    margin-top: 12px;
-    padding: 12px;
-    background: rgba(22, 163, 74, 0.1);
-    border-radius: 6px;
-  }
-
-  .back-in-stock__error {
-    font-family: 'N27', sans-serif;
-    font-size: 13px;
-    font-weight: 300;
-    color: #dc2626;
-    margin-top: 8px;
-  }
-
-  .back-in-stock__privacy {
-    font-family: 'N27', sans-serif;
-    font-size: 11px;
-    font-weight: 300;
-    color: var(--moby-olive, #4F4A32);
-    opacity: 0.7;
-    margin: 0;
   }
 {% endstylesheet %}
