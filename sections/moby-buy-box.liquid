@@ -428,7 +428,8 @@
               popup_button_text: section.settings.notify_popup_button_text,
               popup_success_message: section.settings.notify_popup_success_message,
               popup_privacy_text: section.settings.notify_popup_privacy_text,
-              popup_image: section.settings.notify_popup_image
+              popup_image: section.settings.notify_popup_image,
+              popup_image_height: section.settings.notify_popup_image_height
             %}
           </div>
         {%- else -%}
@@ -477,7 +478,8 @@
               popup_button_text: section.settings.notify_popup_button_text,
               popup_success_message: section.settings.notify_popup_success_message,
               popup_privacy_text: section.settings.notify_popup_privacy_text,
-              popup_image: section.settings.notify_popup_image
+              popup_image: section.settings.notify_popup_image,
+              popup_image_height: section.settings.notify_popup_image_height
             %}
           {%- endif -%}
         {%- endif -%}
@@ -2096,6 +2098,17 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "notify_popup_image",
       "label": "Popup image",
       "info": "Optional image displayed at the top of the popup"
+    },
+    {
+      "type": "range",
+      "id": "notify_popup_image_height",
+      "label": "Image height",
+      "min": 150,
+      "max": 400,
+      "step": 25,
+      "default": 200,
+      "unit": "px",
+      "info": "Height of the popup image"
     },
     {
       "type": "text",

@@ -11,6 +11,7 @@
   @param {string} [popup_success_message] - Custom success message
   @param {string} [popup_privacy_text] - Custom privacy text
   @param {object} [popup_image] - Image object for the popup
+  @param {number} [popup_image_height] - Height of the popup image in pixels
 {%- enddoc -%}
 
 {%- liquid
@@ -33,6 +34,7 @@
   assign button_text = popup_button_text | default: default_button_text
   assign success_text = popup_success_message | default: default_success_message
   assign privacy_text = popup_privacy_text | default: default_privacy_text
+  assign image_height = popup_image_height | default: 200
 -%}
 
 <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
@@ -82,12 +84,10 @@
 
       <!-- Image (optional) -->
       {%- if popup_image != blank -%}
-        <div class="back-in-stock__modal-image">
+        <div class="back-in-stock__modal-image" style="height: {{ image_height }}px;">
           <img
-            src="{{ popup_image | image_url: width: 400 }}"
+            src="{{ popup_image | image_url: width: 800 }}"
             alt="{{ popup_image.alt | default: heading_text | escape }}"
-            width="400"
-            height="{{ 400 | divided_by: popup_image.aspect_ratio | round }}"
             loading="lazy"
           >
         </div>
@@ -334,10 +334,9 @@
 
   .back-in-stock__modal-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     object-fit: cover;
-    max-height: 200px;
   }
 
   .back-in-stock__modal-heading {
